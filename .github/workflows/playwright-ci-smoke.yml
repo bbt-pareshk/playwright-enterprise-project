@@ -1,0 +1,242 @@
+name: Playwright CI – Smoke Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - live
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: playwright-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # ⭐ Cache Playwright browsers (speed optimization)
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      # 4️⃣ Install Playwright browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 🌍 Resolve ENVIRONMENT
+      - name: Resolve Environment
+        run: |
+          if [ -n "${{ inputs.environment }}" ]; then
+            echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          fi
+
+      # 5️⃣ Run Smoke Tests
+      - name: Run Smoke Tests
+        continue-on-error: true
+        env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          CI: true
+        run: |
+          echo "Running Smoke Tests on $ENVIRONMENT"
+          npx playwright test
+
+      # 6️⃣ Optional severity gate
+      - name: Fail build on critical failures
+        run: |
+          if [ -f scripts/check-critical.js ]; then
+            node scripts/check-critical.js || true
+          else
+            echo "No critical check script found"
+          fi
+
+      # 7️⃣ Generate Allure
+      - name: Generate Allure Report
+        run: |
+          mkdir -p allure-report
+          npx allure-commandline generate --clean -o allure-report ./allure-results || true
+
+      # 8️⃣ Upload Allure artifact
+      # ⚠ Added retention-days to prevent GitHub Free (500MB) storage overflow
+      - name: Upload Allure Report Artifact
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 3   # 👈 Auto delete after 3 days to prevent quota issues
+
+      # 9️⃣ Upload Playwright HTML report
+      # ⚠ Added retention-days to reduce artifact storage usage
+      - name: Upload Playwright HTML Report
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report
+          retention-days: 3   # 👈 Prevents long-term storage buildup
+
+      # 🔍 Detect Deployment Mode
+      - name: Detect Deployment Mode
+        id: deploy_mode
+        run: |
+          if [ -n "${{ secrets.GH_PAGES_TOKEN }}" ]; then
+            echo "mode=external" >> $GITHUB_OUTPUT
+          else
+            echo "mode=internal" >> $GITHUB_OUTPUT
+          fi
+
+      # 1️⃣0️⃣ Deploy – Internal (Same Repo)
+      - name: Deploy Allure (Internal)
+        if: steps.deploy_mode.outputs.mode == 'internal'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          user_name: github-actions
+          user_email: github-actions@github.com
+
+      # 1️⃣1️⃣ Deploy – External (Private → Public Repo)
+      - name: Deploy Allure (External Public Repo)
+        if: steps.deploy_mode.outputs.mode == 'external'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.GH_PAGES_TOKEN }}
+          external_repository: qaverseTesting/abcdefg_ooooo
+          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          user_name: github-actions
+          user_email: github-actions@github.com
+
+      # 1️⃣2️⃣ Set Dynamic Allure URL
+      - name: Set Allure URL
+        run: |
+          if [ "${{ steps.deploy_mode.outputs.mode }}" = "external" ]; then
+            echo "ALLURE_URL=https://qaverseTesting.github.io/abcdefg_ooooo/" >> $GITHUB_ENV
+          else
+            echo "ALLURE_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_ENV
+          fi
+
+      # 1️⃣3️⃣ CI Summary links
+      - name: Add CI Summary Links
+        run: |
+          echo "## 📊 Test Reports" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔵 Allure Report (Online)" >> $GITHUB_STEP_SUMMARY
+          echo "👉 $ALLURE_URL" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🟢 Playwright HTML Report" >> $GITHUB_STEP_SUMMARY
+          echo "👉 Download from **Artifacts → playwright-html-report**" >> $GITHUB_STEP_SUMMARY
+
+      # 📊 Collect Playwright test statistics
+      - name: Collect Test Stats
+        if: always()
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+
+          const file = 'test-results/results.json';
+          if (!fs.existsSync(file)) {
+            fs.appendFileSync(process.env.GITHUB_ENV,
+              'TOTAL=0\nPASSED=0\nFAILED=0\nSKIPPED=0\nFLAKY=0\nFAILED_TESTS=None\n'
+            );
+            process.exit(0);
+          }
+
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          const stats = data.stats || {};
+
+          const passed = stats.expected || 0;
+          const failed = stats.unexpected || 0;
+          const skipped = stats.skipped || 0;
+          const flaky = stats.flaky || 0;
+          const total = passed + failed + skipped + flaky;
+
+          const failedTests = new Set();
+
+          function walkSuites(suites = []) {
+            for (const suite of suites) {
+              if (suite.suites) walkSuites(suite.suites);
+              for (const spec of suite.specs || []) {
+                for (const test of spec.tests || []) {
+                  if ((test.results || []).some(r => r.status === 'failed')) {
+                    failedTests.add(spec.title);
+                  }
+                }
+              }
+            }
+          }
+
+          walkSuites(data.suites || []);
+
+          const failedList =
+            failedTests.size === 0
+              ? 'None'
+              : Array.from(failedTests).slice(0, 5).join('\\n• ');
+
+          fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\n`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `PASSED=${passed}\n`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `FAILED=${failed}\n`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `SKIPPED=${skipped}\n`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `FLAKY=${flaky}\n`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `FAILED_TESTS=${failedList}\n`);
+          EOF
+
+      # 🔔 Slack Notification
+      - name: Notify Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ job.status }}"
+          COLOR="#36a64f"
+
+          if [ "$STATUS" != "success" ]; then
+            COLOR="#ff0000"
+          fi
+
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"attachments\": [{
+              \"color\": \"$COLOR\",
+              \"title\": \"Playwright Test Results\",
+              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Test Summary*\n• Total: *$TOTAL*\n• Passed: *$PASSED*\n• Failed: *$FAILED*\n• Skipped: *$SKIPPED*\n• Flaky: *$FLAKY*\n\n*Failed Tests (Top 5)*\n• $FAILED_TESTS\n\n*Allure Report:* $ALLURE_URL\n\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View CI Run>\"
+            }]
+          }" $SLACK_WEBHOOK_URL

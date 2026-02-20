@@ -1,0 +1,120 @@
+﻿[dotenv@17.2.3] injecting env (11) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+[2026-02-19T14:40:40.929Z] [INFO] Γû╢ Initializing Global Setup
+[2026-02-19T14:40:40.930Z] [INFO] Γû╢ Global Setup Completed
+
+Running 4 tests using 2 workers
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+[2026-02-19T14:40:45.083Z] [INFO] [leader] Debug - CI: false, Skip: false, File: true at D:\Git\mentalhappy-playwright\storage\auth\leader.json
+[2026-02-19T14:40:45.084Z] [INFO] [leader] skipping authentication based on: Smart Cache
+[2026-02-19T14:40:45.376Z] [INFO] [member] Debug - CI: false, Skip: false, File: true at D:\Git\mentalhappy-playwright\storage\auth\member.json
+[2026-02-19T14:40:45.378Z] [INFO] [member] skipping authentication based on: Smart Cache
+  -  2 [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate leader
+  -  1 [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate member
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+[2026-02-19T14:40:50.856Z] [NAV] Navigating to Registration
+[2026-02-19T14:40:50.899Z] [NAV] Navigating to Registration
+[2026-02-19T14:40:55.388Z] [STEP] Entering invalid first name with numbers
+[2026-02-19T14:40:56.111Z] [STEP] Touching fields and leaving them empty
+  Γ£ÿ  4 [default] ΓÇ║ specs\features\auth\registration.spec.ts:187:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify first and last name field validation (only letters allowed) @regression (23.7s)
+  Γ£ÿ  3 [default] ΓÇ║ specs\features\auth\registration.spec.ts:213:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify mandatory field validation (First Name and Last Name) @regression @smoke (25.3s)
+
+
+  1) [default] ΓÇ║ specs\features\auth\registration.spec.ts:187:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify first and last name field validation (only letters allowed) @regression 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  locator('input[name="firstname"]').locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]')
+    Expected: [32m"[7mFirst name must contain [27monly letters"[39m
+    Received: [31m"only letters[7m are allowed[27m"[39m
+    Timeout:  15000ms
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 15000ms[22m
+    [2m  - waiting for locator('input[name="firstname"]').locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]')[22m
+    [2m    18 ├ù locator resolved to <div aria-live="polite" id="field-:r0:-feedback" class="chakra-form__error-message css-502kp3">only letters are allowed</div>[22m
+    [2m       - unexpected value "only letters are allowed"[22m
+
+
+       at ..\lib\pages\auth\RegistrationPage.ts:237
+
+      235 |   async verifyFirstNameInvalidError() {
+      236 |     await this.expectVisible(this.firstNameError);
+    > 237 |     await expect(this.firstNameError).toHaveText(MESSAGES.AUTH.REGISTRATION.FIRST_NAME_INVALID);
+          |                                       ^
+      238 |   }
+      239 |
+      240 |   async verifyLastNameInvalidError() {
+        at RegistrationPage.verifyFirstNameInvalidError (D:\Git\mentalhappy-playwright\lib\pages\auth\RegistrationPage.ts:237:39)
+        at D:\Git\mentalhappy-playwright\specs\features\auth\registration.spec.ts:199:9
+
+    attachment #5: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-cdf07-ation-only-letters-allowed--default\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    attachment #6: video (video/webm) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-cdf07-ation-only-letters-allowed--default\video.webm
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\features-auth-registration-cdf07-ation-only-letters-allowed--default\error-context.md
+
+    attachment #8: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-cdf07-ation-only-letters-allowed--default\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\features-auth-registration-cdf07-ation-only-letters-allowed--default\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  2) [default] ΓÇ║ specs\features\auth\registration.spec.ts:213:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify mandatory field validation (First Name and Last Name) @regression @smoke 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  locator('input[name="firstname"]').locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]')
+    Expected: [32m"[7mF[27mirst[7m [27mname is required"[39m
+    Received: [31m"[7mf[27mirstname is required"[39m
+    Timeout:  15000ms
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 15000ms[22m
+    [2m  - waiting for locator('input[name="firstname"]').locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]')[22m
+    [2m    18 ├ù locator resolved to <div aria-live="polite" id="field-:r0:-feedback" class="chakra-form__error-message css-502kp3">firstname is required</div>[22m
+    [2m       - unexpected value "firstname is required"[22m
+
+
+       at ..\lib\pages\auth\RegistrationPage.ts:247
+
+      245 |   async verifyFirstNameRequiredError() {
+      246 |     await this.expectVisible(this.firstNameError);
+    > 247 |     await expect(this.firstNameError).toHaveText(MESSAGES.AUTH.REGISTRATION.FIRST_NAME_REQUIRED);
+          |                                       ^
+      248 |   }
+      249 |
+      250 |   async verifyLastNameRequiredError() {
+        at RegistrationPage.verifyFirstNameRequiredError (D:\Git\mentalhappy-playwright\lib\pages\auth\RegistrationPage.ts:247:39)
+        at D:\Git\mentalhappy-playwright\specs\features\auth\registration.spec.ts:226:9
+
+    attachment #5: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-a7cc7-n-First-Name-and-Last-Name--default\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    attachment #6: video (video/webm) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-a7cc7-n-First-Name-and-Last-Name--default\video.webm
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\features-auth-registration-a7cc7-n-First-Name-and-Last-Name--default\error-context.md
+
+    attachment #8: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-auth-registration-a7cc7-n-First-Name-and-Last-Name--default\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\features-auth-registration-a7cc7-n-First-Name-and-Last-Name--default\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  2 failed
+    [default] ΓÇ║ specs\features\auth\registration.spec.ts:187:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify first and last name field validation (only letters allowed) @regression 
+    [default] ΓÇ║ specs\features\auth\registration.spec.ts:213:9 ΓÇ║ Registration - Password Visibility ΓÇ║ Verify mandatory field validation (First Name and Last Name) @regression @smoke 
+  2 skipped

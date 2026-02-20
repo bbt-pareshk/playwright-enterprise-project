@@ -1,0 +1,403 @@
+﻿[dotenv@17.2.3] injecting env (11) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+[2026-02-19T14:27:31.089Z] [INFO] Γû╢ Initializing Global Setup
+[2026-02-19T14:27:31.090Z] [INFO] Γû╢ Global Setup Completed
+{
+  "config": {
+    "configFile": "D:\\Git\\mentalhappy-playwright\\playwright.config.ts",
+    "rootDir": "D:/Git/mentalhappy-playwright/specs",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "D:\\Git\\mentalhappy-playwright\\lib\\utils\\global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Git/mentalhappy-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "setup-auth",
+        "name": "setup-auth",
+        "testDir": "D:/Git/mentalhappy-playwright/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Git/mentalhappy-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "default",
+        "name": "default",
+        "testDir": "D:/Git/mentalhappy-playwright/specs",
+        "testIgnore": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "setup\\auth.setup.ts",
+      "file": "setup/auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Global Authentication Setup",
+          "file": "setup/auth.setup.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Authenticate member",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                        "line": 32,
+                        "column": 22
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "setup-auth",
+                  "projectName": "setup-auth",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 1057,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T14:27:33.612Z] [INFO] [member] Debug - CI: false, Skip: false, File: true at D:\\Git\\mentalhappy-playwright\\storage\\auth\\member.json\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:33.612Z] [INFO] [member] skipping authentication based on: Smart Cache\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T14:27:32.556Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                            "line": 32,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJQcm9qZWN0IiwidmFsdWUiOiJzZXR1cC1hdXRoIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCcm93c2VyIiwidmFsdWUiOiJ1bmtub3duIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCYXNlVVJMIiwidmFsdWUiOiJodHRwczovL3N0YWdpbmcubWVudGFsaGFwcHkuY29tIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJXb3JrZXIiLCJ2YWx1ZSI6IjAifV19fQ=="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e717b06d8d484d1cd946-43205d6463cb716f04de",
+              "file": "setup/auth.setup.ts",
+              "line": 19,
+              "column": 13
+            },
+            {
+              "title": "Authenticate leader",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                        "line": 32,
+                        "column": 22
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "setup-auth",
+                  "projectName": "setup-auth",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 783,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T14:27:33.314Z] [INFO] [leader] Debug - CI: false, Skip: false, File: true at D:\\Git\\mentalhappy-playwright\\storage\\auth\\leader.json\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:33.314Z] [INFO] [leader] skipping authentication based on: Smart Cache\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T14:27:32.557Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                            "line": 32,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJQcm9qZWN0IiwidmFsdWUiOiJzZXR1cC1hdXRoIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCcm93c2VyIiwidmFsdWUiOiJ1bmtub3duIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCYXNlVVJMIiwidmFsdWUiOiJodHRwczovL3N0YWdpbmcubWVudGFsaGFwcHkuY29tIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJXb3JrZXIiLCJ2YWx1ZSI6IjEifV19fQ=="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e717b06d8d484d1cd946-3d41f87e4a774c326edd",
+              "file": "setup/auth.setup.ts",
+              "line": 19,
+              "column": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "features\\auth\\registration.spec.ts",
+      "file": "features/auth/registration.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Registration - Resend OTP",
+          "file": "features/auth/registration.spec.ts",
+          "line": 210,
+          "column": 15,
+          "specs": [
+            {
+              "title": "Register new user and land on OTP verification page",
+              "ok": true,
+              "tags": [
+                "smoke"
+              ],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 16487,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T14:27:36.386Z] [NAV] Navigating to Registration\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:40.356Z] [STEP] Generated email for Resend OTP test: pw_email_20260219195740w2r03565@mailinator.com\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:41.653Z] [INFO] Submitting registration form\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T14:27:35.665Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d56a6fff5f12892c8a7-523d47f1ed81a5b58b41",
+              "file": "features/auth/registration.spec.ts",
+              "line": 224,
+              "column": 9
+            },
+            {
+              "title": "Verify Resend OTP delivers a new valid code",
+              "ok": false,
+              "tags": [
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 82812,
+                      "error": {
+                        "message": "Error: locator.innerText: Target page, context or browser has been closed",
+                        "stack": "Error: locator.innerText: Target page, context or browser has been closed\n    at RegistrationPage.clickResendOTP (D:\\Git\\mentalhappy-playwright\\lib\\pages\\auth\\RegistrationPage.ts:243:45)\n    at D:\\Git\\mentalhappy-playwright\\specs\\features\\auth\\registration.spec.ts:254:9",
+                        "location": {
+                          "file": "D:\\Git\\mentalhappy-playwright\\lib\\pages\\auth\\RegistrationPage.ts",
+                          "column": 45,
+                          "line": 243
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\lib\\pages\\auth\\RegistrationPage.ts:243\n\n\u001b[0m \u001b[90m 241 |\u001b[39m       \u001b[36mawait\u001b[39m expect(resendButton)\u001b[33m.\u001b[39mtoBeEnabled({ timeout\u001b[33m:\u001b[39m \u001b[35m120\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m 242 |\u001b[39m     } \u001b[36mcatch\u001b[39m (e) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 243 |\u001b[39m       \u001b[36mconst\u001b[39m finalState \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m resendButton\u001b[33m.\u001b[39minnerText()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 244 |\u001b[39m       \u001b[33mLogger\u001b[39m\u001b[33m.\u001b[39merror(\u001b[32m`Resend button still disabled after 2 minutes. Current text: \"${finalState}\"`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 245 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`Resend button still disabled after 2 minutes. Current text: \"${finalState}\". The app may have a long lockout (e.g. 40 mins) as reported.`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 246 |\u001b[39m     }\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Git\\mentalhappy-playwright\\lib\\pages\\auth\\RegistrationPage.ts",
+                            "column": 45,
+                            "line": 243
+                          },
+                          "message": "Error: locator.innerText: Target page, context or browser has been closed\n\n   at ..\\lib\\pages\\auth\\RegistrationPage.ts:243\n\n  241 |       await expect(resendButton).toBeEnabled({ timeout: 120_000 });\n  242 |     } catch (e) {\n> 243 |       const finalState = await resendButton.innerText();\n      |                                             ^\n  244 |       Logger.error(`Resend button still disabled after 2 minutes. Current text: \"${finalState}\"`);\n  245 |       throw new Error(`Resend button still disabled after 2 minutes. Current text: \"${finalState}\". The app may have a long lockout (e.g. 40 mins) as reported.`);\n  246 |     }\n    at RegistrationPage.clickResendOTP (D:\\Git\\mentalhappy-playwright\\lib\\pages\\auth\\RegistrationPage.ts:243:45)\n    at D:\\Git\\mentalhappy-playwright\\specs\\features\\auth\\registration.spec.ts:254:9"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T14:27:53.007Z] [INFO] Detecting Resend Code button state...\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:53.036Z] [INFO] Observed text: \"Resend Code\"\n"
+                        },
+                        {
+                          "text": "[2026-02-19T14:27:53.036Z] [INFO] Waiting for button to be enabled (cooldown period)...\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T14:27:52.908Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Git\\mentalhappy-playwright\\test-results\\features-auth-registration-55997-P-delivers-a-new-valid-code-default\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Git\\mentalhappy-playwright\\lib\\pages\\auth\\RegistrationPage.ts",
+                        "column": 45,
+                        "line": 243
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2d56a6fff5f12892c8a7-4052a0366e01e792d49f",
+              "file": "features/auth/registration.spec.ts",
+              "line": 247,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-02-19T14:27:31.082Z",
+    "duration": 106800.68000000001,
+    "expected": 1,
+    "skipped": 2,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

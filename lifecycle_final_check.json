@@ -1,0 +1,660 @@
+﻿[dotenv@17.2.3] injecting env (11) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+[2026-02-19T16:35:01.047Z] [INFO] Γû╢ CI: false
+[2026-02-19T16:35:01.048Z] [INFO] Γû╢ Environment: staging
+[2026-02-19T16:35:01.048Z] [INFO] Γû╢ Base URL: https://staging.mentalhappy.com
+[2026-02-19T16:35:01.048Z] [INFO] Initializing Global Setup
+[2026-02-19T16:35:01.049Z] [INFO] Global Setup Completed
+{
+  "config": {
+    "configFile": "D:\\Git\\mentalhappy-playwright\\playwright.config.ts",
+    "rootDir": "D:/Git/mentalhappy-playwright/specs",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "D:\\Git\\mentalhappy-playwright\\lib\\utils\\global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Git/mentalhappy-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "setup-auth",
+        "name": "setup-auth",
+        "testDir": "D:/Git/mentalhappy-playwright/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Git/mentalhappy-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "default",
+        "name": "default",
+        "testDir": "D:/Git/mentalhappy-playwright/specs",
+        "testIgnore": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "setup\\auth.setup.ts",
+      "file": "setup/auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Global Authentication Setup",
+          "file": "setup/auth.setup.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Authenticate member",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                        "line": 32,
+                        "column": 22
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "setup-auth",
+                  "projectName": "setup-auth",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 2343,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:35:06.758Z] [INFO] [member] Debug - CI: false, Skip: false, File: true at D:\\Git\\mentalhappy-playwright\\storage\\auth\\member.json\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:06.759Z] [INFO] [member] skipping authentication based on: Smart Cache\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:35:04.584Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                            "line": 32,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJQcm9qZWN0IiwidmFsdWUiOiJzZXR1cC1hdXRoIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCcm93c2VyIiwidmFsdWUiOiJ1bmtub3duIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCYXNlVVJMIiwidmFsdWUiOiJodHRwczovL3N0YWdpbmcubWVudGFsaGFwcHkuY29tIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJXb3JrZXIiLCJ2YWx1ZSI6IjAifV19fQ=="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e717b06d8d484d1cd946-43205d6463cb716f04de",
+              "file": "setup/auth.setup.ts",
+              "line": 19,
+              "column": 13
+            },
+            {
+              "title": "Authenticate leader",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                        "line": 32,
+                        "column": 22
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "setup-auth",
+                  "projectName": "setup-auth",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 2358,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:35:06.777Z] [INFO] [leader] Debug - CI: false, Skip: false, File: true at D:\\Git\\mentalhappy-playwright\\storage\\auth\\leader.json\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:06.777Z] [INFO] [leader] skipping authentication based on: Smart Cache\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:35:04.553Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\Git\\mentalhappy-playwright\\specs\\setup\\auth.setup.ts",
+                            "line": 32,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJQcm9qZWN0IiwidmFsdWUiOiJzZXR1cC1hdXRoIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCcm93c2VyIiwidmFsdWUiOiJ1bmtub3duIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJCYXNlVVJMIiwidmFsdWUiOiJodHRwczovL3N0YWdpbmcubWVudGFsaGFwcHkuY29tIn1dfX0="
+                        },
+                        {
+                          "name": "Allure Metadata (metadata)",
+                          "contentType": "application/vnd.allure.message+json",
+                          "body": "eyJ0eXBlIjoibWV0YWRhdGEiLCJkYXRhIjp7InBhcmFtZXRlcnMiOlt7Im5hbWUiOiJXb3JrZXIiLCJ2YWx1ZSI6IjEifV19fQ=="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e717b06d8d484d1cd946-3d41f87e4a774c326edd",
+              "file": "setup/auth.setup.ts",
+              "line": 19,
+              "column": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "features\\group\\group-lifecycle.spec.ts",
+      "file": "features/group/group-lifecycle.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Group Lifecycle Flow",
+          "file": "features/group/group-lifecycle.spec.ts",
+          "line": 17,
+          "column": 15,
+          "specs": [
+            {
+              "title": "Step 1: Create Group",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 26824,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:35:13.053Z] [INFO] Starting Step 1: Group Creation\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:13.055Z] [STEP] Creating group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:13.056Z] [NAV] Navigating to Dashboard\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:16.877Z] [STEP] Clicking on Start a Group\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:27.775Z] [ASSERT] Create Group page is loaded\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:29.878Z] [STEP] Filling group details\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:31.245Z] [STEP] Selecting a random group tag\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:34.782Z] [STEP] Submitting group creation Preview\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:34.936Z] [STEP] Confirming group submission\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:35.871Z] [SUCCESS] Group creation flow initiated for: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:35.872Z] [ASSERT] Verifying toast message: Group created successfully!\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:37.963Z] [SUCCESS] Step 1 Completed: Group PW_Group_20260219_220513_w2r0055wi9 created.\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:35:11.102Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5e4f0b140e5374e036ee-09c78c09df9036bcc9ae",
+              "file": "features/group/group-lifecycle.spec.ts",
+              "line": 27,
+              "column": 9
+            },
+            {
+              "title": "Step 2: Activate Group (Payment)",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 50478,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:35:39.664Z] [INFO] Starting Step 2: Group Activation\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:39.665Z] [STEP] Activating group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:39.668Z] [STEP] Navigating to My Groups page\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:44.156Z] [STEP] Waiting for My Groups page content\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:59.051Z] [STEP] Priority scan initiated for group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:59.414Z] [SUCCESS] Priority group found: PW_Group_20260219_220513_w2r0055wi9\n\n1 Member\n\nActivate your group\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:35:59.567Z] [SUCCESS] Priority group is inactive, opening activation flow\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:01.220Z] [SUCCESS] Activation or payment page detected for priority group\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:01.221Z] [STEP] Waiting for Stripe full form\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:18.766Z] [SUCCESS] Stripe form ready\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:18.767Z] [STEP] Filling Stripe full payment form\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:18.768Z] [STEP] Selecting country\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:23.747Z] [SUCCESS] Stripe form filled\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:23.747Z] [STEP] Submitting payment\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:23.873Z] [STEP] Clicking Pay button\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:28.380Z] [SUCCESS] Payment success confirmed\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:28.381Z] [SUCCESS] Group activation flow completed for: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:28.381Z] [SUCCESS] Step 2 Completed: Group activated.\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:35:38.575Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5e4f0b140e5374e036ee-f07a15304d9405070d2a",
+              "file": "features/group/group-lifecycle.spec.ts",
+              "line": 39,
+              "column": 9
+            },
+            {
+              "title": "Step 3: Configure Group Membership",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 23652,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:36:30.408Z] [INFO] Starting Step 3: Configure Membership\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:30.408Z] [STEP] Configuring free membership for group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:30.409Z] [STEP] Opening Profile ΓåÆ Payments page\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:46.123Z] [SUCCESS] Profile Payments page ready\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:46.125Z] [STEP] Selecting group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:48.760Z] [STEP] Selecting group from Chakra virtualized menu\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:50.920Z] [SUCCESS] Group switched successfully to: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:50.920Z] [STEP] Preparing to configure payment settings\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:50.949Z] [STEP] Waiting for payment section\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:50.976Z] [STEP] Selecting FREE payment type\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:51.158Z] [STEP] Saving payment settings\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:52.734Z] [SUCCESS] Payment type saved successfully\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:52.734Z] [SUCCESS] Membership configuration completed for: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:52.734Z] [SUCCESS] Step 3 Completed: Membership configured.\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:36:29.113Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5e4f0b140e5374e036ee-fac620432eabd0d43985",
+              "file": "features/group/group-lifecycle.spec.ts",
+              "line": 50,
+              "column": 9
+            },
+            {
+              "title": "Step 4: Create Session",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "default",
+                  "projectName": "default",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 63605,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[2026-02-19T16:36:53.506Z] [INFO] Starting Step 4: Create Session\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:53.507Z] [STEP] Creating session \"PW_Session_20260219_220653_w2r0507m97\" in group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:53.507Z] [NAV] Navigating to Dashboard\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:57.301Z] [STEP] Searching for group to create session: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:36:57.301Z] [STEP] Navigating to My Groups page\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:00.433Z] [STEP] Waiting for My Groups page content\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:10.555Z] [INFO] Total groups detected: 314\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:39.928Z] [SUCCESS] Group matched: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:40.065Z] [STEP] Opening target group chat\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:40.293Z] [STEP] Initiating Create Session flow from Chat menu\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:40.293Z] [STEP] Verifying chat page has loaded correctly\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:48.408Z] [SUCCESS] Chat page layout is visible\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:48.467Z] [SUCCESS] Chat page opened for expected group: PW_Group_20260219_220513_w2r0055wi9\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:48.986Z] [INFO] Announcement banner detected, attempting to close\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:49.650Z] [SUCCESS] Announcement banner closed successfully\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:49.901Z] [SUCCESS] Chat action menu opened\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:50.140Z] [SUCCESS] \"Schedule a Session\" menu item selected\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.566Z] [SUCCESS] Create Session modal displayed successfully\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.567Z] [SUCCESS] Create Session modal successfully opened for target group\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.567Z] [STEP] Waiting for Create Session modal\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.597Z] [SUCCESS] Create Session modal visible\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.598Z] [STEP] Filling Create Session form\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:51.598Z] [STEP] Setting session date to next day\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:53.355Z] [INFO] Session date set to 20 February, 2026\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:53.356Z] [STEP] Ensuring timezone is selected\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:53.431Z] [INFO] Timezone already selected: Asia/Kolkata\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:54.061Z] [SUCCESS] Required fields filled\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:54.061Z] [STEP] Submitting session\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:54.195Z] [SUCCESS] Session creation flow initiated for: PW_Session_20260219_220653_w2r0507m97\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:54.195Z] [ASSERT] Verifying toast message: New Message\n"
+                        },
+                        {
+                          "text": "[2026-02-19T16:37:56.248Z] [SUCCESS] Step 4 Completed: Session created.\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-19T16:36:52.959Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5e4f0b140e5374e036ee-bc12ab7d9b759b079956",
+              "file": "features/group/group-lifecycle.spec.ts",
+              "line": 61,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-02-19T16:35:01.032Z",
+    "duration": 176076.579,
+    "expected": 4,
+    "skipped": 2,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

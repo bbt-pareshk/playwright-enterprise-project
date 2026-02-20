@@ -1,0 +1,121 @@
+﻿[dotenv@17.2.3] injecting env (11) from .env -- tip: Γ£à audit secrets and track compliance: https://dotenvx.com/ops
+[2026-02-19T16:22:00.464Z] [INFO] Γû╢ CI: false
+[2026-02-19T16:22:00.465Z] [INFO] Γû╢ Environment: staging
+[2026-02-19T16:22:00.465Z] [INFO] Γû╢ Base URL: https://staging.mentalhappy.com
+[2026-02-19T16:22:00.465Z] [INFO] Initializing Global Setup
+[2026-02-19T16:22:00.466Z] [INFO] Global Setup Completed
+
+Running 6 tests using 2 workers
+
+[1A[2K[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+
+[1A[2K[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+
+[1A[2K[1/6] [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate member
+[1A[2K[2/6] [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate leader
+[1A[2K[setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate member
+[2026-02-19T16:22:05.655Z] [INFO] [member] Debug - CI: false, Skip: false, File: true at D:\Git\mentalhappy-playwright\storage\auth\member.json
+
+[1A[2K[2026-02-19T16:22:05.655Z] [INFO] [member] skipping authentication based on: Smart Cache
+
+[1A[2K[setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate leader
+[2026-02-19T16:22:05.777Z] [INFO] [leader] Debug - CI: false, Skip: false, File: true at D:\Git\mentalhappy-playwright\storage\auth\leader.json
+
+[1A[2K[2026-02-19T16:22:05.777Z] [INFO] [leader] skipping authentication based on: Smart Cache
+
+[1A[2K[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+
+[1A[2K[3/6] [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:22:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 1: Create Group @smoke @critical
+[1A[2K[default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:22:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 1: Create Group @smoke @critical
+[2026-02-19T16:22:12.096Z] [INFO] Starting Step 1: Group Creation
+
+[1A[2K[2026-02-19T16:22:12.097Z] [STEP] Creating group: PW_Group_20260219_215212_w2r0097zrf
+
+[1A[2K[2026-02-19T16:22:12.097Z] [NAV] Navigating to Dashboard
+
+[1A[2K[2026-02-19T16:22:16.448Z] [STEP] Clicking on Start a Group
+
+[1A[2K[2026-02-19T16:22:27.413Z] [ASSERT] Create Group page is loaded
+
+[1A[2K[2026-02-19T16:22:28.917Z] [STEP] Filling group details
+
+[1A[2K[2026-02-19T16:22:30.404Z] [STEP] Selecting a random group tag
+
+[1A[2K[2026-02-19T16:22:34.364Z] [STEP] Submitting group creation Preview
+
+[1A[2K[2026-02-19T16:22:34.648Z] [STEP] Confirming group submission
+
+[1A[2K[2026-02-19T16:22:35.523Z] [SUCCESS] Group creation flow initiated for: PW_Group_20260219_215212_w2r0097zrf
+
+[1A[2K[2026-02-19T16:22:35.523Z] [ASSERT] Verifying toast message: Group created successfully!
+
+[1A[2K[2026-02-19T16:22:37.680Z] [SUCCESS] Step 1 Completed: Group PW_Group_20260219_215212_w2r0097zrf created.
+
+[1A[2K[4/6] [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:34:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 2: Activate Group (Payment) @smoke @critical
+[1A[2K[default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:34:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 2: Activate Group (Payment) @smoke @critical
+[2026-02-19T16:22:39.244Z] [INFO] Starting Step 2: Group Activation
+
+[1A[2K[2026-02-19T16:22:39.244Z] [STEP] Activating group: PW_Group_20260219_215212_w2r0097zrf
+
+[1A[2K[2026-02-19T16:22:39.246Z] [STEP] Navigating to My Groups page
+
+[1A[2K[2026-02-19T16:22:43.707Z] [STEP] Waiting for My Groups page content
+
+[1A[2K[2026-02-19T16:22:57.262Z] [STEP] Priority scan initiated for group: PW_Group_20260219_215212_w2r0097zrf
+
+[1A[2K[2026-02-19T16:24:04.457Z] [SUCCESS] Priority group found: PW_Group_20260219_215212_w2r0097zrf
+
+1 Member
+
+Activate your group
+
+[1A[2K[2026-02-19T16:24:04.562Z] [SUCCESS] Priority group is inactive, opening activation flow
+
+[1A[2K[2026-02-19T16:24:06.254Z] [SUCCESS] Activation or payment page detected for priority group
+
+[1A[2K[2026-02-19T16:24:06.255Z] [STEP] Waiting for Stripe full form
+
+[1A[2K  1) [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:34:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 2: Activate Group (Payment) @smoke @critical 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: locator.waitFor: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('iframe[title="Secure payment input frame"]').contentFrame().locator('#payment-numberInput') to be visible[22m
+
+
+       at ..\lib\pages\payment\GroupActivationPaymentPage.ts:30
+
+      28 |     const cardNumber = this.stripeFrame.locator('#payment-numberInput');
+      29 |
+    > 30 |     await cardNumber.waitFor({ state: 'visible', timeout: 30_000 });
+         |                      ^
+      31 |     await expect(cardNumber).toBeEditable();
+      32 |
+      33 |     Logger.success('Stripe form ready');
+        at GroupActivationPaymentPage.waitForVisible (D:\Git\mentalhappy-playwright\lib\pages\payment\GroupActivationPaymentPage.ts:30:22)
+        at Function.activateGroup (D:\Git\mentalhappy-playwright\lib\helpers\GroupHelper.ts:60:27)
+        at D:\Git\mentalhappy-playwright\specs\features\group\group-lifecycle.spec.ts:40:13
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-group-group-lifec-359fd-p-2-Activate-Group-Payment--default\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\features-group-group-lifec-359fd-p-2-Activate-Group-Payment--default\error-context.md
+
+    attachment #3: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-group-group-lifec-359fd-p-2-Activate-Group-Payment--default\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\features-group-group-lifec-359fd-p-2-Activate-Group-Payment--default\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[5/6] [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:45:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 3: Configure Group Membership @smoke @critical
+[1A[2K[6/6] [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:56:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 4: Create Session @smoke @critical
+[1A[2K  1 failed
+    [default] ΓÇ║ specs\features\group\group-lifecycle.spec.ts:34:9 ΓÇ║ Group Lifecycle Flow ΓÇ║ Step 2: Activate Group (Payment) @smoke @critical 
+  2 skipped
+  2 did not run
+  1 passed (2.2m)
