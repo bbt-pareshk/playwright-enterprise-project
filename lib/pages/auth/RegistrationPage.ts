@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect, test } from '@playwright/test';
 import { BasePage } from '../base/BasePage';
 import { Wait } from '../../utils/Wait';
 import { ROUTES, URLS, ROUTE_PATHS } from '../../../config/urls';
@@ -188,6 +188,10 @@ export class RegistrationPage extends BasePage {
    * Clicks the "Resend Code" button on the email verification page.
    * Handles the countdown timer by waiting for the button to be re-enabled.
    */
+  /**
+   * Clicks the "Resend Code" button on the email verification page.
+   * Handles the countdown timer by dynamically reading the remaining time from the DOM.
+   */
   async clickResendOTP(): Promise<void> {
     Logger.info('Detecting Resend Code button state...');
 
@@ -197,29 +201,77 @@ export class RegistrationPage extends BasePage {
 
     await resendButton.waitFor({ state: 'visible', timeout: 20000 });
 
-    // Try to find any lockout text (minutes, seconds, etc)
-    const lockoutText = await this.page.locator('body').innerText().catch(() => '');
-    const countdownMatch = lockoutText.match(/resend in \d+ (minutes|seconds)/i) || lockoutText.match(/(\d+)\s*min/i);
-    if (countdownMatch) {
-      Logger.warn(`LOCKOUT DETECTED: "${countdownMatch[0]}"`);
+    // Locate the countdown text and poll for a valid (non-zero) time
+    // This handles race conditions where the text initially renders as "0 minutes 00" before JS updates it.
+    const countdownLocator = this.page.locator('p.chakra-text').filter({ hasText: /resend in/i }).first();
+
+    let totalSeconds = 0;
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      // Quick visibility check
+      if (!await countdownLocator.isVisible().catch(() => false)) {
+        await this.page.waitForTimeout(500);
+        continue;
+      }
+
+      const fullText = await countdownLocator.innerText();
+
+      // --- Parsing Logic ---
+      const minMatch = fullText.match(/(\d+)\s*minutes?/i);
+      const explicitSecMatch = fullText.match(/(\d+)\s*seconds?/i);
+      const outputSecMatch = fullText.match(/minutes?\s*(\d+)\s*$/i);
+      const bareNumberMatch = !minMatch ? fullText.match(/(\d+)/) : null;
+
+      let currentSeconds = 0;
+      if (minMatch) currentSeconds += parseInt(minMatch[1]) * 60;
+
+      if (explicitSecMatch) {
+        currentSeconds += parseInt(explicitSecMatch[1]);
+      } else if (outputSecMatch) {
+        currentSeconds += parseInt(outputSecMatch[1]);
+      } else if (bareNumberMatch) {
+        currentSeconds += parseInt(bareNumberMatch[1]);
+      }
+
+      if (currentSeconds > 0) {
+        totalSeconds = currentSeconds;
+        Logger.info(`Countdown initialized: "${fullText}" (${totalSeconds}s)`);
+        break;
+      }
+
+      // If 0, wait and retry. "0 minutes 00" is often a placeholder during page load.
+      if (attempt === 0) {
+        Logger.info(`Timer initializing (value is currently placeholder "${fullText}"). Waiting for real countdown...`);
+      }
+      await this.page.waitForTimeout(500);
     }
 
-    Logger.info('Waiting for button to be enabled (cooldown period)...');
+    if (totalSeconds > 0) {
+      Logger.info(`Time remaining: ${totalSeconds} seconds.`);
+
+      // If wait is too long (e.g., > 2 minutes), skip to avoid hanging
+      if (totalSeconds > 120) {
+        const minutes = Math.round(totalSeconds / 60);
+        Logger.warn(`Environment Lockout: Resend cooldown is ${minutes} minutes. Skipping test.`);
+        test.skip(true, `Test skipped due to environment rate limit (${minutes} min wait)`);
+      }
+
+      Logger.info(`Waiting ${totalSeconds}s for resend countdown...`);
+      // Wait with a small buffer
+      await this.page.waitForTimeout((totalSeconds + 1) * 1000);
+    } else {
+      Logger.info('No active countdown detected (timer is 0 or not found). expecting button enablement.');
+    }
+
+    Logger.info('Waiting for button to be enabled...');
 
     // Use a timeout that fits within the global 90s test timeout
     try {
       await expect(resendButton).toBeEnabled({ timeout: 70_000 });
     } catch (e) {
-      // Safe check to avoid 'Target page closed' errors
       if (this.page.isClosed()) throw e;
-
       const currentText = await resendButton.innerText().catch(() => 'unknown');
-      Logger.error(`Resend button still disabled after 70s. State: "${currentText}"`);
-
-      if (currentText.toLowerCase().includes('minute')) {
-        throw new Error(`CRITICAL LOCKOUT: Resend OTP shows minutes (${currentText}). Test cannot proceed.`);
-      }
-      throw new Error(`Resend button timeout. Final text: "${currentText}"`);
+      throw new Error(`Resend button timeout. Final state: "${currentText}"`);
     }
 
     await this.robustClick(resendButton);

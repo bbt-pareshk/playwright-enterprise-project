@@ -12,7 +12,7 @@ export default defineConfig({
   fullyParallel: true,
 
   forbidOnly: isCI,
-  retries: isCI ? 1 : 1,
+  retries: isCI ? 0 : 0,
   workers: 2,
 
   outputDir: 'test-results',

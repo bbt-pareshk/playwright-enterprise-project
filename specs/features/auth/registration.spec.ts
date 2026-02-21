@@ -269,35 +269,35 @@ test.describe.serial('Registration - Resend OTP', () => {
         await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 20000 });
     });
 
-    // test('Verify Resend OTP delivers a new valid code', { tag: ['@smoke', '@critical'] }, async () => {
-    //     const registrationPage = new RegistrationPage(page);
+    test('Verify Resend OTP delivers a new valid code', { tag: ['@smoke', '@critical'] }, async () => {
+        const registrationPage = new RegistrationPage(page);
 
-    //     // 1. Confirm we are on the verify email page
-    //     await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 10000 });
+        // 1. Confirm we are on the verify email page
+        await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 10000 });
 
-    //     // 2. Click the "Resend Code" button (handles countdown automatically)
-    //     await registrationPage.clickResendOTP();
-    //     Logger.step('Resend OTP button clicked — waiting for new email to arrive');
+        // 2. Click the "Resend Code" button (handles countdown automatically)
+        await registrationPage.clickResendOTP();
+        Logger.step('Resend OTP button clicked — waiting for new email to arrive');
 
-    //     // 3. Verify a success indication appears (using flexible regex for 'email', 'sent', or 'code')
-    //     // The previous specific 'MESSAGES.AUTH.REGISTRATION.OTP_RESENT' might be too strict
-    //     await AssertionHelper.verifyToastMessage(page, /email|sent|code/i);
+        // 3. Verify a success indication appears (using flexible regex for 'email', 'sent', or 'code')
+        // The previous specific 'MESSAGES.AUTH.REGISTRATION.OTP_RESENT' might be too strict
+        await AssertionHelper.verifyToastMessage(page, /email|sent|code/i);
 
-    //     // 4. Open Mailinator and retrieve the NEW (latest) OTP from the resent email
-    //     const mailinatorPage = await context.newPage();
-    //     const mailinator = new MailinatorPage(mailinatorPage);
+        // 4. Open Mailinator and retrieve the NEW (latest) OTP from the resent email
+        const mailinatorPage = await context.newPage();
+        const mailinator = new MailinatorPage(mailinatorPage);
 
-    //     // Wait a few seconds for Mailinator to receive the new email
-    //     await page.waitForTimeout(5000);
+        // Wait a few seconds for Mailinator to receive the new email
+        await page.waitForTimeout(5000);
 
-    //     const newOtp = await mailinator.getOTPFromEmail(resendEmail);
-    //     await mailinatorPage.close();
-    //     Logger.step(`New OTP retrieved after resend: ${newOtp}`);
+        const newOtp = await mailinator.getOTPFromEmail(resendEmail);
+        await mailinatorPage.close();
+        Logger.step(`New OTP retrieved after resend: ${newOtp}`);
 
-    //     // 5. Use the new OTP to complete verification — proves resend delivered a valid code
-    //     await registrationPage.verifyEmailWithOTP(newOtp);
+        // 5. Use the new OTP to complete verification — proves resend delivered a valid code
+        await registrationPage.verifyEmailWithOTP(newOtp);
 
-    //     // 6. Validate email confirmed success toast
-    //     await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
-    // });
+        // 6. Validate email confirmed success toast
+        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
+    });
 });
