@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "@playwright/test"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": [
+        "config/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@pages/*": [
+        "lib/pages/*"
+      ],
+      "@fixtures/*": [
+        "lib/fixtures/*"
+      ],
+      "@utils/*": [
+        "lib/utils/*"
+      ],
+      "@data/*": [
+        "lib/data/*"
+      ]
+    }
+  },
+  "include": [
+    "lib",
+    "specs",
+    "config",
+    "playwright.config.ts"
+  ]
+}
