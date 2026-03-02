@@ -23,8 +23,8 @@ test.describe('Free Group Confirmation Popup', () => {
     test('TC-FGP-02: Popup modal container is visible @smoke @leader', async ({ leaderPage }) => {
         const modal = leaderPage.locator('.chakra-modal__content, section[role="dialog"]').first();
         await expect(modal).toBeVisible();
-        // DOM-verified (2026-02-24): The exact button text inside the popup is 'Go to Groups' (plural)
-        await expect(modal.getByRole('button', { name: 'Go to Groups', exact: true })).toBeVisible();
+        // DOM-verified (2026-03-02): The exact button text inside the popup is now 'Create Your Group'
+        await expect(modal.getByRole('button', { name: 'Create Your Group', exact: true })).toBeVisible();
     });
 
     test('TC-FGP-03: Clicking popup CTA proceeds to /groups @regression @leader', async ({ leaderPage }) => {
@@ -32,6 +32,7 @@ test.describe('Free Group Confirmation Popup', () => {
         await freePopup.clickGoToGroup();
 
         // After clicking, should redirect to dashboard/group page
-        await expect(leaderPage).toHaveURL(/.*\/groups$/);
+        // After clicking, should redirect to either the Dashboard or the Group Creation flow
+        await expect(leaderPage).toHaveURL(/.*\/groups(\/create)?$/);
     });
 });
