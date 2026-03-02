@@ -1,103 +1,82 @@
-
-import { test, expect } from '../../../lib/fixtures/index';
-import { RegistrationPage } from '../../../lib/pages/auth/RegistrationPage';
-import { WelcomePage } from '../../../lib/pages/auth/WelcomePage';
-import { OnboardingPage } from '../../../lib/pages/auth/OnboardingPage';
-import { MailinatorPage } from '../../../lib/pages/utils/MailinatorPage';
+import { test } from '../../../lib/fixtures/index';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
-import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
+import { MemberHelper } from '../../../lib/helpers/MemberHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
-import { MESSAGES } from '../../../lib/data/constants/messages';
 import { Logger } from '../../../lib/utils/Logger';
 
 /**
  * Member Lifecycle Flows
  * --------------------
  * High-value E2E tests for the Support Member persona.
- * Each test performs a fresh registration to ensure the Welcome Page and Onboarding flows are triggered correctly.
+ * This version uses the centralized MemberHelper and expands to 8 granular tests.
+ * 
+ * Scenario A & B are split into 4 granular steps each for maximum visibility.
  */
 test.describe('Member Lifecycle Flows @smoke @member @e2e', () => {
 
-    test('MEMBER-LIFECYCLE-01: Full Journey - Registration to Member Dashboard (Continue Path)', async ({ page, context }) => {
-        const email = DataGenerator.email();
-        const registrationPage = new RegistrationPage(page);
-        const welcomePage = new WelcomePage(page);
-        const onboardingPage = new OnboardingPage(page);
+    test.describe.serial('Scenario A: Full Journey via CONTINUE path', () => {
+        let context: any;
+        let page: any;
+        let email: string;
 
-        // 1. Registration
-        await registrationPage.goto();
-        await registrationPage.fillRegistrationForm({
-            firstName: DataGenerator.firstName(),
-            lastName: DataGenerator.lastName(),
-            email: email,
-            password: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+        test.beforeAll(async ({ browser }) => {
+            context = await browser.newContext();
+            page = await context.newPage();
+            email = DataGenerator.email();
         });
-        await registrationPage.clickCreateAccount();
 
-        // 2. OTP Verification
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+        test.afterAll(async () => {
+            await context.close();
+        });
 
-        await page.bringToFront();
-        await registrationPage.verifyEmailWithOTP(otp);
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
+        test('MEMBER-LC-A1: Fresh Registration Form Submission', async () => {
+            await MemberHelper.submitRegistrationForm(page, email);
+        });
 
-        // 3. Welcome Screen - Role Selection
-        await welcomePage.verifyPageLoaded();
-        await welcomePage.selectSupportGroupMember();
-        await welcomePage.clickContinue();
+        test('MEMBER-LC-A2: Email Verification via Mailinator (OTP)', async () => {
+            await MemberHelper.verifyEmailWithOTP(page, context, email);
+        });
 
-        // Pixel Perfect: Wait for transition to onboarding
-        await expect(page.getByText(/What kind of support are you looking for/i)).toBeVisible({ timeout: 20000 });
+        test('MEMBER-LC-A3: Welcome Screen - Role Selection', async () => {
+            await MemberHelper.selectRoleAndContinue(page);
+        });
 
-        // 4. Onboarding - Multi-step Continue
-        await onboardingPage.completeMemberOnboardingViaContinue();
-
-        // 5. Landing - Groups Dashboard
-        await AssertionHelper.verifyDashboardLoaded(page);
-        Logger.success('MEMBER-LIFECYCLE-01: COMPLETED SUCCESSFULLY');
+        test('MEMBER-LC-A4: Onboarding (Continue) & Dashboard Verify', async () => {
+            await MemberHelper.completeOnboardingViaContinue(page);
+            await MemberHelper.verifyDashboard(page);
+        });
     });
 
-    test('MEMBER-LIFECYCLE-02: Full Journey - Registration to Member Dashboard (Skip Path)', async ({ page, context }) => {
-        const email = DataGenerator.email();
-        const registrationPage = new RegistrationPage(page);
-        const welcomePage = new WelcomePage(page);
-        const onboardingPage = new OnboardingPage(page);
+    test.describe.serial('Scenario B: Full Journey via SKIP path', () => {
+        let context: any;
+        let page: any;
+        let email: string;
 
-        // 1. Registration
-        await registrationPage.goto();
-        await registrationPage.fillRegistrationForm({
-            firstName: DataGenerator.firstName(),
-            lastName: DataGenerator.lastName(),
-            email: email,
-            password: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+        test.beforeAll(async ({ browser }) => {
+            context = await browser.newContext();
+            page = await context.newPage();
+            email = DataGenerator.email();
         });
-        await registrationPage.clickCreateAccount();
 
-        // 2. OTP Verification
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+        test.afterAll(async () => {
+            await context.close();
+        });
 
-        await page.bringToFront();
-        await registrationPage.verifyEmailWithOTP(otp);
+        test('MEMBER-LC-B1: Fresh Registration Form Submission', async () => {
+            await MemberHelper.submitRegistrationForm(page, email);
+        });
 
-        // 3. Welcome Screen - Role Selection
-        await welcomePage.verifyPageLoaded();
-        await welcomePage.selectSupportGroupMember();
-        await welcomePage.clickContinue();
+        test('MEMBER-LC-B2: Email Verification via Mailinator (OTP)', async () => {
+            await MemberHelper.verifyEmailWithOTP(page, context, email);
+        });
 
-        // Pixel Perfect: Wait for transition to onboarding
-        await expect(page.getByText(/What kind of support are you looking for/i)).toBeVisible({ timeout: 20000 });
+        test('MEMBER-LC-B3: Welcome Screen - Role Selection', async () => {
+            await MemberHelper.selectRoleAndContinue(page);
+        });
 
-        // 4. Onboarding - Skip
-        await onboardingPage.completeMemberOnboardingViaSkip();
-
-        // 5. Landing - Groups Dashboard
-        await AssertionHelper.verifyDashboardLoaded(page);
-        Logger.success('MEMBER-LIFECYCLE-02: COMPLETED SUCCESSFULLY');
+        test('MEMBER-LC-B4: Onboarding (Skip) & Dashboard Verify', async () => {
+            await MemberHelper.completeOnboardingViaSkip(page);
+            await MemberHelper.verifyDashboard(page);
+        });
     });
 });

@@ -16,7 +16,11 @@ import { NavigationHelper } from './NavigationHelper';
 export class GroupHelper {
 
     /**
-     * Performs the full flow of creating a new group.
+     * Performs the full 4-tab group creation flow:
+     *   Tab 1 → Group Details (Name, Cover Image, Description, Tags)
+     *   Tab 2 → Professional Background (conditional — first-time only)
+     *   Tab 3 → Pricing Model (conditional — selects "Free")
+     *   Tab 4 → Review & Submit (Launch Group)
      */
     static async createGroup(page: Page, groupName: string) {
         Logger.step(`Creating group: ${groupName}`);
@@ -25,21 +29,41 @@ export class GroupHelper {
         const dashboard = new DashboardPage(page);
         await dashboard.clickStartGroup();
 
-        // Wait for navigation to settle
         await page.waitForURL(/\/groups\/create\/?/, { timeout: 20_000 });
 
         const createGroup = new CreateGroupPage(page);
         await createGroup.verifyPageLoaded();
-        await createGroup.enterGroupDetails(
-            groupName,
-            DataGenerator.description(),
-            APP_CONSTANTS.TEST_DATA.DEFAULTS.DEFAULT_SCHEDULE
-        );
-        await createGroup.selectRandomTag();
-        await createGroup.submitGroup();
-        await createGroup.confirmSubmit();
 
-        Logger.success(`Group creation flow initiated for: ${groupName}`);
+        // ── Tab 1: Group Details ─────────────────────────────────────────────
+        await createGroup.enterGroupDetails(groupName, DataGenerator.description());
+        await createGroup.uploadCoverImage(APP_CONSTANTS.DUMMY_PROFILE_IMAGE_PATH);
+        await createGroup.selectTag();
+        await createGroup.clickContinue();
+
+        // ── Tab 2: Professional Background (conditional — first-time only) ───
+        const isProfBgVisible = await createGroup.isProfessionalBackgroundVisible();
+        if (isProfBgVisible) {
+            Logger.info('Professional Background tab detected — completing required fields');
+            await createGroup.fillProfessionalBackground();
+            await createGroup.clickContinue();
+        } else {
+            Logger.info('Professional Background tab not present');
+        }
+
+        // ── Tab 3: Pricing Model (conditional) ───────────────────────────────
+        const isPricingVisible = await createGroup.isPricingModelVisible();
+        if (isPricingVisible) {
+            Logger.info('Pricing Model tab detected — selecting "Free"');
+            await createGroup.selectFreePricing();
+            await createGroup.clickContinue();
+        } else {
+            Logger.info('Pricing Model tab not present');
+        }
+
+        // ── Tab 4: Review & Submit ───────────────────────────────────────────
+        await createGroup.launchGroup();
+
+        Logger.success(`Group creation flow completed for: ${groupName}`);
     }
 
     /**

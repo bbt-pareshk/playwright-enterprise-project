@@ -15,7 +15,7 @@ export class FreeGroupPopup extends BasePage {
     // Internal UI Labels (Static)
     // ⚠️ DOM-verified (2026-02-24): The popup button uses plural "Groups"
     private static readonly LABELS = {
-        GO_TO_GROUP: 'Go to Groups',
+        GO_TO_GROUP: 'Create Your Group',
         CLOSE_ARIA: 'Close',
     };
 

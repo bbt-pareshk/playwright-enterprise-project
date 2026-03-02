@@ -1,4 +1,4 @@
-// src/pages/group/CreateGroupPage.ts
+// lib/pages/group/CreateGroupPage.ts
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../base/BasePage';
 import { Wait } from '../../utils/Wait';
@@ -10,239 +10,342 @@ import { APP_CONSTANTS } from '../../data/constants/app-constants';
 /**
  * CreateGroupPage
  * ----------------
- * Handles all interactions on the
- * "Create Group" flow
+ * Handles all interactions on the 3-step "Create Group" flow:
+ *
+ *   Tab 1 → Group Details      (Group Name, Cover Image, Description, Tags)
+ *   Tab 2 → Professional Background  (conditional — first-time only)
+ *              (Photo Profile, Name, Professional Role, Professional Bio)
+ *   Tab 3 → Pricing Model      (conditional — select "Free" pricing)
+ *   Tab 4 → Review & Submit    (preview only → click "Launch Group")
+ *
+ * All locators are DOM-verified against real application DOM captures.
  */
 export class CreateGroupPage extends BasePage {
-  /* ---------------------------
-     Locators
-  ---------------------------- */
 
+  /* ─────────────────────────────────────────────────────────
+     TAB 1 — GROUP DETAILS
+  ───────────────────────────────────────────────────────── */
+
+  /** input[name="name"] */
   private readonly groupNameInput: Locator;
-  private readonly groupDescriptionInput: Locator;
-  private readonly groupScheduleInput: Locator;
-  private readonly profilePhotoInput: Locator;
-  private readonly photoUploadArea: Locator;
-  private readonly professionalBioInput: Locator;
-  private readonly selectTagsButton: Locator;
-  private readonly doneButton: Locator;
-  private readonly submitButton: Locator;
-  private readonly finalSubmitButton: Locator;
 
+  /**
+   * Hidden file input scoped to the "Cover Image" form-control group.
+   * DOM: input[accept="image/jpeg,image/png,image/jpg"][type="file"] inside
+   *      div[role="group"] that contains label "Cover Image".
+   */
+  private readonly coverImageInput: Locator;
+
+  /**
+   * Lexical rich-text editor for Group Description.
+   * DOM: div[data-lexical-editor="true"] inside the "Group Description" form-control group.
+   */
+  private readonly groupDescriptionInput: Locator;
+
+  /**
+   * react-select control element. Clicking it opens the tag options dropdown.
+   * DOM: div.react-select__control (first instance on the page)
+   */
+  private readonly selectTagsControl: Locator;
+
+  /* ─────────────────────────────────────────────────────────
+     TAB 2 — PROFESSIONAL BACKGROUND (CONDITIONAL)
+  ───────────────────────────────────────────────────────── */
+
+  /**
+   * Hidden file input scoped to the "Photo Profile" form-control group.
+   * DOM: input[type="file"] inside div[role="group"] containing label "Photo Profile".
+   */
+  private readonly profilePhotoInput: Locator;
+
+  /**
+   * Display name text input — pre-populated with the logged-in user's name.
+   * DOM: input[name="displayName"]
+   */
+  private readonly displayNameInput: Locator;
+
+  /**
+   * Professional Role — native HTML <select> element.
+   * DOM: select[name="professionalRole"]
+   * Options: placeholder at index 0, first real option at index 1.
+   */
+  private readonly professionalRoleSelect: Locator;
+
+  /**
+   * Lexical rich-text editor for Professional Bio.
+   * DOM: div[data-lexical-editor="true"] inside the "Professional Bio" form-control group.
+   */
+  private readonly professionalBioInput: Locator;
+
+  /* ─────────────────────────────────────────────────────────
+     TAB 3 — PRICING MODEL (CONDITIONAL)
+  ───────────────────────────────────────────────────────── */
+
+  /** "Pricing Model" heading text for tab detection. */
+  private readonly pricingModelHeading: Locator;
+
+  /** "Free" pricing model option card. Clicking it selects the free tier. */
+  private readonly freePricingOption: Locator;
+
+  /* ─────────────────────────────────────────────────────────
+     NAVIGATION BUTTONS (shared across tabs)
+  ───────────────────────────────────────────────────────── */
+
+  /** "Continue" button — appears on Tab 1 and Tab 2 (DOM-verified exact text). */
+  private readonly continueButton: Locator;
+
+  /** "Launch Group" button — final submit on Tab 3 Review & Submit (DOM-verified). */
+  private readonly launchGroupButton: Locator;
+
+  /* ─────────────────────────────────────────────────────────
+     CONSTRUCTOR
+  ───────────────────────────────────────────────────────── */
 
   constructor(page: Page) {
     super(page);
 
-    this.groupNameInput = page.locator('input[name="name"]').or(page.getByRole('textbox', { name: UI_CONSTANTS.GROUPS.CREATE.INPUTS.NAME }));
+    // ── Tab 1 ───────────────────────────────────────────────────────────────
+
+    this.groupNameInput = page.locator('input[name="name"]');
+
+    this.coverImageInput = page
+      .locator('div[role="group"]')
+      .filter({ hasText: UI_CONSTANTS.GROUPS.CREATE.TEXT.COVER_IMAGE_LABEL })
+      .locator('input[type="file"]');
 
     this.groupDescriptionInput = page
-      .locator(`p:has-text("${UI_CONSTANTS.GROUPS.CREATE.TEXT.DESCRIPTION_LABEL}")`)
-      .locator('..')
+      .locator('div[role="group"]')
+      .filter({ hasText: UI_CONSTANTS.GROUPS.CREATE.TEXT.DESCRIPTION_LABEL })
       .locator('[data-lexical-editor="true"]');
 
-    this.groupScheduleInput = page.getByRole('textbox', {
-      name: UI_CONSTANTS.GROUPS.CREATE.INPUTS.SCHEDULE,
+    this.selectTagsControl = page.locator('div.react-select__control').first();
+
+    // ── Tab 2 ───────────────────────────────────────────────────────────────
+
+    this.profilePhotoInput = page
+      .locator('div[role="group"]')
+      .filter({ hasText: UI_CONSTANTS.GROUPS.CREATE.TEXT.PHOTO_PROFILE_LABEL })
+      .locator('input[type="file"]');
+
+    this.displayNameInput = page.locator(
+      `input[name="${UI_CONSTANTS.GROUPS.CREATE.INPUTS.DISPLAY_NAME}"]`
+    );
+
+    this.professionalRoleSelect = page.locator(
+      `select[name="${UI_CONSTANTS.GROUPS.CREATE.INPUTS.PROFESSIONAL_ROLE}"]`
+    );
+
+    this.professionalBioInput = page
+      .locator('div[role="group"]')
+      .filter({ hasText: UI_CONSTANTS.GROUPS.CREATE.TEXT.PROFESSIONAL_BIO_LABEL })
+      .locator('[data-lexical-editor="true"]');
+
+    // ── Tab 3 ───────────────────────────────────────────────────────────────
+
+    this.pricingModelHeading = page.getByText('Set Group Pricing', { exact: true });
+
+    // Select the "Free" option card.
+    this.freePricingOption = page.locator('div.chakra-stack').filter({ hasText: /^Free$/ }).first().or(page.getByText('Free', { exact: true }));
+
+    // ── Navigation ──────────────────────────────────────────────────────────
+
+    // exact: true prevents matching "Finish later" or partial text buttons
+    this.continueButton = page.getByRole('button', {
+      name: UI_CONSTANTS.GROUPS.CREATE.BUTTONS.CONTINUE,
+      exact: true,
     });
 
-    this.profilePhotoInput = page.locator('input[type="file"]');
-    this.photoUploadArea = page.getByText(/upload photo/i).first();
-
-    this.professionalBioInput = page.locator('p:has-text("Professional Bio")').locator('..').locator('[data-lexical-editor="true"]')
-      .or(page.getByRole('textbox', { name: /Professional Bio/i }))
-      .or(page.getByPlaceholder(/professional background|inspired you/i))
-      .or(page.locator('textarea[name="aboutme"]'))
-      .first();
-
-    this.selectTagsButton = page.getByRole('button', { name: UI_CONSTANTS.GROUPS.CREATE.BUTTONS.SELECT_TAGS });
-    this.doneButton = page.getByRole('button', { name: UI_CONSTANTS.GROUPS.CREATE.BUTTONS.DONE });
-
-    // Pixel Perfect: Using more resilient locators for the multi-step submission process
-    this.submitButton = page.getByRole('button', { name: /Continue|Review|Submit|Preview/i }).first();
-    this.finalSubmitButton = page.getByRole('button', { name: /Submit Group|Finalize|Confirm|Create Group|Submit$/i })
-      .or(page.locator('button').filter({ hasText: /^Submit Group$|^Submit$|^Confirm$|^Create Group$/i }))
-      .or(page.getByRole('button', { name: UI_CONSTANTS.GROUPS.CREATE.BUTTONS.SUBMIT_GROUP }))
-      .first();
+    this.launchGroupButton = page.getByRole('button', {
+      name: UI_CONSTANTS.GROUPS.CREATE.BUTTONS.LAUNCH_GROUP,
+      exact: true,
+    });
   }
 
-  /* ---------------------------
-     Page Validation
-  ---------------------------- */
+  /* ─────────────────────────────────────────────────────────
+     PAGE VALIDATION
+  ───────────────────────────────────────────────────────── */
 
   /**
-   * Ensures Create Group page is loaded
+   * Verifies the Create Group page has loaded (Tab 1 input visible).
+   * Also dismisses any Chameleon / Intercom overlays.
    */
   async verifyPageLoaded(): Promise<void> {
     Logger.assertion('Create Group page is loaded');
-    await this.dismissSupportPopups(); // Robustness: Clear any Chameleon/Intercom overlays
+    await this.dismissSupportPopups();
     await Wait.forVisible(this.groupNameInput, 20_000);
   }
 
-
-  /* ---------------------------
-     Form Actions
-  ---------------------------- */
+  /* ═══════════════════════════════════════════════════════════
+     TAB 1 — GROUP DETAILS
+  ══════════════════════════════════════════════════════════ */
 
   /**
-   * Fills mandatory group details
+   * Fills Group Name and Group Description.
+   * Cover image upload is a separate step to keep responsibilities isolated.
    */
-  async enterGroupDetails(
-    name: string,
-    description: string,
-    schedule: string
-  ): Promise<void> {
-    Logger.step('Filling group details');
-
+  async enterGroupDetails(name: string, description: string): Promise<void> {
+    Logger.step('Filling Group Name');
     await this.groupNameInput.fill(name);
+
+    Logger.step('Filling Group Description');
     await this.groupDescriptionInput.click();
     await this.page.keyboard.type(description);
-
-    // Pixel Perfect: Filling schedule if visible to ensure form is 'complete' and button enables
-    if (await this.groupScheduleInput.isVisible()) {
-      await this.groupScheduleInput.fill(schedule);
-    }
   }
 
   /**
-   * Selects one random tag from available options
+   * Uploads the Cover Image by setting files on the hidden file input (Tab 1).
+   * The input is scoped to the "Cover Image" form-control so it cannot
+   * accidentally target the profile photo input on Tab 2.
    */
-  async selectRandomTag(): Promise<void> {
-    Logger.step('Selecting a random group tag');
-
-    // Open modal
-    await this.selectTagsButton.click();
-
-    const modal = this.page.getByRole('dialog');
-
-    // WAIT for accordion to be rendered
-    const accordionButtons = modal.locator('button[aria-expanded]');
-
-    await accordionButtons.first().waitFor({ state: 'visible' });
-
-    const categoryCount = await accordionButtons.count();
-    if (categoryCount === 0) {
-      throw new Error('No tag categories found in modal');
-    }
-
-    // 1. Open a random category
-    const randomCategoryIndex = Math.floor(Math.random() * categoryCount);
-    const selectedCategory = accordionButtons.nth(randomCategoryIndex);
-
-    await selectedCategory.click();
-
-    // 2. Wait for panel content to appear
-    const visibleCheckboxes = modal.getByRole('checkbox').filter({ visible: true });
-
-    await visibleCheckboxes.first().waitFor({ state: 'visible' });
-
-    const checkboxCount = await visibleCheckboxes.count();
-    if (checkboxCount === 0) {
-      throw new Error('No tags found inside selected category');
-    }
-
-    // 3. Select a random checkbox
-    const randomCheckboxIndex = Math.floor(Math.random() * checkboxCount);
-    await visibleCheckboxes.nth(randomCheckboxIndex).click({ force: true });
-
-    // 4. Confirm selection
-    await this.robustClick(this.doneButton);
-    await modal.waitFor({ state: 'hidden', timeout: 10000 });
+  async uploadCoverImage(imagePath: string): Promise<void> {
+    Logger.step('Uploading Cover Image');
+    const resolvedPath = require('path').resolve(process.cwd(), imagePath);
+    await this.coverImageInput.setInputFiles(resolvedPath);
+    Logger.success('Cover image uploaded');
   }
 
   /**
-   * Submits the group for Preview
+   * Selects a tag from the react-select tags dropdown.
+   *
+   * Strategy:
+   *   1. Click the react-select control to open the options menu.
+   *   2. Wait for options to render.
+   *   3. Click the second option (nth(1)) — the first real selectable tag,
+   *      since nth(0) may be a group header or separator.
    */
-  async submitGroup(): Promise<void> {
-    Logger.step('Submitting group creation Preview');
-    await this.robustClick(this.submitButton);
+  async selectTag(): Promise<void> {
+    Logger.step('Opening Select Tags dropdown');
+    await this.selectTagsControl.click();
+
+    const options = this.page.locator('div.react-select__option');
+    await options.first().waitFor({ state: 'visible', timeout: 10_000 });
+
+    Logger.step('Selecting tag (second option — first real option)');
+    await options.nth(1).click();
+    Logger.success('Tag selected');
   }
 
+  /* ═══════════════════════════════════════════════════════════
+     TAB 2 — PROFESSIONAL BACKGROUND (CONDITIONAL)
+  ══════════════════════════════════════════════════════════ */
 
   /**
-   * Confirms final group submission
-   * Handles both 2-step (Details -> Review) and 3-step (Details -> Bio -> Review) flows
+   * Returns true if the Professional Background tab is currently active.
+   *
+   * Detection strategy: The professionalRoleSelect (<select name="professionalRole">)
+   * is only rendered when Tab 2 is active. It is not present on Tab 1 or Tab 3.
+   * A 5-second timeout is used so we don't hang if the tab is not shown.
    */
-  async confirmSubmit(): Promise<void> {
-    Logger.step('Confirming group submission');
-
-    // Wait for transition to settle
-    await this.page.waitForTimeout(2000);
-    await this.dismissSupportPopups();
-
-    // Pixel Perfect: Check if we hit the intermediate Professional Bio step (3-step flow)
-    const isBioStep = await this.page.getByText(/Select tags that describe your background/i).isVisible();
-
-    if (isBioStep) {
-      Logger.info('Handling intermediate Bio/Profile step for new users');
-
-      // =========================================================================
-      // 🔒 LOCKED LOGIC: DO NOT TOUCH IMAGE UPLOAD OR FILE CHOOSER FALLBACK 🔒
-      // =========================================================================
-      // Updated: Target dummy image located dynamically via APP_CONSTANTS
-      // removed visual `filechooser` fallback to avoid hanging the headless CI runner.
-
-      const photoPath = require('path').resolve(process.cwd(), APP_CONSTANTS.DUMMY_PROFILE_IMAGE_PATH);
-
-      Logger.step('Uploading professional photo');
-      try {
-        // Method 1: The standard Playwright hidden input approach
-        await this.profilePhotoInput.setInputFiles(photoPath, { timeout: 8000 });
-      } catch (e1) {
-        Logger.error('Image upload strictly failed in CI due to missing dummy image file or unrendered DOM elements.');
-        throw e1;
-      }
-      Logger.success('Photo upload processed');
-      await this.page.waitForTimeout(1000); // Wait for upload processing
-      // =========================================================================
-
-      // Fill Bio text
-      if (await this.professionalBioInput.isVisible()) {
-        await this.professionalBioInput.click();
-        await this.page.keyboard.type(DataGenerator.description());
-        Logger.info('Professional Bio filled');
-      }
-
-      // Select background tags
-      Logger.step('Selecting background tags');
-      const tagsToSelect = ['Licensed Therapist', 'Social Worker', 'Counselor'];
-
-      for (const tagText of tagsToSelect) {
-        // Tag selection logic: find the element containing exactly the text
-        const tag = this.page.getByText(tagText, { exact: true }).first();
-        try {
-          await tag.waitFor({ state: 'visible', timeout: 5000 });
-          await tag.click({ force: true });
-          Logger.info(`Clicked background tag: ${tagText}`);
-          await this.page.waitForTimeout(300);
-        } catch (e) {
-          Logger.error(`Failed to locate/click tag: ${tagText}`);
-        }
-      }
-
-      // Wait for "Continue to Review" button to enable
-      const continueToReviewBtn = this.page.getByRole('button', { name: /Continue to Review/i });
-      Logger.step('Waiting for submission button to enable');
-
-      // In case photo upload or bio filling takes time to reflect on button state
-      await expect(continueToReviewBtn).toBeEnabled({ timeout: 15000 });
-      await this.robustClick(continueToReviewBtn);
-
-      // Wait for transition to final review step
-      await this.page.waitForTimeout(3000);
-      await this.dismissSupportPopups();
-    }
-
-    // Final Review Step (Common to both 2rd and 3rd step flows)
-    Logger.step('Reviewing final submission screen');
-    await this.finalSubmitButton.waitFor({ state: 'visible', timeout: 15000 });
-
+  async isProfessionalBackgroundVisible(): Promise<boolean> {
     try {
-      // Give the frontend up to 5 seconds to formally enable the button after rendering it
-      await expect(this.finalSubmitButton).toBeEnabled({ timeout: 5000 });
-      Logger.step('Clicking final submit button');
-      await this.robustClick(this.finalSubmitButton);
-    } catch (error) {
-      Logger.error('Final submit button is visible but DISABLED - potentially missing fields');
-      await this.robustClick(this.finalSubmitButton); // Force click as fallback
+      await this.professionalRoleSelect.waitFor({ state: 'visible', timeout: 5_000 });
+      return true;
+    } catch {
+      return false;
     }
+  }
+
+  /**
+   * Uploads the Profile Photo via the hidden file input on Tab 2.
+   * Scoped to the "Photo Profile" form-control group to avoid
+   * collision with the Cover Image input on Tab 1.
+   */
+  async uploadProfilePhoto(imagePath: string): Promise<void> {
+    Logger.step('Uploading Profile Photo');
+    const resolvedPath = require('path').resolve(process.cwd(), imagePath);
+    await this.profilePhotoInput.setInputFiles(resolvedPath);
+    Logger.success('Profile photo uploaded');
+  }
+
+  /**
+   * Completes all fields on the Professional Background tab:
+   *   1. Profile Photo — upload via hidden file input
+   *   2. Name          — only fill if the field is empty (pre-populated with username)
+   *   3. Professional Role — native <select>: pick index 1 (first real option, skip placeholder)
+   *   4. Professional Bio — Lexical rich-text editor
+   */
+  async fillProfessionalBackground(): Promise<void> {
+    Logger.step('Filling Professional Background tab');
+
+    // 1. Upload profile photo
+    await this.uploadProfilePhoto(APP_CONSTANTS.DUMMY_PROFILE_IMAGE_PATH);
+
+    // 2. Display name — enter only if field is empty
+    const currentName = await this.displayNameInput.inputValue();
+    if (!currentName || currentName.trim() === '') {
+      Logger.info('Display name is empty — filling with generated name');
+      await this.displayNameInput.fill(
+        `${DataGenerator.firstName()} ${DataGenerator.lastName()}`
+      );
+    } else {
+      Logger.info(`Display name already set: "${currentName}" — skipping`);
+    }
+
+    // 3. Professional Role — native <select>
+    //    index 0 = placeholder "Select your Background Professional Role..."
+    //    index 1 = first real option (e.g. "Licensed Therapist")
+    Logger.step('Selecting Professional Role');
+    await this.professionalRoleSelect.selectOption({ index: 1 });
+    Logger.success('Professional Role selected');
+
+    // 4. Professional Bio — Lexical rich-text editor
+    Logger.step('Filling Professional Bio');
+    await this.professionalBioInput.click();
+    await this.page.keyboard.type(DataGenerator.description());
+    Logger.success('Professional Bio filled');
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     TAB 3 — PRICING MODEL (CONDITIONAL)
+  ══════════════════════════════════════════════════════════ */
+
+  /**
+   * Returns true if the Pricing Model tab is currently active.
+   *
+   * Detection strategy: Checks for the presence of the "Pricing Model" heading.
+   */
+  async isPricingModelVisible(): Promise<boolean> {
+    try {
+      // Use a shorter timeout as this is a conditional check
+      await this.pricingModelHeading.waitFor({ state: 'visible', timeout: 5_000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Selects the "Free" pricing model on Tab 3.
+   */
+  async selectFreePricing(): Promise<void> {
+    Logger.step('Selecting "Free" Pricing Model');
+    await this.freePricingOption.click();
+    Logger.success('Free pricing model selected');
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     NAVIGATION ACTIONS
+  ══════════════════════════════════════════════════════════ */
+
+  /**
+   * Clicks the "Continue" button to advance to the next tab.
+   * Used after Tab 1 (→ Tab 2 or Tab 3) and after Tab 2 (→ Tab 3).
+   */
+  async clickContinue(): Promise<void> {
+    Logger.step('Clicking Continue');
+    await this.continueButton.waitFor({ state: 'visible', timeout: 10_000 });
+    await this.robustClick(this.continueButton);
+  }
+
+  /**
+   * Clicks the "Launch Group" button on the Review & Submit tab (Tab 3).
+   * Asserts the button is enabled before clicking to surface form validation failures early.
+   */
+  async launchGroup(): Promise<void> {
+    Logger.step('Clicking Launch Group');
+    // Tab 3 transition can be slow in CI, wait up to 30s
+    await this.launchGroupButton.waitFor({ state: 'visible', timeout: 30_000 });
+    await expect(this.launchGroupButton).toBeEnabled({ timeout: 15_000 });
+    await this.robustClick(this.launchGroupButton);
   }
 }

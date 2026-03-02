@@ -89,16 +89,23 @@ export const UI_CONSTANTS = {
         CREATE: {
             INPUTS: {
                 NAME: 'Group name',
-                SCHEDULE: 'Group Schedule'
+                SCHEDULE: 'Group Schedule',            // retained — not in updated flow
+                DISPLAY_NAME: 'displayName',           // name attr — Professional Background tab (DOM-verified)
+                PROFESSIONAL_ROLE: 'professionalRole', // name attr — Professional Background tab (DOM-verified)
             },
             BUTTONS: {
-                SUBMIT_GROUP: 'Submit Group',
-                SELECT_TAGS: 'Select Tags',
-                DONE: 'Done',
-                CONTINUE: 'Continue to Review & Submit'
+                SUBMIT_GROUP: 'Submit Group',          // retained for compatibility
+                SELECT_TAGS: 'Select Tags',            // retained for compatibility
+                DONE: 'Done',                          // retained for compatibility
+                CONTINUE: 'Continue',                  // Tab 1 & Tab 2 navigation button (DOM-verified)
+                LAUNCH_GROUP: 'Launch Group',          // Tab 3 final submit button (DOM-verified)
+                UPLOAD_PHOTO: 'Upload Photo',          // Profile photo trigger button (DOM-verified)
             },
             TEXT: {
-                DESCRIPTION_LABEL: 'let us know what your group is about'
+                DESCRIPTION_LABEL: 'Group Description',       // updated to match actual DOM label
+                COVER_IMAGE_LABEL: 'Cover Image',             // Tab 1 cover image field label (DOM-verified)
+                PHOTO_PROFILE_LABEL: 'Photo Profile',         // Tab 2 profile photo field label (DOM-verified)
+                PROFESSIONAL_BIO_LABEL: 'Professional Bio',   // Tab 2 bio field label (DOM-verified)
             }
         }
     },
