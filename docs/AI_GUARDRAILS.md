@@ -35,7 +35,7 @@ Never suggest:
 - replacing Playwright expect with custom assertion frameworks.
 
 ================================================
-NO HARDCODED VALUES
+NO HARDCODED VALUES 
 ================================================
 
 Do NOT introduce:
