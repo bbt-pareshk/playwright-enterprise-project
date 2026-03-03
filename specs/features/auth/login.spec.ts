@@ -6,6 +6,7 @@ import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { Logger } from '../../../lib/utils/Logger';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
+import { AuthHelper } from '../../../lib/helpers/AuthHelper';
 
 const TEST_ROLE = process.env.TEST_ROLE;
 
@@ -42,6 +43,26 @@ test.describe('Login – Single User', () => {
       await loginAs(ROLES.MEMBER);
 
       await AssertionHelper.verifyDashboardLoaded(page);
+    }
+  );
+
+  test(
+    'Verify Logout functionality from Dashboard',
+    { tag: ['@smoke', '@critical'] },
+    async ({ loginAs, page }) => {
+      // 1. Login as Member
+      await loginAs(ROLES.MEMBER);
+      await AssertionHelper.verifyDashboardLoaded(page);
+
+      // 2. Perform Logout
+      Logger.step('Performing Logout from Dashboard');
+      await AuthHelper.logout(page);
+
+      // 3. Verify redirection to Login page
+      const loginPage = new LoginPage(page);
+      await loginPage.verifyLoginPageVisible();
+
+      Logger.success('Logout successful: User redirected to Login page.');
     }
   );
 

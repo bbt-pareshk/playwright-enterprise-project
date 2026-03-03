@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { APP_CONSTANTS } from '../lib/data/constants/app-constants';
 
 /**
  * Enterprise Environment Configuration Loader
@@ -78,6 +79,10 @@ export const ENV = {
   SKIP_LEADER_AUTH: getBoolFlag('SKIP_LEADER_AUTH'),
   TEST_ROLE: process.env.TEST_ROLE,
   ALLOW_CHAT: getBoolFlag('ALLOW_CHAT'),
+
+  // OTP Bypass Configuration (Sync'd with backend)
+  USE_OTP_BYPASS: getBoolFlag('USE_OTP_BYPASS'),
+  BYPASS_OTP_VALUE: APP_CONSTANTS.AUTH.OTP_BYPASS.BYPASS_OTP_VALUE,
 
   // Backward Compatibility (Maintains compatibility with tests and fixtures)
   USERS: {

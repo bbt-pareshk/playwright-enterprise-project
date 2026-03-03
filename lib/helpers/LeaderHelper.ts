@@ -2,7 +2,7 @@ import { Page, BrowserContext, expect } from '@playwright/test';
 import { RegistrationPage } from '../pages/auth/RegistrationPage';
 import { WelcomePage } from '../pages/auth/WelcomePage';
 import { OnboardingPage } from '../pages/auth/OnboardingPage';
-import { MailinatorPage } from '../pages/utils/MailinatorPage';
+import { VerificationService } from '../utils/VerificationService';
 import { AssertionHelper } from './AssertionHelper';
 import { MESSAGES } from '../data/constants/messages';
 import { APP_CONSTANTS } from '../data/constants/app-constants';
@@ -34,11 +34,8 @@ export class LeaderHelper {
         await registrationPage.clickCreateAccount();
         await registrationPage.waitForOTPPage();
 
-        // OTP Fetch
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+        // OTP Fetch (Handles Bypass vs Real)
+        const otp = await VerificationService.getOTP(page, email);
 
         // Verification
         await page.bringToFront();

@@ -3,7 +3,7 @@ import { LoginPage } from '../pages/auth/LoginPage';
 import { RegistrationPage } from '../pages/auth/RegistrationPage';
 import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage';
 import { LogoutPage } from '../pages/auth/LogoutPage';
-import { MailinatorPage } from '../pages/utils/MailinatorPage';
+import { VerificationService } from '../utils/VerificationService';
 import { NavigationHelper } from './NavigationHelper';
 import { DataGenerator } from '../utils/DataGenerator';
 import { RuntimeStore } from '../utils/RuntimeStore';
@@ -139,15 +139,8 @@ export class AuthHelper {
             return;
         }
 
-        // Pixel Perfect Integration: Wait for OTP page to be ready before Mailinator
-        await registrationPage.waitForOTPPage();
-
-        // Capture OTP via Mailinator
-        const mailinatorTab = await page.context().newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
-
+        // Capture OTP via VerificationService (Handles Bypass vs Real)
+        const otp = await VerificationService.getOTP(page, email);
 
         // Complete Verification
         await registrationPage.verifyEmailWithOTP(otp);

@@ -2,7 +2,7 @@ import { Page, BrowserContext, expect } from '@playwright/test';
 import { RegistrationPage } from '../pages/auth/RegistrationPage';
 import { WelcomePage } from '../pages/auth/WelcomePage';
 import { OnboardingPage } from '../pages/auth/OnboardingPage';
-import { MailinatorPage } from '../pages/utils/MailinatorPage';
+import { VerificationService } from '../utils/VerificationService';
 import { AssertionHelper } from './AssertionHelper';
 import { MESSAGES } from '../data/constants/messages';
 import { Logger } from '../utils/Logger';
@@ -37,13 +37,11 @@ export class MemberHelper {
      * Step 2: Fetches OTP from Mailinator and verifies it on the OTP page.
      */
     static async verifyEmailWithOTP(page: Page, context: BrowserContext, email: string) {
-        Logger.step(`Verifying email via Mailinator for: ${email}`);
+        Logger.step(`Verifying email for: ${email}`);
         const registrationPage = new RegistrationPage(page);
 
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+        // Capture OTP via VerificationService (Handles Bypass vs Real)
+        const otp = await VerificationService.getOTP(page, email);
 
         await page.bringToFront();
         await registrationPage.verifyEmailWithOTP(otp);

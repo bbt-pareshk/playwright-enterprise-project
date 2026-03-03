@@ -5,7 +5,7 @@ import { OnboardingPage } from '../../../lib/pages/auth/OnboardingPage';
 import { HostingPlanPage } from '../../../lib/pages/hosting/HostingPlanPage';
 import { StripePage } from '../../../lib/pages/payment/StripePage';
 import { PaymentSuccessPopup } from '../../../lib/pages/payment/PaymentSuccessPopup';
-import { MailinatorPage } from '../../../lib/pages/utils/MailinatorPage';
+import { VerificationService } from '../../../lib/utils/VerificationService';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { ROUTE_PATHS } from '../../../config/urls';
@@ -43,11 +43,8 @@ test.describe.serial('Leader Full Flow - Multi-Group ($49) @smoke @critical @lea
         await registrationPage.waitForOTPPage();
     });
 
-    test('TC-LMG-02: Verify email via Mailinator OTP', async () => {
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+    test('TC-LMG-02: Verify email via OTP', async () => {
+        otp = await VerificationService.getOTP(page, email);
 
         // Bring main page to front after multi-tab operation
         await page.bringToFront();

@@ -27,11 +27,11 @@ export class PaymentHelper {
     /**
      * Fills Stripe payment details and submits.
      */
-    static async fillStripeAndPay(page: Page) {
+    static async fillStripeAndPay(page: Page, options?: { cardNumber?: string; expiry?: string; cvc?: string; postalCode?: string }) {
         Logger.step('Completing Stripe Payment');
         const stripePage = new StripePage(page);
         await stripePage.verifyStripeFormVisible();
-        await stripePage.fillPaymentDetails();
+        await stripePage.fillPaymentDetails(options);
         await stripePage.submitPayment();
         Logger.success('Stripe payment submitted');
     }

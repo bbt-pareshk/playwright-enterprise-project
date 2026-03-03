@@ -1,7 +1,7 @@
 import { test, expect } from '../../../lib/fixtures/index';
 import { RegistrationPage } from '../../../lib/pages/auth/RegistrationPage';
 import { WelcomePage } from '../../../lib/pages/auth/WelcomePage';
-import { MailinatorPage } from '../../../lib/pages/utils/MailinatorPage';
+import { VerificationService } from '../../../lib/utils/VerificationService';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { URLS } from '../../../config/urls';
@@ -53,10 +53,7 @@ test.describe.serial('Registration and Onboarding Flow', () => {
         await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 20000 });
         await registrationPage.waitForOTPPage();
 
-        const mailinatorPage = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorPage);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorPage.close();
+        const otp = await VerificationService.getOTP(page, email);
 
         await page.bringToFront();
         await registrationPage.verifyEmailWithOTP(otp);
@@ -295,10 +292,7 @@ test.describe.serial('Registration - Resend OTP', () => {
         await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.OTP_RESENT, 'i'));
 
         // 4. Verify new OTP is received in Mailinator
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const newOtp = await mailinator.getOTPFromEmail(resendEmail);
-        await mailinatorTab.close();
+        const newOtp = await VerificationService.getOTP(page, resendEmail);
 
         // 5. Use the new OTP to complete verification — proves resend delivered a valid code
         await registrationPage.verifyEmailWithOTP(newOtp);

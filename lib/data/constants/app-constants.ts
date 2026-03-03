@@ -23,6 +23,15 @@ export const APP_CONSTANTS = {
     // Test Metadata
     TEST_PREFIX: 'PW',
 
+    // Auth related constants
+    AUTH: {
+        OTP_BYPASS: {
+            PREFIX: 'pw_auto_mh',
+            STANDARD_PREFIX: 'mh',
+            BYPASS_OTP_VALUE: '456321'
+        }
+    },
+
     // Test Data related constants
     TEST_DATA: {
         CHAT_MESSAGE_PREFIX: 'Testing Chat Input Field - ',

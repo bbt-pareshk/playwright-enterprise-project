@@ -101,13 +101,27 @@ Focus on:
 STRICT INTERACTION & EXECUTION POLICY
 ================================================
 
-Do not apply any fixes or changes directly unless given explicit permission for a specific task. If you encounter an issue, first inform the user of:
-1. What issue you are facing
-2. Why it is happening (your analysis)
-3. How you propose to fix it
+1) NO INDEPENDENT ACTION: Do not apply any fixes or changes directly. You must get explicit permission for every specific task.
 
-Share a brief summary, and wait for confirmation before taking any action. 
-The user will review the details and guide you on what needs to be done and how, and will assist further if required.
+2) ONE-SHOT FAILURE POLICY: If a test or command fails ONCE, do not try to re-run it or fix it yourself. Stop immediately.
+
+3) REPORTING STANDARD: Provide a "Point-to-Point" simple report. Do not make it unnecessarily long.
+   - What failed (Point 1, 2, 3...)
+   - Visual Evidence: Screenshots (if applicable) and Error Logs
+   - Analysis: Your specific assumptions/reasons for the failure
+   - Proposal: How you plan to fix it
+
+4) NO ASSUMPTIONS: Every proposal must be based on evidence from logs or code, not "guesses".
+
+================================================
+SESSION INITIATION PROTOCOL
+================================================
+
+IMPORTANT: At the start of every new session, the USER will state: "Check and review AI_Guard doc".
+Upon receiving this message, you MUST:
+1) Read this `AI_GUARDRAILS.md` file immediately.
+2) Confirm understanding of these rules.
+3) Follow these steps for every subsequent chat, command, or action without being reminded again.
 
 ================================================
 ENVIRONMENTAL NOISE POLICY

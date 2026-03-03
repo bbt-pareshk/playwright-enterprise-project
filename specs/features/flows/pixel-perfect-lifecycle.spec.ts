@@ -5,7 +5,7 @@ import { PaymentHelper } from '../../../lib/helpers/PaymentHelper';
 import { GroupHelper } from '../../../lib/helpers/GroupHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { RegistrationPage } from '../../../lib/pages/auth/RegistrationPage';
-import { MailinatorPage } from '../../../lib/pages/utils/MailinatorPage';
+import { VerificationService } from '../../../lib/utils/VerificationService';
 import { MESSAGES } from '../../../lib/data/constants/messages';
 import { Logger } from '../../../lib/utils/Logger';
 
@@ -50,11 +50,8 @@ test.describe.serial('Pixel Perfect Lifecycle Flow @smoke @critical @leader @e2e
         await registrationPage.waitForOTPPage();
     });
 
-    test('LIFECYCLE-02: OTP Verification via Mailinator', async () => {
-        const mailinatorTab = await context.newPage();
-        const mailinator = new MailinatorPage(mailinatorTab);
-        const otp = await mailinator.getOTPFromEmail(email);
-        await mailinatorTab.close();
+    test('LIFECYCLE-02: OTP Verification', async () => {
+        const otp = await VerificationService.getOTP(page, email);
 
         await page.bringToFront();
         const registrationPage = new RegistrationPage(page);

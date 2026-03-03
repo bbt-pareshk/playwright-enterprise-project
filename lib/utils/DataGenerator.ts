@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import { APP_CONSTANTS } from '../data/constants/app-constants';
+import { ENV } from '../../config/env';
 
 /* -------------------------------------------------------
  * Enterprise DataGenerator Utility
@@ -134,8 +135,14 @@ export class DataGenerator {
     domain = APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN,
     entropyLength = 4
   ): string {
+    // Enterprise Bypass Logic: Determine prefix based on flag and environment
+    const isBypassActive = ENV.USE_OTP_BYPASS && ENV.CURRENT === 'staging';
+    const prefix = isBypassActive
+      ? APP_CONSTANTS.AUTH.OTP_BYPASS.PREFIX
+      : APP_CONSTANTS.AUTH.OTP_BYPASS.STANDARD_PREFIX;
+
     // Mailinator UI truncates after 25 chars. 
-    // Format: em_[DDHHMMSS][worker][retry][rnd]
+    // Format: [prefix]_[DDHHMMSS][worker][retry][rnd]
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const day = pad(now.getDate());
@@ -150,8 +157,7 @@ export class DataGenerator {
 
     const rnd = this.generateRandomString(entropyLength, entropyLength);
 
-    // Total approx 17-20 chars: "mh_26105530w0r0abcd"
-    return `mh_${day}${hhmmss}${info.worker}${info.retry}${rnd}@${domain}`.toLowerCase();
+    return `${prefix}_${day}${hhmmss}${info.worker}${info.retry}${rnd}@${domain}`.toLowerCase();
   }
   /* =====================================================
      Compatibility Methods (DO NOT REMOVE)

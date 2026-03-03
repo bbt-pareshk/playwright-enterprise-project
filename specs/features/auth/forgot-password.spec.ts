@@ -64,28 +64,47 @@ test.describe('Forgot Password Flow', () => {
             await mailinator.openLatestEmail(60000, ['reset', 'password', 'forgot']);
 
             // Click the reset link and capture the new tab that opens
+            Logger.info('Clicking Reset Link in Mailinator...');
             const [resetPage] = await Promise.all([
-                context.waitForEvent('page', { timeout: 40000 }),
+                context.waitForEvent('page', { timeout: 60000 }),
                 mailinator.clickForgotPasswordResetLink()
             ]);
 
+            Logger.success(`Reset link clicked. New page opened: ${resetPage.url()}`);
             await mailinatorPageInstance.close();
 
             // 5. Complete Password Reset in New Tab
-            Logger.step('Completing password reset in new tab');
-            await resetPage.waitForLoadState('domcontentloaded');
-            const resetPasswordPage = new ResetPasswordPage(resetPage);
-            await resetPasswordPage.verifyResetPasswordPageVisible();
+            try {
+                Logger.step('Completing password reset in new tab');
+                await resetPage.waitForLoadState('load'); // Wait for full page load
+                await resetPage.bringToFront();
 
-            const newPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.TEST;
-            await resetPasswordPage.enterPassword(newPassword);
-            await resetPasswordPage.enterConfirmPassword(newPassword);
-            await resetPasswordPage.clickConfirmPasswordButton();
+                const resetPasswordPage = new ResetPasswordPage(resetPage);
 
-            // 6. Verify Password Updated Success Message
-            await AssertionHelper.verifyToastMessage(resetPage, MESSAGES.AUTH.RESET_PASSWORD.SUCCESS);
+                Logger.info('Verifying Reset Password page is visible...');
+                await resetPasswordPage.verifyResetPasswordPageVisible();
 
-            Logger.success('Forgot Password test completed successfully');
+                const newPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.TEST;
+                await resetPasswordPage.enterPassword(newPassword);
+                await resetPasswordPage.enterConfirmPassword(newPassword);
+
+                Logger.info('Submitting new password...');
+                await resetPasswordPage.clickConfirmPasswordButton();
+
+                // 6. Verify Password Updated Success Message
+                Logger.info('Verifying success message toast...');
+                await AssertionHelper.verifyToastMessage(resetPage, MESSAGES.AUTH.RESET_PASSWORD.SUCCESS);
+
+                Logger.success('Forgot Password test completed successfully');
+            } catch (error: any) {
+                Logger.error(`Failure during Reset Password completion: ${error.message}`);
+                // Capture additional state info on failure
+                const currentUrl = resetPage.url();
+                const pageContent = await resetPage.innerText('body').catch(() => 'N/A');
+                Logger.info(`Failure URL: ${currentUrl}`);
+                Logger.info(`Page Content Snippet: ${pageContent.substring(0, 200)}`);
+                throw error;
+            }
         }
     );
 });
