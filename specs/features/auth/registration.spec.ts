@@ -101,7 +101,7 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
 });
 
 test.describe('Registration - Validation', () => {
-    test('Verify minimum password length validation on Registration', { tag: ['@regression'] }, async ({ page }) => {
+    test('Verify minimum password length validation on Registration', { tag: ['@regression', '@member'] }, async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -127,7 +127,7 @@ test.describe('Registration - Validation', () => {
         await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
     });
 
-    test('Verify maximum password length validation on Registration', { tag: ['@regression'] }, async ({ page }) => {
+    test('Verify maximum password length validation on Registration', { tag: ['@regression', '@member'] }, async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -157,7 +157,7 @@ test.describe('Registration - Validation', () => {
         await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
     });
 
-    test('Verify registration with already registered email', async ({ page }) => {
+    test('Verify registration with already registered email', { tag: ['@regression', '@member'] }, async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -178,7 +178,7 @@ test.describe('Registration - Validation', () => {
         await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
     });
 
-    test('Verify first and last name field validation (only letters allowed)', { tag: ['@regression'] }, async ({ page }) => {
+    test('Verify first and last name field validation (only letters allowed)', { tag: ['@regression', '@member'] }, async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -205,7 +205,7 @@ test.describe('Registration - Validation', () => {
         await registrationPage.expectCreateButtonDisabled();
     });
 
-    test('Verify mandatory field validation (First Name and Last Name)', { tag: ['@regression', '@smoke'] }, async ({ page }) => {
+    test('Verify mandatory field validation (First Name and Last Name)', { tag: ['@smoke', '@member'] }, async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -229,7 +229,7 @@ test.describe('Registration - Validation', () => {
 test.describe('Registration - Password Visibility', () => {
 
     test('Verify password visibility can be toggled in Registration',
-        { tag: ['@regression'] }, async ({ page }) => {
+        { tag: ['@regression', '@member'] }, async ({ page }) => {
             const registrationPage = new RegistrationPage(page);
 
             // 1. Navigate to Registration page
@@ -262,7 +262,7 @@ test.describe.serial('Registration - Resend OTP', () => {
         await context.close();
     });
 
-    test('Verify Resend OTP delivers a new valid code', async () => {
+    test('Verify Resend OTP delivers a new valid code', { tag: ['@regression', '@member'] }, async () => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration and create fresh account

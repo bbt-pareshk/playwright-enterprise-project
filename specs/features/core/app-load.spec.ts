@@ -6,11 +6,10 @@ import { LoginPage } from '../../../lib/pages/auth/LoginPage';
    App Load – Core
    Verifies staging application load and Login page visibility.
 ========================================================= */
-test.describe('App Load', () => {
+test.describe('App Load', { tag: ['@smoke', '@member'] }, () => {
 
   test(
     'Application loads successfully',
-    { tag: ['@smoke'] },
     async ({ page }) => {
       const loginPage = new LoginPage(page);
 

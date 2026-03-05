@@ -16,10 +16,10 @@ import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { MESSAGES } from '../../../lib/data/constants/messages';
 
-test.describe('Forgot Password Flow', () => {
+test.describe('Forgot Password Flow', { tag: ['@member'] }, () => {
 
     test('User can request password reset and update password successfully',
-        { tag: ['@smoke', '@regression'] },
+        { tag: ['@smoke'] },
         async ({ page, context }) => {
             // Enterprise flow with Mailinator + tabs needs more time
             test.setTimeout(180_000);

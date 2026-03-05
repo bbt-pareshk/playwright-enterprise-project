@@ -29,12 +29,12 @@ test.describe('Hosting Plan Selection', { tag: ['@smoke', '@leader'] }, () => {
     });
 
     // DOM-verified (2026-02-24): 'Get Group Listing' is the Free plan CTA on the hosting-plan page
-    test('"Get Group Listing" CTA on Free plan is clickable', { tag: ['@regression'] }, async ({ leaderPage }) => {
+    test('"Get Group Listing" CTA on Free plan is clickable', async ({ leaderPage }) => {
         const freeCta = leaderPage.getByRole('button', { name: 'Get Group Listing', exact: true });
         await expect(freeCta).toBeEnabled();
     });
 
-    test('Clicking "Get Group Listing" shows Free group popup', { tag: ['@regression'] }, async ({ leaderPage }) => {
+    test('Clicking "Get Group Listing" shows Free group popup', async ({ leaderPage }) => {
         const hostingPage = new HostingPlanPage(leaderPage);
         await hostingPage.selectFreePlan();
 

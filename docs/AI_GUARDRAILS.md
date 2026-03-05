@@ -43,9 +43,10 @@ Do NOT introduce:
 - hardcoded URLs
 - hardcoded UI text
 - hardcoded roles
+- test file paths / asset strings
 - reusable string literals
 
-Use centralized constants instead.
+Use centralized constants (app-constants.ts) instead.
 
 EXCEPTION:
 
@@ -128,6 +129,36 @@ ENVIRONMENTAL NOISE POLICY
 ================================================
 
 If a test is blocked by external environmental factors (e.g. OTP rate limits > 120s), prefer a "Logged Force Pass" with a [WARN] message over a hard "Skip" or "Fail". This keeps the pipeline green while alerting the user to real environmental constraints in the logs.
+
+================================================
+TECHNICAL CONFLICT PREVENTION
+================================================
+
+1) TRACING: Do NOT manually start/stop tracing in role fixtures. Playwright auto-manages this via config. Manual calls cause "Tracing has been already started" crashes.
+
+2) VIDEO: Custom role contexts (memberPage/leaderPage) do not auto-attach video. You MUST explicitly call `testInfo.attach('video', ...)` after context closure for HTML/Allure visibility.
+
+================================================
+TEST NAMING CONVENTION
+================================================
+
+1) GENERAL TESTS: Use "Outcome-based" naming (e.g., "Leader user can login successfully"). Start with a capital letter.
+
+2) FLOW/E2E TESTS: Use "Sequential Step" naming (e.g., "Step 1: Registration - Submit form"). Format: "Step X: [Area] - [Action]".
+
+3) DESCRIBE BLOCKS: Summarize the feature or functional group (e.g., "Login – Single User").
+
+================================================
+TAGGING SYSTEM
+================================================
+
+1) PRIORITY: `@smoke` (critical path), `@regression` (full coverage).
+
+2) PERSONA: `@leader`, `@member`.
+
+3) FEATURES: `@chat-widget`, `@onboarding`, `@payment`.
+
+4) SYNTAX: Always use the Playwright object syntax: `{ tag: ['@smoke', '@leader'] }`.
 
 ================================================
 CAREFUL, TESTED MINDSET

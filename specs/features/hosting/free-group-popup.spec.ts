@@ -27,7 +27,7 @@ test.describe('Free Group Confirmation Popup', { tag: ['@smoke', '@leader'] }, (
         await expect(modal.getByRole('button', { name: 'Create Your Group', exact: true })).toBeVisible();
     });
 
-    test('Clicking popup CTA proceeds to dashboard', { tag: ['@regression'] }, async ({ leaderPage }) => {
+    test('Clicking popup CTA proceeds to dashboard', async ({ leaderPage }) => {
         const freePopup = new FreeGroupPopup(leaderPage);
         await freePopup.clickGoToGroup();
 

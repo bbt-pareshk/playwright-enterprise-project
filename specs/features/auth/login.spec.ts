@@ -13,7 +13,7 @@ const TEST_ROLE = process.env.TEST_ROLE;
 /* =========================================================
    Login – Single User (Smoke + Regression)
  ========================================================= */
-test.describe('Login – Single User', { tag: ['@smoke', '@regression'] }, () => {
+test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
 
   test(
     'Leader user can login successfully',
@@ -37,6 +37,7 @@ test.describe('Login – Single User', { tag: ['@smoke', '@regression'] }, () =>
 
   test(
     'Verify Logout functionality from Dashboard',
+    { tag: ['@member'] },
     async ({ loginAs, page }) => {
       // 1. Login as Member
       await loginAs(ROLES.MEMBER);
@@ -54,7 +55,7 @@ test.describe('Login – Single User', { tag: ['@smoke', '@regression'] }, () =>
     }
   );
 
-  test.describe('Invalid Login Scenarios', () => {
+  test.describe('Invalid Login Scenarios', { tag: ['@member'] }, () => {
     test(
       'Invalid Credentials - Verify error message appears',
       async ({ page }) => {
@@ -118,7 +119,7 @@ test.describe('Login – Single User', { tag: ['@smoke', '@regression'] }, () =>
     );
   });
 
-  test.describe('Advanced Login Features', () => {
+  test.describe('Advanced Login Features', { tag: ['@member'] }, () => {
     test(
       'Social Auth (Google) navigation',
       async ({ page }) => {
