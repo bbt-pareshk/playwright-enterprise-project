@@ -45,7 +45,7 @@ export class PaymentHelper {
         await successPopup.verifyVisible();
 
         // Handle potential auto-dismiss or fast redirect
-        const isPopupVisible = await page.locator('.chakra-modal__content, section[role="dialog"]').isVisible({ timeout: 5000 }).catch(() => false);
+        const isPopupVisible = await page.locator('dialog, .chakra-modal__content, section[role="dialog"]').isVisible({ timeout: 5000 }).catch(() => false);
         if (isPopupVisible) {
             await successPopup.clickDoThisLater();
         }

@@ -74,15 +74,18 @@ export class StripePage extends BasePage {
         // 3. CARD NUMBER
         // Fill fields with minor delays for stability (Sequential typing prevents Stripe validation race conditions)
         await number.click();
+        await number.clear();
         await number.pressSequentially(details.cardNumber, { delay: 40 });
 
         // 4. EXPIRY
         await expiry.click();
+        await expiry.clear();
         await expiry.pressSequentially(details.expiry, { delay: 40 });
 
         // 5. CVC 
         // Kept last as typing the final digit often triggers Stripe's background submission hook
         await cvc.click();
+        await cvc.clear();
         await cvc.pressSequentially(details.cvc, { delay: 40 });
 
         Logger.success('Stripe payment details filled');

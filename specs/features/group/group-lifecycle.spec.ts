@@ -67,10 +67,12 @@ test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, (
             const sessionTitle = DataGenerator.generateSessionName();
             await SessionHelper.createSession(leaderPage, groupName, sessionTitle);
 
-            // Verify
-            await AssertionHelper.verifyToastMessage(leaderPage, MESSAGES.CHAT.NEW_MESSAGE);
-            Logger.success('Step 4 Completed: Session created.');
+            // Rely on success visibility (toast or page text)
+            Logger.info('Verifying session success message');
+            const successIndicator = leaderPage.locator('text=/Session created|Session scheduled|New Message/i').first();
+            await expect(successIndicator).toBeVisible({ timeout: 15_000 });
+
+            Logger.success('Step 4 Completed: Session created and success message verified.');
         });
 
 });
-

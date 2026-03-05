@@ -25,7 +25,7 @@ export class PaymentSuccessPopup extends BasePage {
         super(page);
 
         // Locators based on Chakra UI modal structure
-        this.modalContainer = page.locator('.chakra-modal__content, section[role="dialog"]').first();
+        this.modalContainer = page.locator('dialog, .chakra-modal__content, section[role="dialog"]').first();
         this.successHeading = this.modalContainer.getByText(new RegExp(PaymentSuccessPopup.LABELS.HEADING, 'i'));
         this.doThisLaterButton = this.modalContainer.getByRole('button', { name: /do this later|do this later/i });
         this.setUpGroupButton = this.modalContainer.getByRole('button', { name: new RegExp(PaymentSuccessPopup.LABELS.SET_UP_GROUP, 'i') });

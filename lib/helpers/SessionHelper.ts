@@ -33,7 +33,8 @@ export class SessionHelper {
             description: APP_CONSTANTS.TEST_DATA.SESSION.DEFAULT_DESCRIPTION,
         });
         await createSessionModal.submit();
+        await createSessionModal.expectSessionCreated();
 
-        Logger.success(`Session creation flow initiated for: ${sessionTitle}`);
+        Logger.success(`Session creation flow completed for: ${sessionTitle}`);
     }
 }

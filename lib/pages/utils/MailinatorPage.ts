@@ -93,7 +93,8 @@ export class MailinatorPage extends BasePage {
                 }
                 Logger.warn(`Attempt ${attempts}/${maxAttempts} failed: ${error.message}. Refreshing inbox...`);
                 await this.page.reload({ waitUntil: 'domcontentloaded' });
-                await this.page.waitForTimeout(2000);
+                // Slow down polling to allow for external delivery delays
+                await this.page.waitForTimeout(10000);
             }
         }
     }

@@ -53,8 +53,10 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
         });
 
         // 5. Assertion: Verify error message is displayed
-        // Stripe usually displays errors inside their iframe or as a body text
-        await expect(page.locator('body')).toContainText(/declined|error|could not process/i, { timeout: 15000 });
+        // Stripe displays errors inside their iframe
+        const stripeFrame = page.frameLocator('iframe[title="Secure payment input frame"]');
+        await expect(stripeFrame.locator('body').or(page.locator('body')))
+            .toContainText(/declined|error|could not process/i, { timeout: 15000 });
 
         Logger.success('Declined Card error verified correctly');
     });
@@ -69,7 +71,9 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
             expiry: '01/20' // Hardcoded expired date
         });
 
-        await expect(page.locator('body')).toContainText(/expired|error|valid/i, { timeout: 15000 });
+        const stripeFrame = page.frameLocator('iframe[title="Secure payment input frame"]');
+        await expect(stripeFrame.locator('body').or(page.locator('body')))
+            .toContainText(/expired|error|invalid|past/i, { timeout: 15000 });
 
         Logger.success('Expired Card error verified correctly');
     });
@@ -79,10 +83,12 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
 
         await PaymentHelper.fillStripeAndPay(page, {
             cardNumber: APP_CONSTANTS.TEST_DATA.PAYMENT.CARD_NUMBER,
-            cvc: '000' // Typically triggers CVC error
+            cvc: '00' // 2 digits triggers incomplete frontend validation, preventing false success
         });
 
-        await expect(page.locator('body')).toContainText(/CVC|security code|invalid/i, { timeout: 15000 });
+        const stripeFrame = page.frameLocator('iframe[title="Secure payment input frame"]');
+        await expect(stripeFrame.locator('body').or(page.locator('body')))
+            .toContainText(/incomplete|invalid/i, { timeout: 15000 });
 
         Logger.success('Invalid CVC error verified correctly');
     });

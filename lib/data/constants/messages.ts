@@ -14,7 +14,7 @@ export const MESSAGES = {
             EMAIL_CONFIRMED: 'Email confirmed!',
             PASSWORD_VISIBILITY_ERROR: 'Password visibility mismatch: expected type',
             PASSWORD_LENGTH_ERROR: 'Password must be at least 8 characters',
-            EMAIL_UNAVAILABLE: 'email is not available',
+            EMAIL_UNAVAILABLE: 'Email already exists',
             OTP_RESENT: 'email sent',
             FIRST_NAME_INVALID: 'only letters are allowed',
             LAST_NAME_INVALID: 'only letters are allowed',
