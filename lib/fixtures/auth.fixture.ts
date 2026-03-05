@@ -27,33 +27,76 @@ export const test = baseFixture.extend<AuthFixtures>({
     },
 
     memberPage: async ({ browser, playwright, baseURL }, use, testInfo) => {
+        const projectUse = testInfo.project.use;
+
         // Inherit global context options (viewport, timeouts, etc.)
         const options: BrowserContextOptions = {
-            ...testInfo.project.use,
+            ...projectUse,
             storageState: path.resolve(process.cwd(), 'storage/auth/member.json'),
             baseURL: baseURL
         };
 
+        // Manual contexts need explicit recordVideo settings
+        if (projectUse.video && projectUse.video !== 'off') {
+            options.recordVideo = {
+                dir: testInfo.outputPath('videos')
+            };
+        }
+
         const context = await browser.newContext(options);
+
+        // Start tracing manually for isolated context
+        if (projectUse.trace && projectUse.trace !== 'off') {
+            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+        }
+
         await applyEnterpriseContextSettings(context, testInfo);
 
         const page = await context.newPage();
         await use(page);
+
+        // Handle Trace retention on final context
+        if (projectUse.trace && projectUse.trace !== 'off') {
+            const isFailed = testInfo.status !== testInfo.expectedStatus;
+            const shouldRetain = projectUse.trace === 'on' || (projectUse.trace === 'retain-on-failure' && isFailed);
+            await context.tracing.stop({ path: shouldRetain ? testInfo.outputPath('trace.zip') : undefined });
+        }
+
         await context.close();
     },
 
     leaderPage: async ({ browser, playwright, baseURL }, use, testInfo) => {
+        const projectUse = testInfo.project.use;
+
         const options: BrowserContextOptions = {
-            ...testInfo.project.use,
+            ...projectUse,
             storageState: path.resolve(process.cwd(), 'storage/auth/leader.json'),
             baseURL: baseURL
         };
 
+        if (projectUse.video && projectUse.video !== 'off') {
+            options.recordVideo = {
+                dir: testInfo.outputPath('videos')
+            };
+        }
+
         const context = await browser.newContext(options);
+
+        if (projectUse.trace && projectUse.trace !== 'off') {
+            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+        }
+
         await applyEnterpriseContextSettings(context, testInfo);
 
         const page = await context.newPage();
         await use(page);
+
+        if (projectUse.trace && projectUse.trace !== 'off') {
+            const isFailed = testInfo.status !== testInfo.expectedStatus;
+            const shouldRetain = projectUse.trace === 'on' || (projectUse.trace === 'retain-on-failure' && isFailed);
+            await context.tracing.stop({ path: shouldRetain ? testInfo.outputPath('trace.zip') : undefined });
+        }
+
         await context.close();
     },
 });

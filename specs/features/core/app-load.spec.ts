@@ -10,7 +10,7 @@ test.describe('App Load', () => {
 
   test(
     'Application loads successfully',
-    { tag: ['@smoke', '@critical'] },
+    { tag: ['@smoke'] },
     async ({ page }) => {
       const loginPage = new LoginPage(page);
 

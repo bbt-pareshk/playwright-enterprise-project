@@ -13,7 +13,7 @@ import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { RuntimeStore } from '../../../lib/utils/RuntimeStore';
 import { UI_CONSTANTS } from '../../../lib/data/constants/ui-constants';
 
-test.describe.serial('Registration and Onboarding Flow', () => {
+test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }, () => {
     let context: any;
     let page: any;
     let email: string;
@@ -27,7 +27,7 @@ test.describe.serial('Registration and Onboarding Flow', () => {
         await context.close();
     });
 
-    test('Full Journey: Registration to Dashboard @smoke @critical', async () => {
+    test('Full Journey: Registration to Dashboard', async () => {
         const registrationPage = new RegistrationPage(page);
         const onboardingPage = new OnboardingPage(page);
 
@@ -157,7 +157,7 @@ test.describe('Registration - Validation', () => {
         await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
     });
 
-    test('Verify registration with already registered email', { tag: ['@smoke', '@critical'] }, async ({ page }) => {
+    test('Verify registration with already registered email', async ({ page }) => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration page
@@ -229,7 +229,7 @@ test.describe('Registration - Validation', () => {
 test.describe('Registration - Password Visibility', () => {
 
     test('Verify password visibility can be toggled in Registration',
-        { tag: ['@regression', '@optional'] }, async ({ page }) => {
+        { tag: ['@regression'] }, async ({ page }) => {
             const registrationPage = new RegistrationPage(page);
 
             // 1. Navigate to Registration page
@@ -262,7 +262,7 @@ test.describe.serial('Registration - Resend OTP', () => {
         await context.close();
     });
 
-    test('Verify Resend OTP delivers a new valid code', { tag: ['@smoke', '@critical'] }, async () => {
+    test('Verify Resend OTP delivers a new valid code', async () => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration and create fresh account

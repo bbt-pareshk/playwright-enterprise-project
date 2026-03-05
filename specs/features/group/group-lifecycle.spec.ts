@@ -14,7 +14,7 @@ import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 // Combined flow: Create -> Activate -> Configure Membership -> Create Session
 // -----------------------------------------------------------------------------------------
 
-test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, () => {
+test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@leader'] }, () => {
 
     test.beforeEach(async () => {
         // Multi-page enterprise flow needs more time
@@ -24,8 +24,9 @@ test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, (
     // Shared state
     let groupName: string;
 
-    test('Step 1: Create Group',
-        async ({ leaderPage }) => {
+    test('Step 1: Group - Create group',
+        async ({ leaderPage }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'GLC-01' });
             Logger.info('Starting Step 1: Group Creation');
             groupName = DataGenerator.generateGroupName();
 
@@ -36,8 +37,9 @@ test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, (
             Logger.success(`Step 1 Completed: Group ${groupName} created.`);
         });
 
-    test('Step 2: Activate Group (Payment)',
-        async ({ leaderPage }) => {
+    test('Step 2: Payment - Activate group subscription',
+        async ({ leaderPage }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'GLC-02' });
             Logger.info('Starting Step 2: Group Activation');
 
             if (!groupName) throw new Error('Group name not available from previous step.');
@@ -47,8 +49,9 @@ test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, (
             Logger.success('Step 2 Completed: Group activated.');
         });
 
-    test('Step 3: Configure Group Membership',
-        async ({ leaderPage }) => {
+    test('Step 3: Membership - Configure free membership',
+        async ({ leaderPage }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'GLC-03' });
             Logger.info('Starting Step 3: Configure Membership');
 
             if (!groupName) throw new Error('Group name not available');
@@ -58,8 +61,9 @@ test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@critical'] }, (
             Logger.success('Step 3 Completed: Membership configured.');
         });
 
-    test('Step 4: Create Session',
-        async ({ leaderPage }) => {
+    test('Step 4: Session - Create and verify session',
+        async ({ leaderPage }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'GLC-04' });
             Logger.info('Starting Step 4: Create Session');
 
             if (!groupName) throw new Error('Group name not available');

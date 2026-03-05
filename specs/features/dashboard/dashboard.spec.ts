@@ -12,7 +12,7 @@ import { Logger } from '../../../lib/utils/Logger';
 
 test(
   'Dashboard loads successfully for authenticated leader',
-  { tag: ['@smoke', '@critical'] },
+  { tag: ['@smoke', '@leader'] },
   async ({ leaderPage }, testInfo) => {
 
     testInfo.annotations.push(

@@ -14,7 +14,7 @@ import { DataGenerator } from '../../../lib/utils/DataGenerator';
  */
 
 
-test.describe.serial('Chat – Send Message Flow', { tag: ['@smoke', '@critical'] }, () => {
+test.describe.serial('Chat – Send Message Flow', { tag: ['@smoke', '@leader', '@member'] }, () => {
     let groupName: string;
     let chatMessage: string;
 

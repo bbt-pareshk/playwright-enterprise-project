@@ -12,15 +12,22 @@ import { Logger } from '../../../lib/utils/Logger';
  * 
  * Scenario A & B are split into 4 granular steps each for maximum visibility.
  */
-test.describe('Member Lifecycle Flows @smoke @member @e2e', () => {
+test.describe('Member Lifecycle Flows', { tag: ['@smoke', '@member'] }, () => {
 
     test.describe.serial('Scenario A: Full Journey via CONTINUE path', () => {
         let context: any;
         let page: any;
         let email: string;
 
-        test.beforeAll(async ({ browser }) => {
-            context = await browser.newContext();
+        test.beforeAll(async ({ browser }, testInfo) => {
+            const use = testInfo.project.use;
+            context = await browser.newContext({
+                ...use,
+                // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
+                ...(use.video && use.video !== 'off'
+                    ? { recordVideo: { dir: testInfo.outputPath('videos') } }
+                    : {}),
+            });
             page = await context.newPage();
             email = DataGenerator.email();
         });
@@ -29,19 +36,23 @@ test.describe('Member Lifecycle Flows @smoke @member @e2e', () => {
             await context.close();
         });
 
-        test('MEMBER-LC-A1: Fresh Registration Form Submission', async () => {
+        test('Step 1: Registration - Submit form', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-A1' });
             await MemberHelper.submitRegistrationForm(page, email);
         });
 
-        test('MEMBER-LC-A2: Email Verification via Mailinator (OTP)', async () => {
+        test('Step 2: Registration - Verify OTP email', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-A2' });
             await MemberHelper.verifyEmailWithOTP(page, context, email);
         });
 
-        test('MEMBER-LC-A3: Welcome Screen - Role Selection', async () => {
+        test('Step 3: Welcome - Select member role', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-A3' });
             await MemberHelper.selectRoleAndContinue(page);
         });
 
-        test('MEMBER-LC-A4: Onboarding (Continue) & Dashboard Verify', async () => {
+        test('Step 4: Onboarding - Complete via CONTINUE path and verify Dashboard', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-A4' });
             await MemberHelper.completeOnboardingViaContinue(page);
             await MemberHelper.verifyDashboard(page);
         });
@@ -52,8 +63,15 @@ test.describe('Member Lifecycle Flows @smoke @member @e2e', () => {
         let page: any;
         let email: string;
 
-        test.beforeAll(async ({ browser }) => {
-            context = await browser.newContext();
+        test.beforeAll(async ({ browser }, testInfo) => {
+            const use = testInfo.project.use;
+            context = await browser.newContext({
+                ...use,
+                // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
+                ...(use.video && use.video !== 'off'
+                    ? { recordVideo: { dir: testInfo.outputPath('videos') } }
+                    : {}),
+            });
             page = await context.newPage();
             email = DataGenerator.email();
         });
@@ -62,19 +80,23 @@ test.describe('Member Lifecycle Flows @smoke @member @e2e', () => {
             await context.close();
         });
 
-        test('MEMBER-LC-B1: Fresh Registration Form Submission', async () => {
+        test('Step 1: Registration - Submit form', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-B1' });
             await MemberHelper.submitRegistrationForm(page, email);
         });
 
-        test('MEMBER-LC-B2: Email Verification via Mailinator (OTP)', async () => {
+        test('Step 2: Registration - Verify OTP email', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-B2' });
             await MemberHelper.verifyEmailWithOTP(page, context, email);
         });
 
-        test('MEMBER-LC-B3: Welcome Screen - Role Selection', async () => {
+        test('Step 3: Welcome - Select member role', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-B3' });
             await MemberHelper.selectRoleAndContinue(page);
         });
 
-        test('MEMBER-LC-B4: Onboarding (Skip) & Dashboard Verify', async () => {
+        test('Step 4: Onboarding - Complete via SKIP path and verify Dashboard', async ({ }, testInfo) => {
+            testInfo.annotations.push({ type: 'testId', description: 'MEMBER-LC-B4' });
             await MemberHelper.completeOnboardingViaSkip(page);
             await MemberHelper.verifyDashboard(page);
         });

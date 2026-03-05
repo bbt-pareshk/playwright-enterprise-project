@@ -7,11 +7,10 @@ import { Logger } from '../../../lib/utils/Logger';
    Profile – Payment Page Load
    Verifies that the user can access the billing/payment section.
 ========================================================= */
-test.describe('Profile - Payment Section', () => {
+test.describe('Profile - Payment Section', { tag: ['@regression', '@leader'] }, () => {
 
    test(
       'Payment Page Load: Verify profile payment/billing section loads without errors',
-      { tag: ['@regression'] },
       async ({ leaderPage }) => {
          const paymentPage = new ProfilePaymentPage(leaderPage);
 

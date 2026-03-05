@@ -10,13 +10,20 @@ import { Logger } from '../../../lib/utils/Logger';
  * -------------------------------------
  * Validates the paid subscription journey for a Leader.
  */
-test.describe.serial('Leader Full Flow - Active Group ($19) @smoke @critical @leader @e2e', () => {
+test.describe.serial('Leader Flow - Active Group Subscription', { tag: ['@smoke', '@leader'] }, () => {
     let context: any;
     let page: any;
     let email: string;
 
-    test.beforeAll(async ({ browser }) => {
-        context = await browser.newContext();
+    test.beforeAll(async ({ browser }, testInfo) => {
+        const use = testInfo.project.use;
+        context = await browser.newContext({
+            ...use,
+            // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
+            ...(use.video && use.video !== 'off'
+                ? { recordVideo: { dir: testInfo.outputPath('videos') } }
+                : {}),
+        });
         page = await context.newPage();
         email = DataGenerator.email();
     });
@@ -25,27 +32,33 @@ test.describe.serial('Leader Full Flow - Active Group ($19) @smoke @critical @le
         await context.close();
     });
 
-    test('TC-LAG-01: Register new Leader & Verify Email', async () => {
+    test('Step 1: Registration - Create new leader account', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-01' });
         await LeaderHelper.registerNewLeader(page, context, email);
     });
 
-    test('TC-LAG-02: Welcome page -> Role Selection', async () => {
+    test('Step 2: Welcome - Select leader role', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-02' });
         await LeaderHelper.selectRoleAndContinue(page);
     });
 
-    test('TC-LAG-03: Onboarding -> Skip Path to Pricing', async () => {
+    test('Step 3: Onboarding - Skip to Hosting Plan', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-03' });
         await LeaderHelper.completeOnboardingViaSkip(page);
     });
 
-    test('TC-LAG-04: Hosting Plan -> Select Active Plan', async () => {
+    test('Step 4: Hosting Plan - Select Active plan ($19)', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-04' });
         await PaymentHelper.selectActivePlanAndProceed(page);
     });
 
-    test('TC-LAG-05: Stripe Payment -> Full Checkout', async () => {
+    test('Step 5: Payment - Complete Stripe checkout', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-05' });
         await PaymentHelper.fillStripeAndPay(page);
     });
 
-    test('TC-LAG-06: Payment Success -> Redirect to Dashboard', async () => {
+    test('Step 6: Payment Success - Verify redirect to Dashboard', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-06' });
         await PaymentHelper.verifySuccessAndContinue(page);
         await AssertionHelper.verifyDashboardLoaded(page);
     });

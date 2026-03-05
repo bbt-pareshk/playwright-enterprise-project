@@ -10,7 +10,7 @@ test.describe('Groups – Listing', () => {
 
   test(
     'My Group listing loads with correct visibility and status',
-    { tag: ['@smoke', '@critical'] },
+    { tag: ['@smoke', '@member'] },
     async ({ memberPage }, testInfo) => {
 
       testInfo.annotations.push({

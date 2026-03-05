@@ -16,13 +16,20 @@ import { Logger } from '../../../lib/utils/Logger';
  * 2. Navigates to the Hosting Plan page.
  * 3. Runs multiple edge cases (Declined, Expired, etc.) sequentially.
  */
-test.describe.serial('Stripe Payment Validation @smoke @critical @payment @stripe', () => {
+test.describe.serial('Stripe Payment Validation', { tag: ['@regression', '@leader'] }, () => {
     let context: any;
     let page: any;
     let email: string;
 
-    test.beforeAll(async ({ browser }) => {
-        context = await browser.newContext();
+    test.beforeAll(async ({ browser }, testInfo) => {
+        const use = testInfo.project.use;
+        context = await browser.newContext({
+            ...use,
+            // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
+            ...(use.video && use.video !== 'off'
+                ? { recordVideo: { dir: testInfo.outputPath('videos') } }
+                : {}),
+        });
         page = await context.newPage();
         email = DataGenerator.email();
 
@@ -45,7 +52,7 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
         await context.close();
     });
 
-    test('ST-PAY-01: Declined Card (4000...02) - Verify error feedback', async () => {
+    test('Declined Card - Verify error feedback', async () => {
         Logger.step('Testing Declined Card scenario');
 
         await PaymentHelper.fillStripeAndPay(page, {
@@ -61,7 +68,7 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
         Logger.success('Declined Card error verified correctly');
     });
 
-    test('ST-PAY-02: Expired Card - Verify expiry validation feedback', async () => {
+    test('Expired Card - Verify expiry validation feedback', async () => {
         Logger.step('Testing Expired Card scenario');
 
         // Note: We don't need to refresh the page, just refill the Stripe form
@@ -78,7 +85,7 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
         Logger.success('Expired Card error verified correctly');
     });
 
-    test('ST-PAY-03: Invalid CVC - Verify security code validation', async () => {
+    test('Invalid CVC - Verify security code validation', async () => {
         Logger.step('Testing Invalid CVC scenario');
 
         await PaymentHelper.fillStripeAndPay(page, {
@@ -93,7 +100,7 @@ test.describe.serial('Stripe Payment Validation @smoke @critical @payment @strip
         Logger.success('Invalid CVC error verified correctly');
     });
 
-    test('ST-PAY-04: Successful Transaction - Verify happy path completion', async () => {
+    test('Successful Transaction - Verify happy path completion', async () => {
         Logger.step('Testing Successful Transaction (Happy Path)');
 
         await PaymentHelper.fillStripeAndPay(page); // Uses default valid card from constants

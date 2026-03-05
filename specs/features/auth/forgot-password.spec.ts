@@ -19,7 +19,7 @@ import { MESSAGES } from '../../../lib/data/constants/messages';
 test.describe('Forgot Password Flow', () => {
 
     test('User can request password reset and update password successfully',
-        { tag: ['@smoke', '@critical'] },
+        { tag: ['@smoke', '@regression'] },
         async ({ page, context }) => {
             // Enterprise flow with Mailinator + tabs needs more time
             test.setTimeout(180_000);

@@ -10,7 +10,7 @@ test.describe('Logout – User can log out and access is revoked', () => {
 
     test(
         'Logout Flow',
-        { tag: ['@smoke', '@critical'] },
+        { tag: ['@smoke', '@member'] },
         async ({ memberPage }) => {
             // 1. Ensure on Dashboard
             await NavigationHelper.gotoDashboard(memberPage);

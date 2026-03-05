@@ -4,7 +4,7 @@ import { ROLES, UserRole } from '../../../lib/data/constants/roles';
 import { ROUTES, URLS } from '../../../config/urls';
 import { Logger } from '../../../lib/utils/Logger';
 
-test.describe.serial('Chat Widget Visibility', { tag: ['@regression', '@optional', '@chat-widget'] }, () => {
+test.describe.serial('Chat Widget Visibility', { tag: ['@regression', '@chat-widget'] }, () => {
 
   test('Verify chat widget is visible before login', async ({ page }) => {
     const chat = new ChatWidget(page);

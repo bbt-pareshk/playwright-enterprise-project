@@ -12,14 +12,21 @@ import { ROUTE_PATHS } from '../../../config/urls';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { MESSAGES } from '../../../lib/data/constants/messages';
 
-test.describe.serial('Leader Full Flow - Multi-Group ($49) @smoke @critical @leader @e2e', () => {
+test.describe.serial('Leader Flow - Multi-Group Subscription', { tag: ['@smoke', '@leader'] }, () => {
     let context: any;
     let page: any;
     let email: string;
     let otp: string;
 
-    test.beforeAll(async ({ browser }) => {
-        context = await browser.newContext();
+    test.beforeAll(async ({ browser }, testInfo) => {
+        const use = testInfo.project.use;
+        context = await browser.newContext({
+            ...use,
+            // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
+            ...(use.video && use.video !== 'off'
+                ? { recordVideo: { dir: testInfo.outputPath('videos') } }
+                : {}),
+        });
         page = await context.newPage();
         email = DataGenerator.email();
     });
@@ -28,7 +35,8 @@ test.describe.serial('Leader Full Flow - Multi-Group ($49) @smoke @critical @lea
         await context.close();
     });
 
-    test('TC-LMG-01: Register new Leader (fresh email)', async () => {
+    test('Step 1: Registration - Create new leader account', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-01' });
         const registrationPage = new RegistrationPage(page);
         await registrationPage.goto();
         await registrationPage.fillRegistrationForm({
@@ -43,7 +51,8 @@ test.describe.serial('Leader Full Flow - Multi-Group ($49) @smoke @critical @lea
         await registrationPage.waitForOTPPage();
     });
 
-    test('TC-LMG-02: Verify email via OTP', async () => {
+    test('Step 2: Registration - Verify email via OTP', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-02' });
         otp = await VerificationService.getOTP(page, email);
 
         // Bring main page to front after multi-tab operation
@@ -55,41 +64,48 @@ test.describe.serial('Leader Full Flow - Multi-Group ($49) @smoke @critical @lea
         await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
     });
 
-    test('TC-LMG-03: Welcome page -> "Continue as a Group Leader"', async () => {
+    test('Step 3: Welcome - Select leader role', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-03' });
         const welcomePage = new WelcomePage(page);
         await welcomePage.selectGroupLeader();
         await welcomePage.clickContinue();
     });
 
-    test('TC-LMG-04: Onboarding -> Skip to hosting-plan', async () => {
+    test('Step 4: Onboarding - Skip to Hosting Plan', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-04' });
         const onboardingPage = new OnboardingPage(page);
         await onboardingPage.completeLeaderOnboardingViaSkip();
     });
 
-    test('TC-LMG-05: Hosting-plan -> Click "Get Multi-Group" ($49)', async () => {
+    test('Step 5: Hosting Plan - Select Multi-Group plan ($49)', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-05' });
         const hostingPlanPage = new HostingPlanPage(page);
         await hostingPlanPage.selectMultiGroupPlan();
         await hostingPlanPage.clickPayNow();
     });
 
-    test('TC-LMG-06: Payment page loads', async () => {
+    test('Step 6: Payment - Verify Stripe form loads', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-06' });
         const stripePage = new StripePage(page);
         await stripePage.verifyStripeFormVisible();
     });
 
-    test('TC-LMG-07: Fill payment details', async () => {
+    test('Step 7: Payment - Fill payment details', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-07' });
         const stripePage = new StripePage(page);
         await stripePage.fillPaymentDetails();
     });
 
-    test('TC-LMG-08: Submit payment -> Success popup', async () => {
+    test('Step 8: Payment - Submit and verify success popup', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-08' });
         const stripePage = new StripePage(page);
         await stripePage.submitPayment();
         const successPopup = new PaymentSuccessPopup(page);
         await successPopup.verifyVisible();
     });
 
-    test('TC-LMG-09: Success popup -> Dashboard loads', async () => {
+    test('Step 9: Payment Success - Dismiss popup and verify Dashboard', async ({ }, testInfo) => {
+        testInfo.annotations.push({ type: 'testId', description: 'TC-LMG-09' });
         const successPopup = new PaymentSuccessPopup(page);
         await successPopup.clickDoThisLater();
         await expect(page).toHaveURL(/.*\/groups\/?$/);
