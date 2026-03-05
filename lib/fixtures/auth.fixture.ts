@@ -45,24 +45,22 @@ export const test = baseFixture.extend<AuthFixtures>({
 
         const context = await browser.newContext(options);
 
-        // Start tracing manually for isolated context
-        if (projectUse.trace && projectUse.trace !== 'off') {
-            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
-        }
-
         await applyEnterpriseContextSettings(context, testInfo);
 
         const page = await context.newPage();
         await use(page);
 
-        // Handle Trace retention on final context
-        if (projectUse.trace && projectUse.trace !== 'off') {
-            const isFailed = testInfo.status !== testInfo.expectedStatus;
-            const shouldRetain = projectUse.trace === 'on' || (projectUse.trace === 'retain-on-failure' && isFailed);
-            await context.tracing.stop({ path: shouldRetain ? testInfo.outputPath('trace.zip') : undefined });
-        }
-
+        const video = page.video();
         await context.close();
+
+        if (video && projectUse.video && projectUse.video !== 'off') {
+            const isFailed = testInfo.status !== testInfo.expectedStatus;
+            const shouldRetain = projectUse.video === 'on' || (projectUse.video === 'retain-on-failure' && isFailed);
+            if (shouldRetain) {
+                const videoPath = await video.path();
+                await testInfo.attach('video', { path: videoPath, contentType: 'video/webm' });
+            }
+        }
     },
 
     leaderPage: async ({ browser, playwright, baseURL }, use, testInfo) => {
@@ -82,22 +80,22 @@ export const test = baseFixture.extend<AuthFixtures>({
 
         const context = await browser.newContext(options);
 
-        if (projectUse.trace && projectUse.trace !== 'off') {
-            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
-        }
-
         await applyEnterpriseContextSettings(context, testInfo);
 
         const page = await context.newPage();
         await use(page);
 
-        if (projectUse.trace && projectUse.trace !== 'off') {
-            const isFailed = testInfo.status !== testInfo.expectedStatus;
-            const shouldRetain = projectUse.trace === 'on' || (projectUse.trace === 'retain-on-failure' && isFailed);
-            await context.tracing.stop({ path: shouldRetain ? testInfo.outputPath('trace.zip') : undefined });
-        }
-
+        const video = page.video();
         await context.close();
+
+        if (video && projectUse.video && projectUse.video !== 'off') {
+            const isFailed = testInfo.status !== testInfo.expectedStatus;
+            const shouldRetain = projectUse.video === 'on' || (projectUse.video === 'retain-on-failure' && isFailed);
+            if (shouldRetain) {
+                const videoPath = await video.path();
+                await testInfo.attach('video', { path: videoPath, contentType: 'video/webm' });
+            }
+        }
     },
 });
 
