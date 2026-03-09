@@ -38,6 +38,8 @@ export const UI_CONSTANTS = {
             EXPLORE_GROUPS: 'Explore support groups',
             CONTINUE: 'Continue',
             SKIP: 'Skip',
+            LEADER_INTRO: 'Tell us a bit about your background',
+            MEMBER_INTRO: 'What kind of support are you looking for',
         },
         MAILINATOR_RESET_LINK: 'reset password',
         LABELS: {

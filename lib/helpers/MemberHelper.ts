@@ -6,6 +6,7 @@ import { VerificationService } from '../utils/VerificationService';
 import { AssertionHelper } from './AssertionHelper';
 import { MESSAGES } from '../data/constants/messages';
 import { Logger } from '../utils/Logger';
+import { UI_CONSTANTS } from '../data/constants/ui-constants';
 
 /**
  * MemberHelper
@@ -77,7 +78,7 @@ export class MemberHelper {
         Logger.step('Completing Member onboarding via CONTINUE path');
         const onboardingPage = new OnboardingPage(page);
         // Wait for first onboarding screen
-        await expect(page.getByText(/What kind of support are you looking for/i)).toBeVisible({ timeout: 20000 });
+        await expect(page.getByText(new RegExp(UI_CONSTANTS.AUTH.ONBOARDING.MEMBER_INTRO, 'i'))).toBeVisible({ timeout: 20000 });
         await onboardingPage.completeMemberOnboardingViaContinue();
         Logger.success('Member onboarding (Continue) completed');
     }
@@ -89,7 +90,7 @@ export class MemberHelper {
         Logger.step('Completing Member onboarding via SKIP path');
         const onboardingPage = new OnboardingPage(page);
         // Wait for first onboarding screen
-        await expect(page.getByText(/What kind of support are you looking for/i)).toBeVisible({ timeout: 20000 });
+        await expect(page.getByText(new RegExp(UI_CONSTANTS.AUTH.ONBOARDING.MEMBER_INTRO, 'i'))).toBeVisible({ timeout: 20000 });
         await onboardingPage.completeMemberOnboardingViaSkip();
         Logger.success('Member onboarding (Skip) completed');
     }

@@ -8,6 +8,7 @@ import { MESSAGES } from '../data/constants/messages';
 import { APP_CONSTANTS } from '../data/constants/app-constants';
 import { Logger } from '../utils/Logger';
 import { ROUTE_PATHS } from '../../config/urls';
+import { UI_CONSTANTS } from '../data/constants/ui-constants';
 
 /**
  * LeaderHelper
@@ -64,7 +65,7 @@ export class LeaderHelper {
         Logger.step('Completing Leader onboarding via CONTINUE path');
         const onboardingPage = new OnboardingPage(page);
         // Wait for first onboarding screen
-        await expect(page.getByText(/Tell us a bit about your background/i)).toBeVisible({ timeout: 15000 });
+        await expect(page.getByText(new RegExp(UI_CONSTANTS.AUTH.ONBOARDING.LEADER_INTRO, 'i'))).toBeVisible({ timeout: 15000 });
         await onboardingPage.completeLeaderOnboardingViaContinue();
         Logger.success('Leader onboarding (Continue) completed');
     }

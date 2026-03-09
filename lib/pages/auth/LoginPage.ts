@@ -53,10 +53,8 @@ export class LoginPage extends BasePage {
     // Password Toggle Button - using the right element button as it's the toggle for password visibility
     this.passwordToggleBtn = page.locator('input[name="password"] ~ .chakra-input__right-element button');
 
-    // Validation error locator - finding by text since ID is unknown
-    this.passwordValidationError = page.getByText(MESSAGES.AUTH.REGISTRATION.PASSWORD_LENGTH_ERROR);
-
     // Social Login - assuming standard button text
+
     this.googleLoginButton = page.getByRole('button', { name: /Google/i });
 
     // Field Errors (Common in Chakra/React forms)
@@ -64,9 +62,8 @@ export class LoginPage extends BasePage {
     this.passwordError = page.locator('#password-feedback, [id*="password-error"], .chakra-form__error-message').last();
   }
 
-  private readonly passwordValidationError: Locator;
-
   private readonly passwordToggleBtn: Locator;
+
 
   /**
    * Toggles the password visibility by clicking the show/hide icon.
@@ -107,11 +104,8 @@ export class LoginPage extends BasePage {
     await this.expectVisible(this.loginErrorMessage, 'Invalid login error message should be visible');
   }
 
-  async verifyPasswordLengthError() {
-    await this.expectVisible(this.passwordValidationError, 'Password length validation error should be visible');
-  }
-
   async clickCreateAccount() {
+
     await this.click(this.createAccountLink);
   }
 

@@ -13,14 +13,18 @@ export const MESSAGES = {
         REGISTRATION: {
             EMAIL_CONFIRMED: 'Email confirmed!',
             PASSWORD_VISIBILITY_ERROR: 'Password visibility mismatch: expected type',
-            PASSWORD_LENGTH_ERROR: 'Password must be at least 8 characters',
             EMAIL_UNAVAILABLE: 'Email already exists',
+
+
             OTP_RESENT: 'email sent',
             FIRST_NAME_INVALID: 'only letters are allowed',
             LAST_NAME_INVALID: 'only letters are allowed',
             FIRST_NAME_REQUIRED: 'firstname is required',
             LAST_NAME_REQUIRED: 'lastname is required',
+            EMAIL_REQUIRED: 'email is required',
+            PASSWORD_REQUIRED: 'password is required',
         },
+
         FORGOT_PASSWORD: {
             SUCCESS: 'Password reset sent successfully',
         },

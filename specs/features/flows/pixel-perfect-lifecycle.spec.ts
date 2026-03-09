@@ -18,92 +18,66 @@ import { Logger } from '../../../lib/utils/Logger';
  * It uses the centralized LeaderHelper and PaymentHelper for robustness and maintainability.
  * Standardized to 8 granular steps for maximum visibility and coverage.
  */
-test.describe.serial('Pixel Perfect Lifecycle Flow', { tag: ['@smoke', '@leader'] }, () => {
-    let context: any;
-    let page: any;
-    let email: string;
-    let groupName: string;
+test.describe('Pixel Perfect Lifecycle Flow', { tag: ['@smoke', '@leader'] }, () => {
 
-    test.beforeAll(async ({ browser }, testInfo) => {
-        const use = testInfo.project.use;
-        context = await browser.newContext({
-            ...use,
-            // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
-            ...(use.video && use.video !== 'off'
-                ? { recordVideo: { dir: testInfo.outputPath('videos') } }
-                : {}),
+    test('Pixel Perfect Lifecycle Flow Journey', async ({ page, context }, testInfo) => {
+        // Expand timeout since this single test runs the entire E2E journey
+        test.setTimeout(180_000);
+        const email = DataGenerator.email();
+        const groupName = DataGenerator.generateGroupName();
+
+        // --- PHASE 1: AUTHENTICATION ---
+        await test.step('LIFECYCLE-01: Registration - Create fresh account', async () => {
+            const registrationPage = new RegistrationPage(page);
+            await registrationPage.goto();
+            await registrationPage.fillRegistrationForm({
+                firstName: 'Pixel',
+                lastName: 'Perfect',
+                email: email,
+                password: 'Password123!'
+            });
+            await registrationPage.clickCreateAccount();
+            await registrationPage.waitForOTPPage();
         });
-        page = await context.newPage();
-        email = DataGenerator.email();
-        groupName = DataGenerator.generateGroupName();
-    });
 
-    test.afterAll(async () => {
-        await context.close();
-    });
+        await test.step('LIFECYCLE-02: Registration - Verify OTP email', async () => {
+            const otp = await VerificationService.getOTP(page, email);
 
-    // --- PHASE 1: AUTHENTICATION ---
-
-    test('Step 1: Registration - Create fresh account', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-01' });
-        const registrationPage = new RegistrationPage(page);
-        await registrationPage.goto();
-        await registrationPage.fillRegistrationForm({
-            firstName: 'Pixel',
-            lastName: 'Perfect',
-            email: email,
-            password: 'Password123!'
+            await page.bringToFront();
+            const registrationPage = new RegistrationPage(page);
+            await registrationPage.verifyEmailWithOTP(otp);
+            await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
         });
-        await registrationPage.clickCreateAccount();
-        await registrationPage.waitForOTPPage();
-    });
 
-    test('Step 2: Registration - Verify OTP email', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-02' });
-        const otp = await VerificationService.getOTP(page, email);
+        // --- PHASE 2: ONBOARDING ---
+        await test.step('LIFECYCLE-03: Welcome - Select leader role', async () => {
+            await LeaderHelper.selectRoleAndContinue(page);
+        });
 
-        await page.bringToFront();
-        const registrationPage = new RegistrationPage(page);
-        await registrationPage.verifyEmailWithOTP(otp);
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
-    });
+        await test.step('LIFECYCLE-04: Onboarding - Complete full CONTINUE path', async () => {
+            await LeaderHelper.completeOnboardingViaContinue(page);
+        });
 
-    // --- PHASE 2: ONBOARDING ---
+        // --- PHASE 3: PRICING & PAYMENT ---
+        await test.step('LIFECYCLE-05: Hosting Plan - Select Active plan', async () => {
+            await PaymentHelper.selectActivePlanAndProceed(page);
+        });
 
-    test('Step 3: Welcome - Select leader role', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-03' });
-        await LeaderHelper.selectRoleAndContinue(page);
-    });
+        await test.step('LIFECYCLE-06: Payment - Complete Stripe checkout', async () => {
+            await PaymentHelper.fillStripeAndPay(page);
+        });
 
-    test('Step 4: Onboarding - Complete full CONTINUE path', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-04' });
-        await LeaderHelper.completeOnboardingViaContinue(page);
-    });
+        await test.step('LIFECYCLE-07: Payment Success - Dismiss popup and verify Dashboard', async () => {
+            await PaymentHelper.verifySuccessAndContinue(page);
+            await LeaderHelper.verifyDashboard(page);
+        });
 
-    // --- PHASE 3: PRICING & PAYMENT ---
-
-    test('Step 5: Hosting Plan - Select Active plan', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-05' });
-        await PaymentHelper.selectActivePlanAndProceed(page);
-    });
-
-    test('Step 6: Payment - Complete Stripe checkout', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-06' });
-        await PaymentHelper.fillStripeAndPay(page);
-    });
-
-    test('Step 7: Payment Success - Dismiss popup and verify Dashboard', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-07' });
-        await PaymentHelper.verifySuccessAndContinue(page);
-        await LeaderHelper.verifyDashboard(page);
-    });
-
-    // --- PHASE 4: FEATURE USAGE ---
-
-    test('Step 8: Group - Create first group and verify success', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'LIFECYCLE-08' });
-        await GroupHelper.createGroup(page, groupName);
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.GROUPS.CREATED_SUCCESS, 'i'));
-        Logger.success(`Full Gold Standard Cycle Complete: Group "${groupName}" created.`);
+        // --- PHASE 4: FEATURE USAGE ---
+        await test.step('LIFECYCLE-08: Group - Create first group and verify success', async () => {
+            await GroupHelper.createGroup(page, groupName);
+            await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.GROUPS.CREATED_SUCCESS, 'i'));
+            Logger.success(`Full Gold Standard Cycle Complete: Group "${groupName}" created.`);
+        });
     });
 });
+

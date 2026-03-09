@@ -1,74 +1,68 @@
 import { test } from '../../../lib/fixtures/index';
-import { LoginPage } from '../../../lib/pages/auth/LoginPage';
 import { ChatPage } from '../../../lib/pages/chat/ChatPage';
 import { MyGroupsPage } from '../../../lib/pages/dashboard/MyGroupsPage';
-import { ENV } from '../../../config/env';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { Logger } from '../../../lib/utils/Logger';
-import { RuntimeStore } from '../../../lib/utils/RuntimeStore';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 
 /**
- * We use a clean storage state to skip the global Leader login that usually runs first.
- * This allows us to control exactly when the User and Leader login.
+ * Chat Journey: Multi-User Interaction
+ * -----------------------------------
+ * This spec validates the real-time chat journey between a Member and a Leader.
+ * 
+ * DESIGN PRINCIPLES:
+ * 1. Multi-User Orchestration: Uses both memberPage and leaderPage in one journey.
+ * 2. Visual Persistence: Verifies that messages sent by one user are visible to the other.
+ * 3. Atomic Visibility: Uses test.step() to clearly separate Member and Leader actions.
  */
+test.describe('Chat Journey - Multi-User Interaction', { tag: ['@smoke', '@chat', '@multi-user'] }, () => {
 
+    test('Chat Journey: Member sends message -> Leader receives and replies', async ({ memberPage, leaderPage }) => {
+        const groupName = APP_CONSTANTS.GROUP_NAME;
+        const memberMessage = DataGenerator.generateChatMessage();
+        const leaderReply = DataGenerator.generateChatMessage();
 
-test.describe.serial('Chat – Send Message Flow', { tag: ['@smoke', '@leader', '@member'] }, () => {
-    let groupName: string;
-    let chatMessage: string;
+        // --- PHASE 1: MEMBER ACTION ---
+        await test.step('CHAT-01: Member - Navigate to group and send message', async () => {
+            const memberMyGroups = new MyGroupsPage(memberPage);
+            const memberChat = new ChatPage(memberPage);
 
-    test(
-        'Verify chat input field accepts text and shows typed content',
-        async ({ memberPage }) => {
+            await memberMyGroups.openMyGroups(true);
+            await memberMyGroups.clickGroupName(groupName);
 
-            const chatPage = new ChatPage(memberPage);
-            const myGroupsPage = new MyGroupsPage(memberPage);
-            groupName = APP_CONSTANTS.GROUP_NAME;
-            chatMessage = DataGenerator.generateChatMessage();
+            await memberChat.enterChatMessage(memberMessage);
+            await memberChat.clickSend();
+            await memberChat.verifyChatMessageVisible(memberMessage);
+            Logger.info(`Member sent message: ${memberMessage}`);
+        });
 
-            // 1. Navigation
-            Logger.step('Step: Navigation to My Groups');
-            await myGroupsPage.openMyGroups(true);
+        // --- PHASE 2: LEADER ACTION ---
+        await test.step('CHAT-02: Leader - Verify Member message and send reply', async () => {
+            const leaderMyGroups = new MyGroupsPage(leaderPage);
+            const leaderChat = new ChatPage(leaderPage);
 
-            // 2. Click specific Group
-            Logger.step(`Step: Clicking on group "${groupName}"`);
-            await myGroupsPage.clickGroupName(groupName);
+            await leaderMyGroups.openMyGroups(true);
+            await leaderMyGroups.clickJoinedGroupsTab();
+            await leaderMyGroups.clickGroupName(groupName);
 
-            // 3. Enter Text and verify
-            Logger.step('Step: Entering chat message and verifying input content');
-            await chatPage.enterChatMessage(chatMessage);
-            await chatPage.clickSend();
+            // Verify message received from Member
+            await leaderChat.verifyChatMessageVisible(memberMessage);
+            Logger.success(`Leader verified receipt of Member message: ${memberMessage}`);
 
-            await chatPage.verifyChatMessageVisible(chatMessage);
-        }
-    );
+            // Send reply
+            await leaderChat.enterChatMessage(leaderReply);
+            await leaderChat.clickSend();
+            await leaderChat.verifyChatMessageVisible(leaderReply);
+            Logger.info(`Leader sent reply: ${leaderReply}`);
+        });
 
-    test(
-        'User can send and receive messages in group chat',
-        async ({ leaderPage }) => {
-            const chatPage = new ChatPage(leaderPage);
-            const myGroupsPage = new MyGroupsPage(leaderPage);
+        // --- PHASE 3: FINAL VERIFICATION ---
+        await test.step('CHAT-03: Member - Verify Leader reply in real-time', async () => {
+            const memberChat = new ChatPage(memberPage);
 
-            if (!groupName || !chatMessage) {
-                test.skip(true, 'Shared state from previous step not available');
-            }
-
-            const leaderMessage = DataGenerator.generateChatMessage();
-
-            // --- PHASE A: LEADER SENDS MESSAGE ---
-            Logger.step('Phase A: Logging in as Leader to send a message');
-            await myGroupsPage.openMyGroups(true);
-            await myGroupsPage.clickJoinedGroupsTab();
-            await myGroupsPage.clickGroupName(groupName);
-
-            // Verify message received from User
-            Logger.step('Step: Verifying last message from User is visible');
-            await chatPage.verifyChatMessageVisible(chatMessage);
-
-            await chatPage.enterChatMessage(leaderMessage);
-            await chatPage.clickSend();
-            Logger.success('Leader sent the message');
-        }
-    );
+            // Member should already be on the chat page from Phase 1
+            await memberChat.verifyChatMessageVisible(leaderReply);
+            Logger.success('Member successfully received Leader reply in real-time');
+        });
+    });
 });

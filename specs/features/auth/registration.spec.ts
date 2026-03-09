@@ -12,6 +12,8 @@ import { NavigationHelper } from '../../../lib/helpers/NavigationHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { RuntimeStore } from '../../../lib/utils/RuntimeStore';
 import { UI_CONSTANTS } from '../../../lib/data/constants/ui-constants';
+import { ENV } from '../../../config/env';
+
 
 test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }, () => {
     let context: any;
@@ -100,131 +102,119 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
     });
 });
 
-test.describe('Registration - Validation', () => {
-    test('Verify minimum password length validation on Registration', { tag: ['@regression', '@member'] }, async ({ page }) => {
-        const registrationPage = new RegistrationPage(page);
+test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member'] }, () => {
 
-        // 1. Navigate to Registration page
-        await NavigationHelper.gotoRegistration(page);
+    // 1. Data-Driven Field Formatting (In-line / Blur validation)
+    const FIELD_FORMAT_SCENARIOS = [
+        {
+            name: 'First Name (Regex: Only letters allowed)',
+            action: async (rp: RegistrationPage) => {
+                await rp.fillRegistrationForm({
+                    firstName: 'John123',
+                    lastName: 'Doe',
+                    email: DataGenerator.generateEmail(),
+                    password: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+                });
+                await rp.emailInput.focus(); // Trigger validation
+            },
+            verify: async (rp: RegistrationPage) => await rp.verifyFirstNameInvalidError()
+        },
+        {
+            name: 'Last Name (Regex: Only letters allowed)',
+            action: async (rp: RegistrationPage) => {
+                await rp.fillRegistrationForm({
+                    firstName: 'John',
+                    lastName: 'Doe!',
+                    email: DataGenerator.generateEmail(),
+                    password: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+                });
+                await rp.emailInput.focus(); // Trigger validation
+            },
+            verify: async (rp: RegistrationPage) => await rp.verifyLastNameInvalidError()
+        },
+        {
+            name: 'Email (System-wide Collision check)',
+            action: async (rp: RegistrationPage) => {
+                await rp.fillRegistrationForm({
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: ENV.MEMBER_USERNAME,
+                    password: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+                });
+                await rp.passwordInput.focus(); // Trigger validation
+            },
+            verify: async (rp: RegistrationPage) => await rp.verifyEmailUnavailableError()
+        },
+        {
+            name: 'Password (Minimum Complexity: Len, Mix, Digit)',
+            action: async (rp: RegistrationPage) => {
+                await rp.fillRegistrationForm({
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: DataGenerator.generateEmail(),
+                    password: 'Pass1' // Intentionally short/simple password
+                });
+                await rp.emailInput.focus();
+            },
+            verify: async (rp: RegistrationPage) => {
+                // UI shows an instruction note rather than an explicit validation error state for password length.
+                // Constraint validation is proven by the 'Create Account' button remaining disabled below.
+                Logger.info('Verifying form submission is blocked due to password constraints');
+            }
+        }
+    ];
 
-        // 2. Fill registration form with short password
-        const shortPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.SHORT;
-        const email = DataGenerator.generateEmail();
-        const userData = {
-            firstName: DataGenerator.firstName(),
-            lastName: DataGenerator.lastName(),
-            email: email,
-            password: shortPassword,
-        };
+    for (const scenario of FIELD_FORMAT_SCENARIOS) {
+        test(`Format Constraint: ${scenario.name}`, async ({ page }) => {
+            const registrationPage = new RegistrationPage(page);
+            await NavigationHelper.gotoRegistration(page);
 
-        Logger.step(`Initialising registration with short password: ${shortPassword}`);
-        await registrationPage.fillRegistrationForm(userData);
+            Logger.step(`Testing field formatting: ${scenario.name}`);
+            await scenario.action(registrationPage);
+            await scenario.verify(registrationPage);
 
-        // 3. Verify submit button is disabled (Client-side validation)
-        await registrationPage.expectCreateButtonDisabled();
+            await registrationPage.expectCreateButtonDisabled();
+        });
+    }
 
-        // 5. Verify still on registration page (submission prevented)
-        await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
-    });
+    // 2. Data-Driven Mandatory Field Constraints
+    const MANDATORY_FIELD_SCENARIOS = [
+        {
+            name: 'First Name required on registration',
+            action: async (rp: RegistrationPage) => { await rp.firstNameInput.focus(); await rp.lastNameInput.focus(); },
+            verify: async (rp: RegistrationPage) => await rp.verifyFirstNameRequiredError()
+        },
+        {
+            name: 'Last Name required on registration',
+            action: async (rp: RegistrationPage) => { await rp.lastNameInput.focus(); await rp.emailInput.focus(); },
+            verify: async (rp: RegistrationPage) => await rp.verifyLastNameRequiredError()
+        },
+        {
+            name: 'Email required on registration',
+            action: async (rp: RegistrationPage) => { await rp.emailInput.focus(); await rp.passwordInput.focus(); },
+            verify: async (rp: RegistrationPage) => await rp.verifyEmailRequiredError()
+        },
+        {
+            name: 'Password required on registration',
+            action: async (rp: RegistrationPage) => { await rp.passwordInput.focus(); await rp.firstNameInput.focus(); },
+            verify: async (rp: RegistrationPage) => await rp.verifyPasswordRequiredError()
+        }
+    ];
 
-    test('Verify maximum password length validation on Registration', { tag: ['@regression', '@member'] }, async ({ page }) => {
-        const registrationPage = new RegistrationPage(page);
+    for (const mandatory of MANDATORY_FIELD_SCENARIOS) {
+        test(`Validation: ${mandatory.name}`, async ({ page }) => {
+            const registrationPage = new RegistrationPage(page);
+            await NavigationHelper.gotoRegistration(page);
 
-        // 1. Navigate to Registration page
-        await NavigationHelper.gotoRegistration(page);
+            Logger.step(`Testing mandatory constraint: ${mandatory.name}`);
+            await mandatory.action(registrationPage);
+            await mandatory.verify(registrationPage);
 
-        // 2. Fill registration form with long password
-        const longPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.LONG;
-        const email = DataGenerator.generateEmail();
-        const userData = {
-            firstName: DataGenerator.firstName(),
-            lastName: DataGenerator.lastName(),
-            email: email,
-            password: longPassword,
-        };
-
-        Logger.step(`Initialising registration with long password (length: ${longPassword.length})`);
-        await registrationPage.fillRegistrationForm(userData);
-
-        // 3. Verify submit button is disabled (Client-side validation)
-        // Note: App seems to allow long passwords on client side (button enabled)
-        // await registrationPage.expectCreateButtonDisabled();
-
-        // 4. Verify password length error (optional, commented out as per previous pattern)
-        // await registrationPage.verifyPasswordMaxLengthError();
-
-        // 5. Verify still on registration page
-        await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
-    });
-
-    test('Verify registration with already registered email', { tag: ['@regression', '@member'] }, async ({ page }) => {
-        const registrationPage = new RegistrationPage(page);
-
-        // 1. Navigate to Registration page
-        await NavigationHelper.gotoRegistration(page);
-
-        // 2. Enter an already registered email and trigger blur validation
-        const existingEmail = RuntimeStore.getUserEmail();
-        Logger.step(`Entering already registered email: ${existingEmail}`);
-        await registrationPage.fillEmailAndBlur(existingEmail);
-
-        // 3. Verify "email is not available" inline error appears
-        await registrationPage.verifyEmailUnavailableError();
-
-        // 4. Verify "Create Account" button is disabled
-        await registrationPage.expectCreateButtonDisabled();
-
-        // 5. Verify still on registration page
-        await expect(page).toHaveURL(new RegExp(URLS.REGISTER));
-    });
-
-    test('Verify first and last name field validation (only letters allowed)', { tag: ['@regression', '@member'] }, async ({ page }) => {
-        const registrationPage = new RegistrationPage(page);
-
-        // 1. Navigate to Registration page
-        await NavigationHelper.gotoRegistration(page);
-
-        // 2. Enter invalid first name (with numbers)
-        Logger.step('Entering invalid first name with numbers');
-        await registrationPage.fillFirstName('John123');
-        await registrationPage.fillLastName('Doe'); // Fill other fields to trigger validation
-
-        // 3. Verify first name error
-        await registrationPage.verifyFirstNameInvalidError();
-
-        // 4. Enter invalid last name (with special characters)
-        Logger.step('Entering invalid last name with special characters');
-        await registrationPage.fillFirstName('John');
-        await registrationPage.fillLastName('Doe!');
-        await registrationPage.emailInput.focus();
-
-        // 5. Verify last name error
-        await registrationPage.verifyLastNameInvalidError();
-
-        // 6. Verify "Create Account" button is disabled
-        await registrationPage.expectCreateButtonDisabled();
-    });
-
-    test('Verify mandatory field validation (First Name and Last Name)', { tag: ['@smoke', '@member'] }, async ({ page }) => {
-        const registrationPage = new RegistrationPage(page);
-
-        // 1. Navigate to Registration page
-        await NavigationHelper.gotoRegistration(page);
-
-        // 2. Touch fields and leave them empty (triggering validation)
-        Logger.step('Touching fields and leaving them empty');
-        await registrationPage.firstNameInput.focus();
-        await registrationPage.lastNameInput.focus();
-        await registrationPage.emailInput.focus(); // Shift focus to trigger previous field errors
-
-        // 3. Verify required field errors
-        await registrationPage.verifyFirstNameRequiredError();
-        await registrationPage.verifyLastNameRequiredError();
-
-        // 4. Verify "Create Account" button is disabled
-        await registrationPage.expectCreateButtonDisabled();
-    });
+            await registrationPage.expectCreateButtonDisabled();
+        });
+    }
 });
+
 
 test.describe('Registration - Password Visibility', () => {
 

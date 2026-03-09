@@ -39,4 +39,29 @@ export class VerificationService {
             await page.bringToFront();
         }
     }
+
+    /**
+     * Retrieves the reset password link from Mailinator.
+     * Note: This opens a new tab, clicks the link, and returns the new page handle.
+     */
+    static async getResetPage(page: Page, email: string): Promise<Page> {
+        Logger.info(`[ResetLink] Requesting password reset link for ${email} via Mailinator`);
+
+        const mailinatorTab = await page.context().newPage();
+        const mailinator = new MailinatorPage(mailinatorTab);
+
+        try {
+            // Click link and capture the new tab
+            const [resetPage] = await Promise.all([
+                page.context().waitForEvent('page', { timeout: 60000 }),
+                mailinator.clickResetPasswordLinkFromEmail(email)
+            ]);
+
+            await resetPage.waitForLoadState('load');
+            return resetPage;
+        } finally {
+            await mailinatorTab.close();
+            await page.bringToFront();
+        }
+    }
 }

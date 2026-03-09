@@ -10,56 +10,37 @@ import { Logger } from '../../../lib/utils/Logger';
  * -------------------------------------
  * Validates the paid subscription journey for a Leader.
  */
-test.describe.serial('Leader Flow - Active Group Subscription', { tag: ['@smoke', '@leader'] }, () => {
-    let context: any;
-    let page: any;
-    let email: string;
+test.describe('Leader Flow - Active Group Subscription', { tag: ['@smoke', '@leader'] }, () => {
 
-    test.beforeAll(async ({ browser }, testInfo) => {
-        const use = testInfo.project.use;
-        context = await browser.newContext({
-            ...use,
-            // Only recordVideo needs explicit mapping — Playwright auto-manages tracing in test hooks
-            ...(use.video && use.video !== 'off'
-                ? { recordVideo: { dir: testInfo.outputPath('videos') } }
-                : {}),
+    test('Leader Active Group Subscription Journey', async ({ page, context }, testInfo) => {
+        // Expand timeout since this single test runs the entire E2E journey
+        test.setTimeout(180_000);
+        const email = DataGenerator.email();
+
+        await test.step('TC-LAG-01: Registration - Create new leader account', async () => {
+            await LeaderHelper.registerNewLeader(page, context, email);
         });
-        page = await context.newPage();
-        email = DataGenerator.email();
-    });
 
-    test.afterAll(async () => {
-        await context.close();
-    });
+        await test.step('TC-LAG-02: Welcome - Select leader role', async () => {
+            await LeaderHelper.selectRoleAndContinue(page);
+        });
 
-    test('Step 1: Registration - Create new leader account', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-01' });
-        await LeaderHelper.registerNewLeader(page, context, email);
-    });
+        await test.step('TC-LAG-03: Onboarding - Skip to Hosting Plan', async () => {
+            await LeaderHelper.completeOnboardingViaSkip(page);
+        });
 
-    test('Step 2: Welcome - Select leader role', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-02' });
-        await LeaderHelper.selectRoleAndContinue(page);
-    });
+        await test.step('TC-LAG-04: Hosting Plan - Select Active plan ($19)', async () => {
+            await PaymentHelper.selectActivePlanAndProceed(page);
+        });
 
-    test('Step 3: Onboarding - Skip to Hosting Plan', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-03' });
-        await LeaderHelper.completeOnboardingViaSkip(page);
-    });
+        await test.step('TC-LAG-05: Payment - Complete Stripe checkout', async () => {
+            await PaymentHelper.fillStripeAndPay(page);
+        });
 
-    test('Step 4: Hosting Plan - Select Active plan ($19)', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-04' });
-        await PaymentHelper.selectActivePlanAndProceed(page);
-    });
-
-    test('Step 5: Payment - Complete Stripe checkout', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-05' });
-        await PaymentHelper.fillStripeAndPay(page);
-    });
-
-    test('Step 6: Payment Success - Verify redirect to Dashboard', async ({ }, testInfo) => {
-        testInfo.annotations.push({ type: 'testId', description: 'TC-LAG-06' });
-        await PaymentHelper.verifySuccessAndContinue(page);
-        await AssertionHelper.verifyDashboardLoaded(page);
+        await test.step('TC-LAG-06: Payment Success - Verify redirect to Dashboard', async () => {
+            await PaymentHelper.verifySuccessAndContinue(page);
+            await AssertionHelper.verifyDashboardLoaded(page);
+        });
     });
 });
+

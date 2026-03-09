@@ -7,8 +7,10 @@ import { Logger } from '../../../lib/utils/Logger';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { AuthHelper } from '../../../lib/helpers/AuthHelper';
+import { ENV } from '../../../config/env';
 
 const TEST_ROLE = process.env.TEST_ROLE;
+
 
 /* =========================================================
    Login – Single User (Smoke + Regression)
@@ -55,69 +57,63 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
     }
   );
 
-  test.describe('Invalid Login Scenarios', { tag: ['@member'] }, () => {
-    test(
-      'Invalid Credentials - Verify error message appears',
-      async ({ page }) => {
+  test.describe('Invalid Login – Boundary & Validation', { tag: ['@regression', '@member'] }, () => {
+
+    // 1. Data-Driven Login Failures (Server-Side / Security)
+    const CREDENTIAL_FAILURE_SCENARIOS = [
+      {
+        scenario: 'Registered member cannot login with incorrect password',
+        user: ENV.MEMBER_USERNAME,
+        pass: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.WRONG
+      },
+      {
+        scenario: 'Unregistered user cannot login with a generated email',
+        user: DataGenerator.generateEmail(),
+        pass: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT
+      },
+      {
+        scenario: 'Registered member fails login with minimum password length violation',
+        user: ENV.MEMBER_USERNAME,
+        pass: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.SHORT
+      }
+    ];
+
+    for (const data of CREDENTIAL_FAILURE_SCENARIOS) {
+      test(`Scenario: ${data.scenario}`, async ({ page }) => {
         const loginPage = new LoginPage(page);
 
-        // 1. Open Login page
-        Logger.step('Navigate to Login Page');
         await loginPage.openLoginPage();
+        Logger.step(`Attempting login for: ${data.user} (Scenario: ${data.scenario})`);
 
-        // 2. Enter incorrect credentials
-        const invalidUsername = DataGenerator.generateEmail();
-        const invalidPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.WRONG;
-
-        Logger.step(`Attempt login with invalid credentials: ${invalidUsername}`);
-        await loginPage.login(invalidUsername, invalidPassword);
-
-        // 3. Verify error message appears
-        Logger.step('Verify error message visibility');
+        await loginPage.login(data.user, data.pass);
         await loginPage.verifyInvalidLoginError();
 
-        Logger.success(APP_CONSTANTS.TEST_DATA.LOGIN.SUCCESS.INVALID_TEST);
-      }
-    );
+        Logger.success(`Success: Access denied as expected for "${data.scenario}"`);
+      });
+    }
 
-    test(
-      'Minimum password length validation',
-      async ({ page }) => {
+    // 2. Data-Driven Mandatory Field Checks (Client-Side)
+    const MANDATORY_FIELD_SCENARIOS = [
+      { name: 'Empty credentials submission', email: '', pass: '' },
+      { name: 'Missing password submission', email: ENV.MEMBER_USERNAME, pass: '' },
+      { name: 'Missing email submission', email: '', pass: APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.DEFAULT }
+    ];
+
+    for (const fieldData of MANDATORY_FIELD_SCENARIOS) {
+      test(`Validation: ${fieldData.name}`, async ({ page }) => {
         const loginPage = new LoginPage(page);
 
-        // 1. Open Login page
         await loginPage.openLoginPage();
+        Logger.step(`Testing mandatory fields: ${fieldData.name}`);
 
-        // 2. Enter valid email but short password
-        const testEmail = DataGenerator.generateEmail();
-        const shortPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.SHORT;
-
-        Logger.step(`Attempting login with short password: ${shortPassword}`);
-        await loginPage.login(testEmail, shortPassword);
-
-        // 3. Verify error message
-        Logger.step('Verifying login failure for short password');
-        await loginPage.verifyInvalidLoginError();
-      }
-    );
-
-    test(
-      'Empty credentials validation',
-      async ({ page }) => {
-        const loginPage = new LoginPage(page);
-
-        // 1. Open Login page
-        await loginPage.openLoginPage();
-
-        // 2. Click Login with empty fields
-        Logger.step('Attempt login with empty credentials');
-        await loginPage.login('', '');
-
-        // 3. Verify validation error or that user remains on page
+        await loginPage.login(fieldData.email, fieldData.pass);
         await loginPage.verifyEmptyCredentialsError();
-      }
-    );
+
+        Logger.success(`Success: Form correctly blocked "${fieldData.name}"`);
+      });
+    }
   });
+
 
   test.describe('Advanced Login Features', { tag: ['@member'] }, () => {
     test(

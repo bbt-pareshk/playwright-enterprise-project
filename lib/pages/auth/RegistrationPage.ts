@@ -268,10 +268,6 @@ export class RegistrationPage extends BasePage {
     return true;
   }
 
-  async verifyPasswordLengthError() {
-    await this.expectVisible(this.passwordError, 'Password length error should be visible');
-    await expect(this.passwordError, 'Password length error message mismatch').toHaveText(MESSAGES.AUTH.REGISTRATION.PASSWORD_LENGTH_ERROR);
-  }
 
   async fillEmailAndBlur(email: string) {
     await this.stableFill(this.emailInput, email);
@@ -298,7 +294,18 @@ export class RegistrationPage extends BasePage {
     await expect(this.lastNameError).toHaveText(MESSAGES.AUTH.REGISTRATION.LAST_NAME_REQUIRED);
   }
 
+  async verifyEmailRequiredError() {
+    await this.expectVisible(this.emailError, 'Email required error should be visible');
+    await expect(this.emailError).toHaveText(MESSAGES.AUTH.REGISTRATION.EMAIL_REQUIRED);
+  }
+
+  async verifyPasswordRequiredError() {
+    await this.expectVisible(this.passwordError, 'Password required error should be visible');
+    await expect(this.passwordError).toHaveText(MESSAGES.AUTH.REGISTRATION.PASSWORD_REQUIRED);
+  }
+
   async verifyEmailUnavailableError() {
+
     await this.emailError.waitFor({ state: 'visible', timeout: 10000 });
     await expect(this.emailError, 'Email unavailable error message mismatch').toHaveText(MESSAGES.AUTH.REGISTRATION.EMAIL_UNAVAILABLE);
   }

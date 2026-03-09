@@ -151,6 +151,18 @@ export abstract class BasePage {
   }
 
   /**
+   * Assertion helper to check if an element is disabled.
+   *
+   * @param locator - Element to verify
+   * @param message - Optional custom error message
+   */
+  async expectDisabled(locator: Locator, message?: string) {
+    await locator.waitFor({ state: 'visible' });
+    await expect(locator, message).toBeDisabled();
+  }
+
+
+  /**
    * Dismisses common support/onboarding popups (e.g., Chameleon, Intercom)
    * that might obscure elements during E2E runs.
    */

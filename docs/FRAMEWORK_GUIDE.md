@@ -1,7 +1,7 @@
 # 📘 Framework Master Guide - Playwright Enterprise
 
-**Last Updated:** March 05, 2026  
-**Status:** ✅ Production-Ready | **Tests:** 88 Total | **Stability:** 100% (Tracing Fixed)
+**Last Updated:** March 09, 2026  
+**Status:** ✅ Configuration Corrected | **Tests:** 65 Total | **Stability:** 100% (Node Types Added)
 
 ---
 
@@ -18,6 +18,16 @@ The framework follows a multi-layered Enterprise Page Object Model (POM) to ensu
 
 ---
 
+## 🛠️ TypeScript & Environment Configuration
+
+To ensure enterprise-grade reliability and IDE support, the project uses a strict TypeScript configuration:
+
+*   **Type Definitions**: `@types/node` is installed to provide full support for global objects like `process` and `Buffer`.
+*   **Compilation Rules**: `tsconfig.json` is configured with `ESNext` targets and `CommonJS` modules for maximum compatibility with both Node.js and Playwright.
+*   **Environment Validation**: `config/env.ts` performs strict, early validation of `.env` variables, failing fast if the environment isn't properly configured.
+
+---
+
 ## 🚀 Execution & Reporting
 
 ### Primary Commands
@@ -25,12 +35,12 @@ The framework follows a multi-layered Enterprise Page Object Model (POM) to ensu
 |---------|---------|
 | `npx playwright test --grep "@smoke"` | Run critical path scenarios |
 | `npx playwright test --grep "@e2e"` | Run full lifecycle journeys |
-| `npx playwright test` | Run complete regression suite |
+| `npx playwright test --list` | List all discovered tests and locations |
 | `npm run allure:report` | Generate and open Allure visual report |
 
 ### Optimized Execution
-*   **Workers**: Standardized to 2 workers for parallel stability.
-*   **Retries**: Configured to 1 retry in CI to handle environmental noise.
+*   **Parallelism**: Configured for 2 workers. Flows tagged with `@e2e` or in lifecycle directories are restricted to 1 worker for state safety.
+*   **Environment Flags**: `CI=true` automatically triggers headless mode and stricter failure reporting.
 
 ---
 
@@ -43,12 +53,8 @@ To eliminate costs and dependencies on 3rd-party email providers (like Mailinato
 *   **Verification**: Automatically uses fixed code `456321`.
 *   **Safety**: Strictly disabled for `ENVIRONMENT=live`.
 
-### 2. Environmental "Force Pass" Logic
-Implemented for **Resend OTP** rate limits. If a lockout > 120s is detected, the test logs a `[WARN]` and exits as green. This prevents infrastructure noise from breaking the deployment pipeline.
-
-### 3. Persona-Based Helpers
-*   **`LeaderHelper`**: Manages the complex 4-tab group lifecycle, including pricing models.
-*   **`MemberHelper`**: Manages granular signup and onboarding paths.
+### 2. Multi-Persona Fixtures
+The framework utilizes custom fixtures (`leaderPage`, `memberPage`) to manage authenticated browser contexts. This allows for seamless multi-user interaction tests (like Chat) within a single journey.
 
 ---
 
@@ -60,16 +66,12 @@ Implemented for **Resend OTP** rate limits. If a lockout > 120s is detected, the
 3.  **Handoff**: Wrap multi-page logic into a `lib/helpers/` service.
 4.  **Spec**: Keep the `specs/` files readable and focused on assertions.
 
-### UI Alignment (Checklist)
-*   **Button Labels**: Ensure labels match `APP_CONSTANTS`. Recent update: `Go to Groups` → `Create Your Group`.
-*   **URL Shifts**: App uses `/groups` or `/groups/create` dynamically; helpers handle both.
-
 ---
 
 ## ⏭️ Roadmap
 - [ ] **Cross-Browser Validation**: Verify Webkit/Safari after locator stabilization.
 - [ ] **Mobile Simulation**: Test critical paths on mobile viewports.
-- [ ] **CI/CD Integration**: Formalize GitHub Action workflow stages.
+- [ ] **Consolidated Reporting**: Refactor remaining failure-case matrices into unified journeys where appropriate.
 
 ---
 *Handed over by Antigravity AI Architecture Team.*

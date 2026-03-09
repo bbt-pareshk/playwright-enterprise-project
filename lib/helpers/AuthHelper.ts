@@ -153,6 +153,25 @@ export class AuthHelper {
 
 
     /**
+     * Specialized Prerequisite: Prepares a throwaway user exclusively for destructive tests (e.g., Password Reset, Account Deletion).
+     * Decouples the setup logic from the actual test flow for cleaner, more readable specs.
+     */
+    static async ensureDisposableUserExists(page: Page): Promise<string> {
+        let testEmail: string;
+        try {
+            testEmail = RuntimeStore.getUserEmail();
+            Logger.info(`[DISPOSABLE USER] Using existing user email from store: ${testEmail}`);
+        } catch (e) {
+            testEmail = DataGenerator.generateEmail();
+            Logger.info(`[DISPOSABLE USER] RuntimeStore empty. Using generated email: ${testEmail}`);
+        }
+
+        await this.ensureUserExists(page, testEmail);
+        return testEmail;
+    }
+
+
+    /**
      * Performs a complete login flow for a specific user role.
      * (Critical for Fixture Stability)
      */

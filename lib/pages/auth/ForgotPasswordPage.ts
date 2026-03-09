@@ -46,4 +46,9 @@ export class ForgotPasswordPage extends BasePage {
     async openForgotPasswordPage() {
         await this.goto(ROUTES.reset());
     }
+
+    async expectResetButtonDisabled() {
+        await this.expectDisabled(this.resetPasswordButton, 'Reset Password button should be disabled for invalid input');
+    }
 }
+

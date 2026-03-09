@@ -25,6 +25,18 @@ export class PaymentHelper {
     }
 
     /**
+     * Selects the Multi-Group Plan ($49) and proceeds to payment.
+     */
+    static async selectMultiGroupPlanAndProceed(page: Page) {
+        Logger.step('Selecting Multi-Group Plan ($49)');
+        const hostingPlanPage = new HostingPlanPage(page);
+        await hostingPlanPage.verifyPageLoaded();
+        await hostingPlanPage.selectMultiGroupPlan();
+        await hostingPlanPage.clickPayNow();
+        Logger.success('Multi-Group plan selected, landing on Stripe Checkout');
+    }
+
+    /**
      * Fills Stripe payment details and submits.
      */
     static async fillStripeAndPay(page: Page, options?: { cardNumber?: string; expiry?: string; cvc?: string; postalCode?: string }) {
