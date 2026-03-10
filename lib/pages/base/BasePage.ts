@@ -26,7 +26,7 @@ export abstract class BasePage {
    * @param url - Target URL
    * @param timeout - Max wait time (default 15s)
    */
-  async goto(url: string, timeout = 30000) {
+  async goto(url: string, timeout = 15000) {
     await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout });
   }
 
