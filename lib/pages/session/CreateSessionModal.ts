@@ -91,7 +91,8 @@ export class CreateSessionModal extends BasePage {
 
   async submit(): Promise<void> {
     Logger.step('Submitting session');
-    // We expect it to be enabled now. If not, click might fail or do nothing.
+    // Ensure button is visible before scrolling
+    await this.submitButton.waitFor({ state: 'visible', timeout: 30000 });
     await this.submitButton.scrollIntoViewIfNeeded();
     await this.submitButton.click();
   }

@@ -38,10 +38,16 @@ export class LeaderHelper {
         // OTP Fetch (Handles Bypass vs Real)
         const otp = await VerificationService.getOTP(page, email);
 
-        // Verification
+        // 4. Verification with Parallel Event Handling (Senior Pattern)
         await page.bringToFront();
-        await registrationPage.verifyEmailWithOTP(otp);
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
+        await registrationPage.enterOTP(otp);
+
+        Logger.step('Submitting OTP and syncing Parallel UI Events');
+        await Promise.all([
+            registrationPage.clickVerifyEmail(),
+            AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
+            page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.WELCOME), { timeout: 30000 })
+        ]);
 
         Logger.success('Leader registration and OTP verification completed');
     }

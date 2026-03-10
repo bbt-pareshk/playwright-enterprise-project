@@ -60,8 +60,15 @@ export class ChatPage extends BasePage {
    * CHAT ACTIONS
    * ========================================================= */
 
+  async waitForChatLoaded(expectedGroupName: string): Promise<void> {
+    await this.verifyChatPageLoaded(expectedGroupName);
+    await this.handleAnnouncements();
+  }
+
   async enterChatMessage(message: string): Promise<void> {
     Logger.step(`Entering chat message: ${message}`);
+    // Ensure chat is ready before interaction
+    await this.chatInput.waitFor({ state: 'visible', timeout: 30_000 });
     // Lexical editor needs focus and sequential typing
     await this.chatInput.click();
     await this.chatInput.pressSequentially(message, { delay: 20 });
@@ -116,16 +123,16 @@ export class ChatPage extends BasePage {
    * PAGE STATE ASSERTION
    * Confirms chat page is loaded and correct group is opened
    * ========================================================= */
-  private async assertChatPageOpenedCorrectly(expectedGroupName: string): Promise<void> {
+  async verifyChatPageLoaded(expectedGroupName: string): Promise<void> {
     Logger.step('Verifying chat page has loaded correctly');
 
     // Validate chat layout is rendered
-    await expect(this.chatTopBar).toBeVisible({ timeout: 20_000 });
+    await expect(this.chatTopBar).toBeVisible({ timeout: 30_000 });
     Logger.success('Chat page layout is visible');
 
     // Validate correct group chat is opened
     const groupHeader = this.page.getByText(expectedGroupName, { exact: true });
-    await expect(groupHeader.first()).toBeVisible({ timeout: 20_000 });
+    await expect(groupHeader.first()).toBeVisible({ timeout: 30_000 });
 
     Logger.success(
       `Chat page opened for expected group: ${expectedGroupName}`
@@ -136,10 +143,10 @@ export class ChatPage extends BasePage {
    * ANNOUNCEMENT HANDLER
    * Closes announcement banner if it blocks interactions
    * ========================================================= */
-  private async closeAnnouncementIfExists(): Promise<void> {
+  async handleAnnouncements(): Promise<void> {
     try {
       const appeared = await this.announcementBanner
-        .waitFor({ state: 'attached', timeout: 2_000 })
+        .waitFor({ state: 'attached', timeout: 3_000 })
         .then(() => true)
         .catch(() => false);
 
@@ -174,10 +181,7 @@ export class ChatPage extends BasePage {
       Logger.step('Initiating Create Session flow from Chat menu');
 
       // Step 1: Ensure chat page and group context are correct
-      await this.assertChatPageOpenedCorrectly(expectedGroupName);
-
-      // Step 2: Close announcement banner if present
-      await this.closeAnnouncementIfExists();
+      await this.waitForChatLoaded(expectedGroupName);
 
       // Step 3: Open chat action menu
       await this.waitUntilInteractable(this.chatMenuButton);

@@ -11,9 +11,9 @@ import { ROUTES, ROUTE_PATHS } from '../../../config/urls';
  */
 export class HostingPlanPage extends BasePage {
     // --------- Plan CTAs ----------
-    private readonly freePlanButton: Locator;
-    private readonly activePlanButton: Locator;
-    private readonly multiGroupPlanButton: Locator;
+    public readonly freePlanButton: Locator;
+    public readonly activePlanButton: Locator;
+    public readonly multiGroupPlanButton: Locator;
 
     // --------- Bottom Actions ----------
     private readonly payNowButton: Locator;
@@ -33,10 +33,10 @@ export class HostingPlanPage extends BasePage {
     constructor(page: Page) {
         super(page);
 
-        // Core CTAs (using exact match for precision)
-        this.freePlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.FREE_CTA, exact: true });
-        this.activePlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.ACTIVE_CTA, exact: true });
-        this.multiGroupPlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.MULTI_CTA, exact: true });
+        // Core CTAs (removed exact: true to be resilient to icons/arrows)
+        this.freePlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.FREE_CTA });
+        this.activePlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.ACTIVE_CTA });
+        this.multiGroupPlanButton = page.getByRole('button', { name: HostingPlanPage.LABELS.MULTI_CTA });
 
         // Action buttons
         this.payNowButton = page.getByRole('button', { name: HostingPlanPage.LABELS.PAY_NOW, exact: true });
@@ -49,6 +49,8 @@ export class HostingPlanPage extends BasePage {
     async goto() {
         Logger.step('Navigating to Hosting Plan Page');
         await super.goto(ROUTES.hostingPlan());
+        // Wait for potential initial load spinner to clear
+        await this.page.locator('.chakra-spinner').waitFor({ state: 'hidden', timeout: 30_000 }).catch(() => Logger.info('No initial spinner detected or already cleared'));
         Logger.success('Hosting Plan Page loaded');
     }
 
@@ -58,8 +60,12 @@ export class HostingPlanPage extends BasePage {
     async verifyPageLoaded() {
         Logger.step('Verifying Hosting Plan page content');
         await this.page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.HOSTING_PLAN));
+
+        // Staging can be slow; wait for the spinner to disappear
+        await this.page.locator('.chakra-spinner').waitFor({ state: 'hidden', timeout: 30_000 });
+
         // Verify one of the key plans is visible
-        await this.expectVisible(this.freePlanButton, 'Free Plan card should be visible');
+        await this.expectVisible(this.freePlanButton, 'Free Plan card should be visible', 15_000);
         Logger.success('Hosting Plan page verification successful');
     }
 

@@ -85,9 +85,12 @@ export class RegistrationPage extends BasePage {
     Logger.success(`Password visibility verified as ${isVisible ? 'visible' : 'hidden'}`);
   }
 
-  async goto() {
+  // Override signature must match BasePage.goto(url, timeout)
+  // 'url' is ignored — RegistrationPage always navigates to ROUTES.register()
+  async goto(_url?: string, timeout?: number) {
     Logger.step('Navigating to Registration Page');
-    await super.goto(ROUTES.register());
+    // Use elevated timeout for staging cold-start scenarios (40s)
+    await super.goto(ROUTES.register(), timeout || 40000);
     await this.dismissSupportPopups();
     Logger.success('Registration Page loaded');
   }
@@ -192,20 +195,9 @@ export class RegistrationPage extends BasePage {
   }
 
   async verifyEmailWithOTP(otp: string): Promise<void> {
-    // OTP page readiness is guaranteed by the caller (waitForOTPPage in TC-01)
-    // bringToFront() is called by the spec before this method
     await this.enterOTP(otp);
     await this.clickVerifyEmail();
-
-    // Pixel Perfect: Wait for redirect to /welcome to ensure session is fully established
-    Logger.info('Waiting for redirect to /welcome...');
-    try {
-      await this.page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.WELCOME), { timeout: 30000 });
-      await this.page.waitForLoadState('load');
-      await this.page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => { });
-    } catch (e) {
-      Logger.warn('Redirect to /welcome timed out or was blocked. Current URL: ' + this.page.url());
-    }
+    Logger.success('OTP submitted and verify clicked');
   }
 
   /**

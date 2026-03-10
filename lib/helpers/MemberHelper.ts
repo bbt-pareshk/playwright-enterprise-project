@@ -6,6 +6,7 @@ import { VerificationService } from '../utils/VerificationService';
 import { AssertionHelper } from './AssertionHelper';
 import { MESSAGES } from '../data/constants/messages';
 import { Logger } from '../utils/Logger';
+import { ROUTE_PATHS } from '../../config/urls';
 import { UI_CONSTANTS } from '../data/constants/ui-constants';
 
 /**
@@ -22,7 +23,7 @@ export class MemberHelper {
     static async submitRegistrationForm(page: Page, email: string) {
         Logger.step(`Submitting member registration form for: ${email}`);
         const registrationPage = new RegistrationPage(page);
-        await registrationPage.goto();
+        await registrationPage.goto(undefined, 40000);
         await registrationPage.fillRegistrationForm({
             firstName: 'Auto',
             lastName: 'Member',
@@ -41,12 +42,19 @@ export class MemberHelper {
         Logger.step(`Verifying email for: ${email}`);
         const registrationPage = new RegistrationPage(page);
 
-        // Capture OTP via VerificationService (Handles Bypass vs Real)
+        // OTP Fetch (Handles Bypass vs Real)
         const otp = await VerificationService.getOTP(page, email);
 
+        // 4. Verification with Parallel Event Handling (Senior Pattern)
         await page.bringToFront();
-        await registrationPage.verifyEmailWithOTP(otp);
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
+        await registrationPage.enterOTP(otp);
+
+        Logger.step('Submitting OTP and syncing Parallel UI Events');
+        await Promise.all([
+            registrationPage.clickVerifyEmail(),
+            AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
+            page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.WELCOME), { timeout: 30000 })
+        ]);
         Logger.success('Email verification (OTP) successful');
         return otp;
     }

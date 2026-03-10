@@ -26,7 +26,7 @@ export abstract class BasePage {
    * @param url - Target URL
    * @param timeout - Max wait time (default 15s)
    */
-  async goto(url: string, timeout = 15000) {
+  async goto(url: string, timeout = 30000) {
     await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout });
   }
 
@@ -144,10 +144,11 @@ export abstract class BasePage {
    *
    * @param locator - Element to verify
    * @param message - Optional custom error message
+   * @param timeout - Max wait time for visibility
    */
-  async expectVisible(locator: Locator, message?: string) {
-    await locator.waitFor({ state: 'visible' });
-    await expect(locator, message).toBeVisible();
+  async expectVisible(locator: Locator, message?: string, timeout = 10_000) {
+    await locator.waitFor({ state: 'visible', timeout });
+    await expect(locator, message).toBeVisible({ timeout });
   }
 
   /**
@@ -155,10 +156,11 @@ export abstract class BasePage {
    *
    * @param locator - Element to verify
    * @param message - Optional custom error message
+   * @param timeout - Max wait time for visibility
    */
-  async expectDisabled(locator: Locator, message?: string) {
-    await locator.waitFor({ state: 'visible' });
-    await expect(locator, message).toBeDisabled();
+  async expectDisabled(locator: Locator, message?: string, timeout = 10_000) {
+    await locator.waitFor({ state: 'visible', timeout });
+    await expect(locator, message).toBeDisabled({ timeout });
   }
 
 

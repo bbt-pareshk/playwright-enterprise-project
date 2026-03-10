@@ -8,12 +8,12 @@ export default defineConfig({
   testDir: './specs',
   globalSetup: './lib/utils/global-setup.ts',
   timeout: 90_000,
-  expect: { timeout: 15_000 },
+  expect: { timeout: 20_000 },
   fullyParallel: true,
 
   forbidOnly: isCI,
   retries: isCI ? 0 : 0,
-  workers: 2,
+  workers: isCI ? 3 : '50%',
 
   outputDir: 'test-results',
 
@@ -51,13 +51,12 @@ export default defineConfig({
       fullyParallel: true,
     },
 
-    // Full E2E Serial Flows — NEVER run in parallel (shared browser state)
+    // Full E2E Journey Flows — Runs multiple files in parallel; each file remains serial
     {
       name: 'e2e-flows',
       use: { ...DEFAULT_BROWSER },
       testMatch: /specs\/features\/flows\/.*/,
       fullyParallel: false,
-      workers: 1,
     },
   ],
 });

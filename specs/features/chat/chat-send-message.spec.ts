@@ -30,6 +30,7 @@ test.describe('Chat Journey - Multi-User Interaction', { tag: ['@smoke', '@chat'
             await memberMyGroups.openMyGroups(true);
             await memberMyGroups.clickGroupName(groupName);
 
+            await memberChat.waitForChatLoaded(groupName);
             await memberChat.enterChatMessage(memberMessage);
             await memberChat.clickSend();
             await memberChat.verifyChatMessageVisible(memberMessage);
@@ -44,6 +45,8 @@ test.describe('Chat Journey - Multi-User Interaction', { tag: ['@smoke', '@chat'
             await leaderMyGroups.openMyGroups(true);
             await leaderMyGroups.clickJoinedGroupsTab();
             await leaderMyGroups.clickGroupName(groupName);
+
+            await leaderChat.waitForChatLoaded(groupName);
 
             // Verify message received from Member
             await leaderChat.verifyChatMessageVisible(memberMessage);

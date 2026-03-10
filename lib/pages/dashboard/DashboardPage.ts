@@ -43,7 +43,7 @@ export class DashboardPage extends BasePage {
 
   async clickFindSupportGroup(): Promise<void> {
     Logger.step('Clicking on Find a support group');
-    await Wait.forVisible(this.findSupportGroupButton);
+    await Wait.forVisible(this.findSupportGroupButton, 30_000);
     await this.findSupportGroupButton.click();
   }
 

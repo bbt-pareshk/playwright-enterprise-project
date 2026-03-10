@@ -58,11 +58,15 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
         const otp = await VerificationService.getOTP(page, email);
 
         await page.bringToFront();
-        await registrationPage.verifyEmailWithOTP(otp);
+        await registrationPage.enterOTP(otp);
 
-        // 4. Validate success and redirect to Welcome
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
-        await expect(page).toHaveURL(new RegExp(URLS.WELCOME), { timeout: 15000 });
+        // 4. Parallel Event Synchronization: Submission -> Success Toast -> Welcome Redirect
+        Logger.step('Submitting OTP and syncing Parallel UI Events');
+        await Promise.all([
+            registrationPage.clickVerifyEmail(),
+            AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
+            page.waitForURL((url: URL) => url.pathname.includes(URLS.WELCOME), { timeout: 30000 })
+        ]);
 
         // 5. Select Role (Leader)
         const welcomePage = new WelcomePage(page);
@@ -284,10 +288,14 @@ test.describe.serial('Registration - Resend OTP', () => {
         // 4. Verify new OTP is received in Mailinator
         const newOtp = await VerificationService.getOTP(page, resendEmail);
 
-        // 5. Use the new OTP to complete verification — proves resend delivered a valid code
-        await registrationPage.verifyEmailWithOTP(newOtp);
+        // 5. Use the new OTP to complete verification via Parallel Sync
+        await registrationPage.enterOTP(newOtp);
 
-        // 6. Validate email confirmed success toast
-        await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i'));
+        Logger.step('Submitting Resent OTP and syncing events');
+        await Promise.all([
+            registrationPage.clickVerifyEmail(),
+            AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
+            page.waitForURL((url: any) => url.pathname.includes(URLS.WELCOME), { timeout: 30000 })
+        ]);
     });
 });
