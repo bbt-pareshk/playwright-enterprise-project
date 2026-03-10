@@ -1,0 +1,74 @@
+﻿[dotenv@17.3.1] injecting env (12) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+[2026-03-10T12:29:14.823Z] [INFO] Γû╢ CI: true
+[2026-03-10T12:29:14.824Z] [INFO] Γû╢ Environment: staging
+[2026-03-10T12:29:14.824Z] [INFO] Γû╢ Base URL: https://staging.mentalhappy.com
+[2026-03-10T12:29:14.824Z] [INFO] Initializing Global Setup
+[2026-03-10T12:29:14.825Z] [INFO] Global Setup Completed
+
+Running 3 tests using 2 workers
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+[2026-03-10T12:29:16.186Z] [INFO] [member] Debug - CI: true, Skip: false, File: true at D:\GIT\playwright-enterprise-framework-main\storage\auth\member.json
+[2026-03-10T12:29:16.186Z] [STEP] Logging in as member
+[2026-03-10T12:29:16.186Z] [INFO] [leader] Debug - CI: true, Skip: false, File: true at D:\GIT\playwright-enterprise-framework-main\storage\auth\leader.json
+[2026-03-10T12:29:16.186Z] [STEP] Logging in as leader
+[2026-03-10T12:29:16.187Z] [NAV] Navigating to Login
+[2026-03-10T12:29:16.187Z] [NAV] Navigating to Login
+[2026-03-10T12:29:19.454Z] [INFO] Logging in user: mh_04132953w3r02f4u@mailinator.com
+[2026-03-10T12:29:19.462Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
+[2026-03-10T12:29:28.457Z] [SUCCESS] Login successful and dashboard loaded
+[2026-03-10T12:29:31.104Z] [SUCCESS] Login successful and dashboard loaded
+[2026-03-10T12:29:33.487Z] [SUCCESS] leader session captured and cached.
+  Γ£ô  2 [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate leader (17.7s)
+[2026-03-10T12:29:36.138Z] [SUCCESS] member session captured and cached.
+  Γ£ô  1 [setup-auth] ΓÇ║ specs\setup\auth.setup.ts:19:13 ΓÇ║ Global Authentication Setup ΓÇ║ Authenticate member (20.4s)
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+[2026-03-10T12:29:37.933Z] [STEP] Accessing Login page while already authenticated
+[2026-03-10T12:29:41.131Z] [ASSERT] Verifying redirect to Dashboard/Groups
+  Γ£ÿ  3 [default] ΓÇ║ specs\features\core\security-audit.spec.ts:26:9 ΓÇ║ Core Perimeter Audit ΓÇ║ SEC-02: Authenticated user is redirected away from Auth pages @smoke @core (19.1s)
+
+
+  1) [default] ΓÇ║ specs\features\core\security-audit.spec.ts:26:9 ΓÇ║ Core Perimeter Audit ΓÇ║ SEC-02: Authenticated user is redirected away from Auth pages @smoke @core 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/.*\/groups|.*\/dashboard/[39m
+    Received string:  [31m"https://staging.mentalhappy.com/login"[39m
+    Timeout: 15000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 15000ms[22m
+    [2m    18 ├ù unexpected value "https://staging.mentalhappy.com/login"[22m
+
+
+      30 |         Logger.assertion('Verifying redirect to Dashboard/Groups');
+      31 |         // Flexible regex to handle different landing pages on staging
+    > 32 |         await expect(leaderPage).toHaveURL(/.*\/groups|.*\/dashboard/);
+         |                                  ^
+      33 |         Logger.success('Auth redirection verified');
+      34 |     });
+      35 |
+        at D:\GIT\playwright-enterprise-framework-main\specs\features\core\security-audit.spec.ts:32:34
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-core-security-aud-07a64--away-from-Auth-pages-smoke-default\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    attachment #2: video (video/webm) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-core-security-aud-07a64--away-from-Auth-pages-smoke-default\attachments\video-24202de88c9dfc4455d6e09151f1100e47eac79f.webm
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\features-core-security-aud-07a64--away-from-Auth-pages-smoke-default\error-context.md
+
+    attachment #4: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\features-core-security-aud-07a64--away-from-Auth-pages-smoke-default\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\features-core-security-aud-07a64--away-from-Auth-pages-smoke-default\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  1 failed
+    [default] ΓÇ║ specs\features\core\security-audit.spec.ts:26:9 ΓÇ║ Core Perimeter Audit ΓÇ║ SEC-02: Authenticated user is redirected away from Auth pages @smoke @core 
+  2 passed (42.8s)

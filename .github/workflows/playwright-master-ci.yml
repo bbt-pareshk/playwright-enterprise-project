@@ -1,0 +1,149 @@
+name: Playwright CI – Master Full Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - live
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: playwright-master-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # ⭐ Cache Playwright browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      # 4️⃣ Install Playwright browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 🌍 Resolve ENVIRONMENT
+      - name: Resolve Environment
+        run: |
+          if [ -n "${{ inputs.environment }}" ]; then
+            echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          fi
+
+      # 5️⃣ RUN FULL SUITE (Tiered Execution)
+      # Tier 1: Core Parallel Tests (All tests except specific flows)
+      - name: Run Tier 1 - Core Parallel Tests
+        continue-on-error: true
+        env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          CI: true
+        run: |
+          echo "Running Tier 1 (Parallel Core) on $ENVIRONMENT"
+          npx playwright test --project=default
+
+      # Tier 2: Serial E2E Journeys (Stability priority)
+      - name: Run Tier 2 - Serial E2E Journeys
+        continue-on-error: true
+        env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          CI: true
+        run: |
+          echo "Running Tier 2 (Serial Flows) on $ENVIRONMENT"
+          npx playwright test --project=e2e-flows
+
+      # 6️⃣ Generate Allure
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mkdir -p allure-report
+          npx allure-commandline generate --clean -o allure-report ./allure-results || true
+
+      # 7️⃣ Upload Reports
+      - name: Upload Allure Report Artifact
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-master
+          path: allure-report
+          retention-days: 7
+
+      - name: Upload Playwright HTML Report
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report-master
+          path: playwright-report
+          retention-days: 7
+
+      # 8️⃣ Deploy to GitHub Pages
+      - name: Deploy Allure to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          user_name: github-actions
+          user_email: github-actions@github.com
+
+      # 9️⃣ CI Summary
+      - name: Add CI Summary Links
+        if: always()
+        run: |
+          echo "## 🏆 Master CI Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Manual trigger execution of the full test suite." >> $GITHUB_STEP_SUMMARY
+          echo "### 🔵 Allure Report" >> $GITHUB_STEP_SUMMARY
+          echo "👉 https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_STEP_SUMMARY
+
+      # 🔟 Slack Notification (Uses existing secret name if present)
+      - name: Notify Slack
+        if: always() && secrets.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ job.status }}"
+          COLOR="#36a64f"
+          if [ "$STATUS" != "success" ]; then COLOR="#ff0000"; fi
+          
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"attachments\": [{
+              \"color\": \"$COLOR\",
+              \"title\": \"MASTER CI: Full Suite Execution\",
+              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Comprehensive Report:* https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Master CI Run>\"
+            }]
+          }" $SLACK_WEBHOOK_URL

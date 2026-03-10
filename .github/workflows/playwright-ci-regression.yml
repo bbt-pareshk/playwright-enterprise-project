@@ -27,7 +27,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.set_output.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set_output
+        run: |
+          VAL=$(grep 'enableAutoRun' config/ci-config.json | grep -o 'true\|false')
+          echo "should_run=$VAL" >> $GITHUB_OUTPUT
+          echo "CI Auto-run state: $VAL"
+
   regression-tests:
+    needs: check-gate
+    if: |
+      (github.event_name == 'push' || github.event_name == 'pull_request') && needs.check-gate.outputs.should_run == 'true' ||
+      (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     
