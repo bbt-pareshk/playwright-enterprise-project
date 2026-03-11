@@ -129,12 +129,53 @@ jobs:
           echo "### 🔵 Allure Report" >> $GITHUB_STEP_SUMMARY
           echo "👉 https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_STEP_SUMMARY
 
-      # 🔟 Slack Notification (Uses existing secret name if present)
+      # 🔟 Collect Playwright test statistics
+      - name: Collect Test Stats
+        if: always()
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const file = 'test-results/results.json';
+          if (!fs.existsSync(file)) {
+            fs.appendFileSync(process.env.GITHUB_ENV, 'TOTAL=0\nPASSED=0\nFAILED=0\nSKIPPED=0\nFLAKY=0\nFAILED_TESTS=None\n');
+            process.exit(0);
+          }
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          const stats = data.stats || {};
+          const passed = stats.expected || 0;
+          const failed = stats.unexpected || 0;
+          const skipped = stats.skipped || 0;
+          const flaky = stats.flaky || 0;
+          const total = passed + failed + skipped + flaky;
+          const failedTests = new Set();
+          function walkSuites(suites = []) {
+            for (const suite of suites) {
+              if (suite.suites) walkSuites(suite.suites);
+              for (const spec of suite.specs || []) {
+                for (const test of spec.tests || []) {
+                  if ((test.results || []).some(r => r.status === 'failed')) {
+                    failedTests.add(spec.title);
+                  }
+                }
+              }
+            }
+          }
+          walkSuites(data.suites || []);
+          const failedList = failedTests.size === 0 ? 'None' : Array.from(failedTests).slice(0, 5).join('\\n• ');
+          fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\nPASSED=${passed}\nFAILED=${failed}\nSKIPPED=${skipped}\nFLAKY=${flaky}\nFAILED_TESTS=${failedList}\n`);
+          EOF
+
+      # 1️⃣1️⃣ Slack Notification (Uses existing secret name if present)
       - name: Notify Slack
-        if: always() && secrets.SLACK_WEBHOOK_URL != ''
+        if: always()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "Slack Webhook URL is not set. Skipping notification."
+            exit 0
+          fi
+
           STATUS="${{ job.status }}"
           COLOR="#36a64f"
           if [ "$STATUS" != "success" ]; then COLOR="#ff0000"; fi
@@ -143,7 +184,7 @@ jobs:
           --data "{
             \"attachments\": [{
               \"color\": \"$COLOR\",
-              \"title\": \"MASTER CI: Full Suite Execution\",
-              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Comprehensive Report:* https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Master CI Run>\"
+              \"title\": \"MASTER CI: Full Suite Results\",
+              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Test Summary*\n• Total: *$TOTAL*\n• Passed: *$PASSED*\n• Failed: *$FAILED*\n• Skipped: *$SKIPPED*\n• Flaky: *$FLAKY*\n\n*Failed Tests (Top 5)*\n• $FAILED_TESTS\n\n*Comprehensive Report:* https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Master CI Run>\"
             }]
           }" $SLACK_WEBHOOK_URL

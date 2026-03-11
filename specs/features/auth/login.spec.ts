@@ -8,6 +8,7 @@ import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { AuthHelper } from '../../../lib/helpers/AuthHelper';
 import { ENV } from '../../../config/env';
+import { URLS } from '../../../config/urls';
 
 const TEST_ROLE = process.env.TEST_ROLE;
 
@@ -39,7 +40,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
 
   test(
     'Verify Logout functionality from Dashboard',
-    { tag: ['@member'] },
+    { tag: ['@smoke', '@member'] },
     async ({ loginAs, page }) => {
       // 1. Login as Member
       await loginAs(ROLES.MEMBER);
@@ -54,6 +55,45 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
       await loginPage.verifyLoginPageVisible();
 
       Logger.success('Logout successful: User redirected to Login page.');
+    }
+  );
+
+  test(
+    'Security Check: Post-Logout Back-Button Restriction',
+    { tag: ['@regression', '@member'] },
+    async ({ loginAs, page }) => {
+      // 1. Login and navigate to dashboard to establish session and history
+      await loginAs(ROLES.MEMBER);
+      await AssertionHelper.verifyDashboardLoaded(page);
+
+      // 2. Perform Logout
+      Logger.step('Performing Logout to establish post-auth state');
+      await AuthHelper.logout(page);
+      
+      const loginPage = new LoginPage(page);
+      await loginPage.verifyLoginPageVisible();
+
+      // 3. Attempt to navigate back to protected dashboard
+      Logger.step('Attempting to navigate back to protected dashboard after logout');
+      await page.goBack();
+
+      // 4. Verify we are still on login page or redirected back (Security enforcement)
+      await loginPage.verifyLoginPageVisible();
+      Logger.success('Security Verified: User remains on login page after clicking Back.');
+    }
+  );
+
+  test(
+    'Security Check: Unauthorized Access Redirect',
+    { tag: ['@regression', '@member'] },
+    async ({ page }) => {
+      Logger.step('Attempting to access protected dashboard URL directly without session');
+      await page.goto(URLS.DASHBOARD);
+
+      // Verify redirection to login
+      const loginPage = new LoginPage(page);
+      await loginPage.verifyLoginPageVisible();
+      Logger.success('Security Verified: Redirected to login from protected route.');
     }
   );
 

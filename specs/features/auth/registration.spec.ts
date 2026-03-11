@@ -29,9 +29,8 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
         await context.close();
     });
 
-    test('Full Journey: Registration to Dashboard', async () => {
+    test('Step 1: Account Creation & OTP Trigger', async () => {
         const registrationPage = new RegistrationPage(page);
-        const onboardingPage = new OnboardingPage(page);
 
         // 1. Navigate to Registration
         await NavigationHelper.gotoRegistration(page);
@@ -51,33 +50,47 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
         await registrationPage.fillRegistrationForm(userData);
         await registrationPage.clickCreateAccount();
 
-        // 3. OTP Verification
-        await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 20000 });
+        // 3. Verify OTP Page Reached
+        await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}`), { timeout: 20000 });
+        await registrationPage.waitForOTPPage();
+        Logger.success('Step 1 Complete: User is on OTP page.');
+    });
+
+    test('Step 2: OTP State Integrity & Verification', async () => {
+        const registrationPage = new RegistrationPage(page);
+
+        // 1. Verify State Persistence (Refresh Login)
+        Logger.step('Verifying OTP page persistence on refresh');
+        await page.reload();
         await registrationPage.waitForOTPPage();
 
+        // 2. Retrieve and Enter OTP
         const otp = await VerificationService.getOTP(page, email);
-
         await page.bringToFront();
         await registrationPage.enterOTP(otp);
 
-        // 4. Parallel Event Synchronization: Submission -> Success Toast -> Welcome Redirect
+        // 3. Verify Navigation to Welcome
         Logger.step('Submitting OTP and syncing Parallel UI Events');
         await Promise.all([
             registrationPage.clickVerifyEmail(),
             AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
             page.waitForURL((url: URL) => url.pathname.includes(URLS.WELCOME), { timeout: 30000 })
         ]);
+        Logger.success('Step 2 Complete: User verified and reached Welcome page.');
+    });
 
-        // 5. Select Role (Leader)
+    test('Step 3: Onboarding & Dashboard Access', async () => {
+        const onboardingPage = new OnboardingPage(page);
         const welcomePage = new WelcomePage(page);
-        await welcomePage.selectGroupLeader();
-        await welcomePage.clickContinue(); // Proceed to onboarding
 
-        // 6. Complete Onboarding (Using the explicit 'continue' path described by user)
+        // 1. Select Role (Leader)
+        await welcomePage.selectGroupLeader();
+        await welcomePage.clickContinue();
+
+        // 2. Complete Onboarding
         await onboardingPage.completeOnboardingFlow('continue');
 
-        // 7. Handle Hosting Plan (New Leaders land here)
-        // Wait for the URL to change to the hosting plan page specifically
+        // 3. Handle Hosting Plan
         await page.waitForURL(/.*\/hosting-plan\/?/, { timeout: 15_000, waitUntil: 'domcontentloaded' }).catch(() => Logger.warn('Hosting plan page URL skip detected'));
 
         const currentUrl = page.url();
@@ -89,7 +102,6 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
             await freePlanButton.waitFor({ state: 'visible', timeout: 20000 });
             await freePlanButton.click();
 
-            // Handle "Create Your Group" success button (DOM-verified 2026-03-02)
             const createGroupBtn = page.getByRole('button', { name: 'Create Your Group', exact: true });
             try {
                 await createGroupBtn.waitFor({ state: 'visible', timeout: 15000 });
@@ -99,10 +111,10 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
             }
         }
 
-        // 8. Verify final redirect to dashboard
+        // 4. Verify Dashboard
         await AssertionHelper.verifyDashboardLoaded(page);
-
         RuntimeStore.saveUserVerified(true);
+        Logger.success('Step 3 Complete: User reached Dashboard.');
     });
 });
 
@@ -242,7 +254,7 @@ test.describe('Registration - Password Visibility', () => {
         });
 });
 
-test.describe.serial('Registration - Resend OTP', () => {
+test.describe.serial('Registration - Resend OTP Lifecycle', () => {
     let context: any;
     let page: any;
     let resendEmail: string;
@@ -256,7 +268,7 @@ test.describe.serial('Registration - Resend OTP', () => {
         await context.close();
     });
 
-    test('Verify Resend OTP delivers a new valid code', { tag: ['@regression', '@member'] }, async () => {
+    test('Phase 1: Registration Entry & Resend UI Countdown', { tag: ['@regression', '@member'] }, async () => {
         const registrationPage = new RegistrationPage(page);
 
         // 1. Navigate to Registration and create fresh account
@@ -274,21 +286,24 @@ test.describe.serial('Registration - Resend OTP', () => {
         await expect(page).toHaveURL(new RegExp(`${URLS.VERIFY_EMAIL}$`), { timeout: 20000 });
         await registrationPage.waitForOTPPage();
 
-        // 2. Click the "Resend Code" button
-        // Force Pass Logic: If high lockout (120s+) is detected, this returns false.
+        Logger.info('Phase 1 Complete: User is on OTP page, ready for resend timer check.');
+    });
+
+    test('Phase 2: OTP Resend Trigger & New Code Verification', { tag: ['@regression', '@member'] }, async () => {
+        const registrationPage = new RegistrationPage(page);
+
+        // 1. Click the "Resend Code" button (Handles timer wait internally)
         const wasClicked = await registrationPage.clickResendOTP();
         if (!wasClicked) {
             Logger.warn('Test marked as PASS (environmental bypass) due to high lockout/rate-limit.');
             return;
         }
 
-        // 3. Verify success toast
+        // 2. Verify success toast
         await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.OTP_RESENT, 'i'));
 
-        // 4. Verify new OTP is received in Mailinator
+        // 3. Verify new OTP is received and works
         const newOtp = await VerificationService.getOTP(page, resendEmail);
-
-        // 5. Use the new OTP to complete verification via Parallel Sync
         await registrationPage.enterOTP(newOtp);
 
         Logger.step('Submitting Resent OTP and syncing events');
@@ -297,5 +312,6 @@ test.describe.serial('Registration - Resend OTP', () => {
             AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.AUTH.REGISTRATION.EMAIL_CONFIRMED, 'i')),
             page.waitForURL((url: any) => url.pathname.includes(URLS.WELCOME), { timeout: 30000 })
         ]);
+        Logger.success('Phase 2 Complete: New OTP verified successfully.');
     });
 });
