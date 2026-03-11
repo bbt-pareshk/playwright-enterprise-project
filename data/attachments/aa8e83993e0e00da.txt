@@ -1,5 +1,0 @@
-[2026-03-11T08:50:41.351Z] [STEP] Navigating to Hosting Plan Page
-[2026-03-11T08:50:42.440Z] [SUCCESS] Hosting Plan Page loaded
-[2026-03-11T08:50:42.441Z] [STEP] Selecting Free Group Plan
-[2026-03-11T08:50:44.550Z] [STEP] Verifying Free Group popup visibility
-[2026-03-11T08:50:45.034Z] [SUCCESS] Free Group popup verified

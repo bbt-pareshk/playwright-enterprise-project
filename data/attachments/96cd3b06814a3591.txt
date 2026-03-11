@@ -1,6 +1,0 @@
-[2026-03-11T08:47:33.348Z] [STEP] Logging in as Leader
-[2026-03-11T08:47:33.348Z] [STEP] Logging in as leader
-[2026-03-11T08:47:33.350Z] [NAV] Navigating to Login
-[2026-03-11T08:47:34.342Z] [INFO] Logging in user: mh_04132953w3r02f4u@mailinator.com
-[2026-03-11T08:47:36.561Z] [ASSERT] Verifying dashboard is loaded
-[2026-03-11T08:47:39.991Z] [SUCCESS] Dashboard load verified

@@ -1,1 +1,1 @@
-{"total":3,"items":[{"uid":"743c4983dc8988aba6f3413e65a0d6c3","name":"default","statistic":{"failed":2,"broken":0,"skipped":2,"passed":71,"unknown":0,"total":75}},{"uid":"e271b764efd8e5db946df6614ef8292a","name":"e2e-flows","statistic":{"failed":1,"broken":0,"skipped":0,"passed":7,"unknown":0,"total":8}},{"uid":"1a3611699e4c9a483a94bfed945473de","name":"setup-auth","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}}]}
+{"total":0,"items":[]}

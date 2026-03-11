@@ -1,6 +1,0 @@
-[2026-03-11T08:47:40.230Z] [STEP] Logging in as Member
-[2026-03-11T08:47:40.230Z] [STEP] Logging in as member
-[2026-03-11T08:47:40.231Z] [NAV] Navigating to Login
-[2026-03-11T08:47:41.159Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
-[2026-03-11T08:47:42.949Z] [ASSERT] Verifying dashboard is loaded
-[2026-03-11T08:47:49.001Z] [SUCCESS] Dashboard load verified

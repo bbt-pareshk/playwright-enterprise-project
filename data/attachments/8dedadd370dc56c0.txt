@@ -1,3 +1,0 @@
-[2026-03-11T08:48:21.405Z] [STEP] Attempting login for: mh_11084733w0r0i1f7@mailinator.com (Scenario: Unregistered user cannot login with a generated email)
-[2026-03-11T08:48:21.405Z] [INFO] Logging in user: mh_11084733w0r0i1f7@mailinator.com
-[2026-03-11T08:48:25.607Z] [SUCCESS] Success: Access denied as expected for "Unregistered user cannot login with a generated email"

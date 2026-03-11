@@ -1,3 +1,0 @@
-[2026-03-11T08:49:51.996Z] [STEP] Opening dashboard
-[2026-03-11T08:49:54.984Z] [SUCCESS] Login successful and dashboard loaded
-[2026-03-11T08:49:54.984Z] [SUCCESS] Leader Dashboard verified

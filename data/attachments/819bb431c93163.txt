@@ -1,2 +1,0 @@
-[2026-03-11T08:48:44.985Z] [NAV] Navigating to Login
-[2026-03-11T08:48:47.484Z] [SUCCESS] Empty email validation verified
