@@ -1,5 +1,8 @@
 name: Playwright CI – Master Full Suite
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   workflow_dispatch:
     inputs:
@@ -62,26 +65,17 @@ jobs:
             echo "ENVIRONMENT=staging" >> $GITHUB_ENV
           fi
 
-      # 5️⃣ RUN FULL SUITE (Tiered Execution)
-      # Tier 1: Core Parallel Tests (All tests except specific flows)
-      - name: Run Tier 1 - Core Parallel Tests
+      # 5️⃣ RUN FULL SUITE (Unified Execution)
+      # Runs both Parallel Core tests and Serial E2E Journeys in a single pass
+      # to ensure a consolidated test report and accurate Slack metrics.
+      - name: Run All Projects
         continue-on-error: true
         env:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
           CI: true
         run: |
-          echo "Running Tier 1 (Parallel Core) on $ENVIRONMENT"
-          npx playwright test --project=default
-
-      # Tier 2: Serial E2E Journeys (Stability priority)
-      - name: Run Tier 2 - Serial E2E Journeys
-        continue-on-error: true
-        env:
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
-          CI: true
-        run: |
-          echo "Running Tier 2 (Serial Flows) on $ENVIRONMENT"
-          npx playwright test --project=e2e-flows
+          echo "Running Full Suite (Default + E2E Flows) on $ENVIRONMENT"
+          npx playwright test --project=default --project=e2e-flows
 
       # 6️⃣ Generate Allure
       - name: Generate Allure Report
