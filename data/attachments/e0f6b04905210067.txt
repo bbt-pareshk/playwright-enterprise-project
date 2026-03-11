@@ -1,3 +1,0 @@
-[2026-03-11T11:20:54.946Z] [WARN] Environmental Lockout Detected: 10 min wait required.
-[2026-03-11T11:20:54.946Z] [WARN] FORCE PASS: Bypassing resend verification to prevent CI hang. Please monitor this environmental condition.
-[2026-03-11T11:20:54.946Z] [WARN] Test marked as PASS (environmental bypass) due to high lockout/rate-limit.

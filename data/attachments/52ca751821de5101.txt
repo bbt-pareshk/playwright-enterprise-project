@@ -1,3 +1,0 @@
-[2026-03-11T11:21:11.359Z] [STEP] Testing mandatory fields: Missing password submission
-[2026-03-11T11:21:11.359Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
-[2026-03-11T11:21:28.002Z] [SUCCESS] Success: Form correctly blocked "Missing password submission"
