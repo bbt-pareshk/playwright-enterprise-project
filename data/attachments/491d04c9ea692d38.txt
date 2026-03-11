@@ -1,0 +1,61 @@
+[2026-03-11T11:58:15.116Z] [STEP] Prerequisite: Setting up new Leader for payment testing
+[2026-03-11T11:58:15.116Z] [STEP] Registering new leader with email: mh_11115815w3r032ny@mailinator.com
+[2026-03-11T11:58:15.116Z] [STEP] Navigating to Registration Page
+[2026-03-11T11:58:16.317Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:16.419Z] [SUCCESS] Registration Page loaded
+[2026-03-11T11:58:16.420Z] [STEP] Filling registration form for: mh_11115815w3r032ny@mailinator.com
+[2026-03-11T11:58:17.780Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:17.846Z] [STEP] Submitting registration form
+[2026-03-11T11:58:18.779Z] [SUCCESS] Registration form submitted
+[2026-03-11T11:58:18.779Z] [STEP] Waiting for OTP entry page to be ready
+[2026-03-11T11:58:25.517Z] [SUCCESS] OTP entry page is ready — registration email was sent
+[2026-03-11T11:58:25.517Z] [INFO] [OTP] Requesting real verification code for mh_11115815w3r032ny@mailinator.com via Mailinator
+[2026-03-11T11:58:25.555Z] [STEP] Opening Mailinator inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11115815w3r032ny
+[2026-03-11T11:58:26.640Z] [SUCCESS] Mailinator inbox loaded
+[2026-03-11T11:58:26.641Z] [STEP] Searching for keywords: confirm, email, verify, otp, code in Inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11115815w3r032ny (Timeout: 60000ms)
+[2026-03-11T11:58:26.684Z] [SUCCESS] Matched email: "	MentalHappy	Confirm your email address	just now..."
+[2026-03-11T11:58:29.730Z] [STEP] Extracting OTP
+[2026-03-11T11:58:32.739Z] [INFO] OTP extraction attempt 1/5
+[2026-03-11T11:58:32.783Z] [SUCCESS] OTP found in iframe #html_msg_body: 523597
+[2026-03-11T11:58:32.794Z] [STEP] Entering OTP: 523597
+[2026-03-11T11:58:32.794Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:32.972Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:33.097Z] [SUCCESS] OTP entered
+[2026-03-11T11:58:33.097Z] [STEP] Submitting OTP and syncing Parallel UI Events
+[2026-03-11T11:58:33.098Z] [ASSERT] Verifying toast message: /Email confirmed!/i
+[2026-03-11T11:58:34.137Z] [SUCCESS] Leader registration and OTP verification completed
+[2026-03-11T11:58:34.138Z] [STEP] Selecting Leader role on Welcome page
+[2026-03-11T11:58:34.138Z] [STEP] Verifying Welcome Page is displayed
+[2026-03-11T11:58:34.138Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:34.407Z] [SUCCESS] Welcome Page verification successful (Role buttons visible)
+[2026-03-11T11:58:34.408Z] [STEP] Selecting path: Continue as a Group Leader
+[2026-03-11T11:58:34.408Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:34.518Z] [INFO] Clicked Continue as a Group Leader
+[2026-03-11T11:58:34.525Z] [SUCCESS] Group Leader path selected
+[2026-03-11T11:58:34.525Z] [STEP] Clicking Welcome Continue button
+[2026-03-11T11:58:34.525Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:34.691Z] [SUCCESS] Welcome Continue clicked
+[2026-03-11T11:58:34.691Z] [SUCCESS] Leader role selection completed
+[2026-03-11T11:58:34.691Z] [STEP] Completing Leader onboarding via SKIP path
+[2026-03-11T11:58:34.692Z] [STEP] Completing Leader onboarding via SKIP
+[2026-03-11T11:58:34.692Z] [STEP] Clicking Onboarding Skip button
+[2026-03-11T11:58:34.692Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T11:58:37.032Z] [SUCCESS] Redirected to /hosting-plan via Skip
+[2026-03-11T11:58:37.032Z] [SUCCESS] Leader onboarding (Skip) completed
+[2026-03-11T11:58:37.032Z] [STEP] Selecting Active Plan ($19)
+[2026-03-11T11:58:37.032Z] [STEP] Verifying Hosting Plan page content
+[2026-03-11T11:58:37.230Z] [SUCCESS] Hosting Plan page verification successful
+[2026-03-11T11:58:37.230Z] [STEP] Selecting Active Group Plan
+[2026-03-11T11:58:37.301Z] [STEP] Clicking Pay Now
+[2026-03-11T11:58:41.638Z] [SUCCESS] Plan selected, landing on Stripe Checkout
+[2026-03-11T11:58:42.684Z] [STEP] Testing Declined Card scenario
+[2026-03-11T11:58:42.684Z] [STEP] Completing Stripe Payment
+[2026-03-11T11:58:42.684Z] [STEP] Verifying Stripe form visibility
+[2026-03-11T11:58:42.842Z] [SUCCESS] Stripe form verified
+[2026-03-11T11:58:42.843Z] [STEP] Filling Stripe payment details
+[2026-03-11T11:58:42.863Z] [STEP] Selecting country: US
+[2026-03-11T11:58:45.458Z] [SUCCESS] Stripe payment details filled
+[2026-03-11T11:58:45.458Z] [STEP] Submitting payment
+[2026-03-11T11:58:48.860Z] [SUCCESS] Payment submitted
+[2026-03-11T11:58:48.860Z] [SUCCESS] Stripe payment submitted
+[2026-03-11T11:58:48.883Z] [SUCCESS] Declined Card error verified correctly

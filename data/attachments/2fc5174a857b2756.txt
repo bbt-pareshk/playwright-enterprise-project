@@ -1,0 +1,3 @@
+[2026-03-11T11:58:43.479Z] [STEP] Testing mandatory fields: Missing email submission
+[2026-03-11T11:58:43.479Z] [INFO] Logging in user: 
+[2026-03-11T11:59:00.231Z] [SUCCESS] Success: Form correctly blocked "Missing email submission"
