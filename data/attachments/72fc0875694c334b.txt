@@ -1,0 +1,6 @@
+[2026-03-11T12:03:59.163Z] [NAV] Navigating to Registration
+[2026-03-11T12:04:02.021Z] [SUCCESS] Password visibility verified as hidden
+[2026-03-11T12:04:02.021Z] [STEP] Toggling password visibility
+[2026-03-11T12:04:02.176Z] [SUCCESS] Password visibility verified as visible
+[2026-03-11T12:04:02.176Z] [STEP] Toggling password visibility
+[2026-03-11T12:04:02.275Z] [SUCCESS] Password visibility verified as hidden

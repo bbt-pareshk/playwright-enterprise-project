@@ -1,0 +1,13 @@
+[2026-03-11T12:03:40.215Z] [STEP] Logging in as member
+[2026-03-11T12:03:40.218Z] [NAV] Navigating to Login
+[2026-03-11T12:03:41.416Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
+[2026-03-11T12:03:43.618Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T12:03:52.421Z] [SUCCESS] Dashboard load verified
+[2026-03-11T12:03:52.421Z] [STEP] Performing Logout to establish post-auth state
+[2026-03-11T12:03:52.421Z] [STEP] User is logging out...
+[2026-03-11T12:03:52.421Z] [STEP] Clicking on Profile Icon
+[2026-03-11T12:03:52.613Z] [STEP] Clicking on Logout Button in Menu
+[2026-03-11T12:03:53.329Z] [STEP] Clicking on Confirm Logout Button in Popup
+[2026-03-11T12:03:53.960Z] [SUCCESS] Logout action completed
+[2026-03-11T12:03:56.263Z] [STEP] Attempting to navigate back to protected dashboard after logout
+[2026-03-11T12:03:57.973Z] [SUCCESS] Security Verified: User remains on login page after clicking Back.
