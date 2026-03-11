@@ -1,2 +1,0 @@
-[2026-03-11T12:03:55.709Z] [NAV] Navigating to Registration
-[2026-03-11T12:03:56.934Z] [STEP] Testing mandatory constraint: Last Name required on registration
