@@ -1,3 +1,0 @@
-[2026-03-11T11:58:24.313Z] [STEP] Attempting login for: aeshamangukiya1@gmail.com (Scenario: Registered member fails login with minimum password length violation)
-[2026-03-11T11:58:24.317Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
-[2026-03-11T11:58:27.828Z] [SUCCESS] Success: Access denied as expected for "Registered member fails login with minimum password length violation"
