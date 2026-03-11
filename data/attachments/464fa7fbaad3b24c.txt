@@ -1,0 +1,6 @@
+[2026-03-11T11:36:35.996Z] [STEP] Performing login via helper to check widget persistence
+[2026-03-11T11:36:35.996Z] [STEP] Logging in as leader
+[2026-03-11T11:36:35.997Z] [NAV] Navigating to Login
+[2026-03-11T11:36:36.598Z] [INFO] Logging in user: mh_04132953w3r02f4u@mailinator.com
+[2026-03-11T11:36:38.325Z] [STEP] Verifying chat widget visibility in Authenticated state
+[2026-03-11T11:36:38.357Z] [SUCCESS] Chat widget is visible to Authenticated users

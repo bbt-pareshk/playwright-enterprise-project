@@ -1,0 +1,2 @@
+[2026-03-11T11:36:28.189Z] [NAV] Navigating to Registration
+[2026-03-11T11:36:28.816Z] [STEP] Testing mandatory constraint: Password required on registration

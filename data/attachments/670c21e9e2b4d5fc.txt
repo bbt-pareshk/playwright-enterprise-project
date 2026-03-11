@@ -1,0 +1,4 @@
+[2026-03-11T11:37:09.794Z] [NAV] Navigating to Registration
+[2026-03-11T11:37:10.330Z] [STEP] Testing field formatting: First Name (Regex: Only letters allowed)
+[2026-03-11T11:37:10.331Z] [STEP] Filling registration form for: mh_11113710w3r05jky@mailinator.com
+[2026-03-11T11:37:11.869Z] [INFO] Checking for generic support popups to dismiss...
