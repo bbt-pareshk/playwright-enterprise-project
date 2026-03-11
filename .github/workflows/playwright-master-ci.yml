@@ -1,8 +1,5 @@
 name: Playwright CI – Master Full Suite
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   workflow_dispatch:
     inputs:
@@ -26,159 +23,82 @@ concurrency:
 
 jobs:
   full-suite:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     timeout-minutes: 60
     
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2️⃣ Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
-
-      # 3️⃣ Install dependencies
-      - name: Install dependencies
-        run: npm ci
-
-      # ⭐ Cache Playwright browsers
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
+      - run: npm ci
+      - id: playwright-cache
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-
-      # 4️⃣ Install Playwright browsers
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      # 🌍 Resolve ENVIRONMENT
-      - name: Resolve Environment
+      - name: Install Playwright
         run: |
-          if [ -n "${{ inputs.environment }}" ]; then
-            echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
+            npx playwright install --with-deps
           else
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            npx playwright install-deps
           fi
-
-      # 5️⃣ RUN FULL SUITE (Unified Execution)
-      # Runs both Parallel Core tests and Serial E2E Journeys in a single pass
-      # to ensure a consolidated test report and accurate Slack metrics.
-      - name: Run All Projects
+      - name: Resolve Env
+        run: |
+          if [ -n "${{ inputs.environment }}" ]; then echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          else echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          fi
+      - name: Run Master All
         continue-on-error: true
+        run: npx playwright test --project=default --project=e2e-flows
         env:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
           CI: true
-        run: |
-          echo "Running Full Suite (Default + E2E Flows) on $ENVIRONMENT"
-          npx playwright test --project=default --project=e2e-flows
-
-      # 6️⃣ Generate Allure
-      - name: Generate Allure Report
+      - name: Generate Allure
         if: always()
         run: |
           mkdir -p allure-report
           npx allure-commandline generate --clean -o allure-report ./allure-results || true
-
-      # 7️⃣ Upload Reports
-      - name: Upload Allure Report Artifact
+      - uses: actions/upload-artifact@v7
         if: always()
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
         with:
           name: allure-report-master
           path: allure-report
           retention-days: 7
-
-      - name: Upload Playwright HTML Report
-        if: always()
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-html-report-master
-          path: playwright-report
-          retention-days: 7
-
-      # 8️⃣ Deploy to GitHub Pages
-      - name: Deploy Allure to GitHub Pages
+      - name: Deploy Allure
         if: always()
         uses: peaceiris/actions-gh-pages@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./allure-report
-          user_name: github-actions
-          user_email: github-actions@github.com
-
-      # 9️⃣ CI Summary
-      - name: Add CI Summary Links
-        if: always()
-        run: |
-          echo "## 🏆 Master CI Results Summary" >> $GITHUB_STEP_SUMMARY
-          echo "Manual trigger execution of the full test suite." >> $GITHUB_STEP_SUMMARY
-          echo "### 🔵 Allure Report" >> $GITHUB_STEP_SUMMARY
-          echo "👉 https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_STEP_SUMMARY
-
-      # 🔟 Collect Playwright test statistics
-      - name: Collect Test Stats
+      - name: Aggregate Summary
         if: always()
         run: |
           node - <<'EOF'
           const fs = require('fs');
           const file = 'test-results/results.json';
-          if (!fs.existsSync(file)) {
-            fs.appendFileSync(process.env.GITHUB_ENV, 'TOTAL=0\nPASSED=0\nFAILED=0\nSKIPPED=0\nFLAKY=0\nFAILED_TESTS=None\n');
-            process.exit(0);
+          if (fs.existsSync(file)) {
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const s = data.stats || {};
+            const total = (s.expected || 0) + (s.unexpected || 0) + (s.skipped || 0) + (s.flaky || 0);
+            fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\nPASSED=${s.expected || 0}\n`);
+          } else {
+            fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=0\nPASSED=0\n`);
           }
-          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-          const stats = data.stats || {};
-          const passed = stats.expected || 0;
-          const failed = stats.unexpected || 0;
-          const skipped = stats.skipped || 0;
-          const flaky = stats.flaky || 0;
-          const total = passed + failed + skipped + flaky;
-          const failedTests = new Set();
-          function walkSuites(suites = []) {
-            for (const suite of suites) {
-              if (suite.suites) walkSuites(suite.suites);
-              for (const spec of suite.specs || []) {
-                for (const test of spec.tests || []) {
-                  if ((test.results || []).some(r => r.status === 'failed')) {
-                    failedTests.add(spec.title);
-                  }
-                }
-              }
-            }
-          }
-          walkSuites(data.suites || []);
-          const failedList = failedTests.size === 0 ? 'None' : Array.from(failedTests).slice(0, 5).join('\\n• ');
-          fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\nPASSED=${passed}\nFAILED=${failed}\nSKIPPED=${skipped}\nFLAKY=${flaky}\nFAILED_TESTS=${failedList}\n`);
           EOF
-
-      # 1️⃣1️⃣ Slack Notification (Uses existing secret name if present)
       - name: Notify Slack
         if: always()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "Slack Webhook URL is not set. Skipping notification."
-            exit 0
-          fi
-
-          STATUS="${{ job.status }}"
-          COLOR="#36a64f"
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then exit 0; fi
+          STATUS="${{ job.status }}"; COLOR="#36a64f"
           if [ "$STATUS" != "success" ]; then COLOR="#ff0000"; fi
-          
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{
-            \"attachments\": [{
-              \"color\": \"$COLOR\",
-              \"title\": \"MASTER CI: Full Suite Results\",
-              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Test Summary*\n• Total: *$TOTAL*\n• Passed: *$PASSED*\n• Failed: *$FAILED*\n• Skipped: *$SKIPPED*\n• Flaky: *$FLAKY*\n\n*Failed Tests (Top 5)*\n• $FAILED_TESTS\n\n*Comprehensive Report:* https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Master CI Run>\"
-            }]
-          }" $SLACK_WEBHOOK_URL
+          curl -X POST -H 'Content-type: application/json' --data "{ \"attachments\": [{ \"color\": \"$COLOR\", \"title\": \"MASTER Results\", \"text\": \"*Status:* $STATUS\n*Summary:* $PASSED/$TOTAL Passed\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Master CI Run>\" }] }" $SLACK_WEBHOOK_URL

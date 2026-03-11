@@ -1,14 +1,10 @@
 name: Playwright CI – Regression Tests
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
     inputs:
       environment:
@@ -31,231 +27,204 @@ concurrency:
 
 jobs:
   check-gate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     outputs:
       should_run: ${{ steps.set_output.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: set_output
         run: |
           VAL=$(grep 'enableAutoRun' config/ci-config.json | grep -o 'true\|false')
           echo "should_run=$VAL" >> $GITHUB_OUTPUT
-          echo "CI Auto-run state: $VAL"
 
   regression-tests:
     needs: check-gate
     if: |
       (github.event_name == 'push' || github.event_name == 'pull_request') && needs.check-gate.outputs.should_run == 'true' ||
       (github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    runs-on: ubuntu-24.04
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
     
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2️⃣ Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
-
-      # 3️⃣ Install dependencies
-      - name: Install dependencies
-        run: npm ci
-
-      # ⭐ Cache Playwright browsers (speed optimization)
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
+      - run: npm ci
+      - name: Cache Playwright
+        id: playwright-cache
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-
-      # 4️⃣ Install Playwright browsers
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      # 🌍 Resolve ENVIRONMENT
-      - name: Resolve Environment
+      - name: Install Playwright
         run: |
-          if [ -n "${{ inputs.environment }}" ]; then
-            echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
+            npx playwright install --with-deps
           else
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            npx playwright install-deps
           fi
-
-      # 5️⃣ Run Regression Tests
-      - name: Run Regression Tests
+      - name: Run Shard ${{ matrix.shardIndex }}
         continue-on-error: true
+        run: npx playwright test --grep @regression --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          ENVIRONMENT: ${{ inputs.environment || 'staging' }}
           CI: true
-        run: |
-          echo "Running Regression Tests on $ENVIRONMENT"
-          npx playwright test --grep @regression
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: allure-results-shard-${{ matrix.shardIndex }}
+          path: allure-results/
+          retention-days: 1
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results-shard-${{ matrix.shardIndex }}
+          path: test-results/results.json
+          retention-days: 1
 
-      # 6️⃣ Optional severity gate
-      - name: Fail build on critical failures
-        run: |
-          if [ -f scripts/check-critical.js ]; then
-            node scripts/check-critical.js || true
-          else
-            echo "No critical check script found"
-          fi
-
-      # 7️⃣ Generate Allure
-      - name: Generate Allure Report
+  generate-report:
+    needs: regression-tests
+    if: always()
+    runs-on: ubuntu-24.04
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Download Results
+        uses: actions/download-artifact@v8
+        with:
+          path: merged-results
+          pattern: allure-results-shard-*
+          merge-multiple: true
+      - name: Download Stats
+        uses: actions/download-artifact@v8
+        with:
+          path: shard-stats
+          pattern: test-results-shard-*
+      - name: Generate Unified Allure Report
         run: |
           mkdir -p allure-report
-          npx allure-commandline generate --clean -o allure-report ./allure-results || true
-
-      # 8️⃣ Upload Allure artifact
-      # ⚠ Added retention-days to prevent GitHub Free (500MB) storage overflow
-      - name: Upload Allure Report Artifact
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
+          npx allure-commandline generate --clean -o allure-report merged-results || true
+      
+      # 📦 1. Internal ZIP Artifact (Always available)
+      - name: Upload Allure Report (Internal Zip)
+        uses: actions/upload-artifact@v7
         with:
-          name: allure-report
+          name: allure-report-internal
           path: allure-report
-          retention-days: 3   # 👈 Auto delete after 3 days to prevent quota issues
+          retention-days: 7
 
-      # 9️⃣ Upload Playwright HTML report
-      # ⚠ Added retention-days to reduce artifact storage usage
-      - name: Upload Playwright HTML Report
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-html-report
-          path: playwright-report
-          retention-days: 3   # 👈 Prevents long-term storage buildup
-
-      # 🔍 Detect Deployment Mode
+      # 🔍 2. Detect Deployment Mode (Smart Switch)
       - name: Detect Deployment Mode
-        id: deploy_mode
+        id: mode
         run: |
-          if [ -n "${{ secrets.GH_PAGES_TOKEN }}" ]; then
-            echo "mode=external" >> $GITHUB_OUTPUT
+          if [ -n "${{ secrets.PUBLIC_REPO_TOKEN }}" ]; then
+            echo "DEPLOY_TARGET=external" >> $GITHUB_OUTPUT
+            echo "Target: External Public Repo"
           else
-            echo "mode=internal" >> $GITHUB_OUTPUT
+            echo "DEPLOY_TARGET=internal" >> $GITHUB_OUTPUT
+            echo "Target: Internal GitHub Pages"
           fi
 
-      # 1️⃣0️⃣ Deploy – Internal (Same Repo)
-      - name: Deploy Allure (Internal)
-        if: steps.deploy_mode.outputs.mode == 'internal'
-        uses: peaceiris/actions-gh-pages@v4
+      # 🚀 3A. Internal Deploy (Official - 0 Warnings)
+      - name: Upload Pages Artifact (Internal)
+        if: steps.mode.outputs.DEPLOY_TARGET == 'internal'
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./allure-report
-          user_name: github-actions
-          user_email: github-actions@github.com
+          path: allure-report
+      - name: Deploy Allure (Internal Pages)
+        if: steps.mode.outputs.DEPLOY_TARGET == 'internal'
+        id: internal_deploy
+        uses: actions/deploy-pages@v4
 
-      # 1️⃣1️⃣ Deploy – External (Private → Public Repo)
+      # 🚀 3B. External Deploy (Versatile - Might show 1 warning)
       - name: Deploy Allure (External Public Repo)
-        if: steps.deploy_mode.outputs.mode == 'external'
+        if: steps.mode.outputs.DEPLOY_TARGET == 'external'
+        id: external_deploy
         uses: peaceiris/actions-gh-pages@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
-          personal_token: ${{ secrets.GH_PAGES_TOKEN }}
-          external_repository: qaverseTesting/abcdefg_ooooo
+          personal_token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+          external_repository: ${{ secrets.PUBLIC_REPO_NAME }}
           publish_branch: gh-pages
           publish_dir: ./allure-report
-          user_name: github-actions
-          user_email: github-actions@github.com
 
-      # 1️⃣2️⃣ Set Dynamic Allure URL
-      - name: Set Allure URL
+      - name: Set Report URL
         run: |
-          if [ "${{ steps.deploy_mode.outputs.mode }}" = "external" ]; then
-            echo "ALLURE_URL=https://qaverseTesting.github.io/abcdefg_ooooo/" >> $GITHUB_ENV
+          if [ "${{ steps.mode.outputs.DEPLOY_TARGET }}" == "external" ]; then
+            # Assuming standard GitHub Pages URL format for external repo
+            REPO_NAME="${{ secrets.PUBLIC_REPO_NAME }}"
+            OWNER="${REPO_NAME%/*}"
+            NAME="${REPO_NAME#*/}"
+            echo "REPORT_URL=https://${OWNER}.github.io/${NAME}/" >> $GITHUB_ENV
           else
-            echo "ALLURE_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_ENV
+            echo "REPORT_URL=${{ steps.internal_deploy.outputs.page_url }}" >> $GITHUB_ENV
           fi
 
-      # 1️⃣3️⃣ CI Summary links
-      - name: Add CI Summary Links
-        run: |
-          echo "## 📊 Test Reports" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🔵 Allure Report (Online)" >> $GITHUB_STEP_SUMMARY
-          echo "👉 $ALLURE_URL" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🟢 Playwright HTML Report" >> $GITHUB_STEP_SUMMARY
-          echo "👉 Download from **Artifacts → playwright-html-report**" >> $GITHUB_STEP_SUMMARY
-
-      # 📊 Collect Playwright test statistics
-      - name: Collect Test Stats
-        if: always()
+      - name: Aggregate Test Stats
         run: |
           node - <<'EOF'
           const fs = require('fs');
-
-          const file = 'test-results/results.json';
-          if (!fs.existsSync(file)) {
-            fs.appendFileSync(process.env.GITHUB_ENV,
-              'TOTAL=0\nPASSED=0\nFAILED=0\nSKIPPED=0\nFLAKY=0\nFAILED_TESTS=None\n'
-            );
-            process.exit(0);
-          }
-
-          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-          const stats = data.stats || {};
-
-          const passed = stats.expected || 0;
-          const failed = stats.unexpected || 0;
-          const skipped = stats.skipped || 0;
-          const flaky = stats.flaky || 0;
-          const total = passed + failed + skipped + flaky;
-
-          const failedTests = new Set();
-
-          function walkSuites(suites = []) {
-            for (const suite of suites) {
-              if (suite.suites) walkSuites(suite.suites);
-              for (const spec of suite.specs || []) {
-                for (const test of spec.tests || []) {
-                  if ((test.results || []).some(r => r.status === 'failed')) {
-                    failedTests.add(spec.title);
-                  }
-                }
+          const path = require('path');
+          const statsDir = 'shard-stats';
+          let total = 0, passed = 0, failed = 0;
+          let failedTests = new Set();
+          if (fs.existsSync(statsDir)) {
+            fs.readdirSync(statsDir).forEach(shard => {
+              const file = path.join(statsDir, shard, 'results.json');
+              if (fs.existsSync(file)) {
+                try {
+                  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+                  const s = data.stats || {};
+                  passed += (s.expected || 0); failed += (s.unexpected || 0);
+                  const walk = (suites = []) => {
+                    for (const suite of suites) {
+                      if (suite.suites) walk(suite.suites);
+                      for (const spec of suite.specs || []) {
+                        for (const test of spec.tests || []) { if ((test.results || []).some(r => r.status === 'failed')) failedTests.add(spec.title); }
+                      }
+                    }
+                  };
+                  walk(data.suites || []);
+                } catch (e) { console.error(e); }
               }
-            }
+            });
           }
-
-          walkSuites(data.suites || []);
-
-          const failedList =
-            failedTests.size === 0
-              ? 'None'
-              : Array.from(failedTests).slice(0, 5).join('\\n• ');
-
-          fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `PASSED=${passed}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `FAILED=${failed}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `SKIPPED=${skipped}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `FLAKY=${flaky}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `FAILED_TESTS=${failedList}\n`);
+          total = passed+failed;
+          const failedList = failedTests.size === 0 ? 'None' : Array.from(failedTests).slice(0, 5).join('\\n• ');
+          fs.appendFileSync(process.env.GITHUB_ENV, `TOTAL=${total}\nPASSED=${passed}\nFAILED=${failed}\nFAILED_TESTS=${failedList}\n`);
           EOF
-
-      # 🔔 Slack Notification
+      - name: Create Unified Job Summary
+        if: always()
+        run: |
+          echo "## 📊 Regression Suite Executive Summary (Sharded)" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ **Total Passed** | $PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ **Total Failed** | $FAILED |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📈 **Total Executed** | $TOTAL |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[View Full Allure Report]($REPORT_URL)" >> $GITHUB_STEP_SUMMARY
       - name: Notify Slack
-        if: always() && env.SLACK_WEBHOOK_URL != ''
+        if: always()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          STATUS="${{ job.status }}"
-          COLOR="#36a64f"
-
-          if [ "$STATUS" != "success" ]; then
-            COLOR="#ff0000"
-          fi
-
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{
-            \"attachments\": [{
-              \"color\": \"$COLOR\",
-              \"title\": \"Playwright Test Results\",
-              \"text\": \"*Workflow:* ${{ github.workflow }}\n*Status:* $STATUS\n*Environment:* $ENVIRONMENT\n\n*Test Summary*\n• Total: *$TOTAL*\n• Passed: *$PASSED*\n• Failed: *$FAILED*\n• Skipped: *$SKIPPED*\n• Flaky: *$FLAKY*\n\n*Failed Tests (Top 5)*\n• $FAILED_TESTS\n\n*Allure Report:* $ALLURE_URL\n\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View CI Run>\"
-            }]
-          }" $SLACK_WEBHOOK_URL
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then exit 0; fi
+          STATUS="${{ needs.regression-tests.result }}"; COLOR="#36a64f"
+          if [ "$STATUS" != "success" ]; then COLOR="#ff0000"; fi
+          curl -X POST -H 'Content-type: application/json' --data "{ \"attachments\": [{ \"color\": \"$COLOR\", \"title\": \"Regression Results\", \"text\": \"*Status:* $STATUS\n*Summary:* $PASSED/$TOTAL Passed\n\n*Report URL:* $REPORT_URL\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View CI Run>\" }] }" $SLACK_WEBHOOK_URL
