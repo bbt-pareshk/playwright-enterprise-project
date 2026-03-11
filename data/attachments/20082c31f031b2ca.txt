@@ -1,0 +1,35 @@
+[2026-03-11T08:47:33.320Z] [INFO] [DISPOSABLE USER] RuntimeStore empty. Using generated email: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:47:33.321Z] [INFO] [PREREQUISITE] Checking for proof of existence for: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:47:33.321Z] [INFO] [PREREQUISITE] Proceeding with on-the-fly registration for: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:47:33.321Z] [INFO] Prerequisite not met: User mh_11084733w2r0kb0e@mailinator.com not found. Registering...
+[2026-03-11T08:47:33.321Z] [STEP] Navigating to Registration Page
+[2026-03-11T08:47:34.324Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:47:34.479Z] [SUCCESS] Registration Page loaded
+[2026-03-11T08:47:34.479Z] [STEP] Filling registration form for: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:47:36.386Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:47:36.621Z] [STEP] Submitting registration form
+[2026-03-11T08:47:36.826Z] [SUCCESS] Registration form submitted
+[2026-03-11T08:47:42.979Z] [INFO] [OTP] Requesting real verification code for mh_11084733w2r0kb0e@mailinator.com via Mailinator
+[2026-03-11T08:47:43.047Z] [STEP] Opening Mailinator inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11084733w2r0kb0e
+[2026-03-11T08:47:44.501Z] [SUCCESS] Mailinator inbox loaded
+[2026-03-11T08:47:44.502Z] [STEP] Searching for keywords: confirm, email, verify, otp, code in Inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11084733w2r0kb0e (Timeout: 60000ms)
+[2026-03-11T08:47:44.543Z] [SUCCESS] Matched email: "	MentalHappy	Confirm your email address	just now..."
+[2026-03-11T08:47:47.601Z] [STEP] Extracting OTP
+[2026-03-11T08:47:50.611Z] [INFO] OTP extraction attempt 1/5
+[2026-03-11T08:47:50.654Z] [SUCCESS] OTP found in iframe #html_msg_body: 180804
+[2026-03-11T08:47:50.666Z] [STEP] Entering OTP: 180804
+[2026-03-11T08:47:50.666Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:47:50.829Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:47:50.978Z] [SUCCESS] OTP entered
+[2026-03-11T08:47:51.051Z] [SUCCESS] OTP submitted and verify clicked
+[2026-03-11T08:47:51.051Z] [STEP] Ensuring clean session state (Force Logout)
+[2026-03-11T08:47:51.051Z] [STEP] User is logging out...
+[2026-03-11T08:47:51.051Z] [STEP] Clicking on Profile Icon
+[2026-03-11T08:48:21.076Z] [NAV] Navigating to Login
+[2026-03-11T08:48:21.742Z] [SUCCESS] Prerequisite completed: User mh_11084733w2r0kb0e@mailinator.com created and state reset.
+[2026-03-11T08:48:21.743Z] [INFO] Saving user email: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:48:21.744Z] [INFO] Saving user verification status: true
+[2026-03-11T08:48:21.744Z] [INFO] Using test email: mh_11084733w2r0kb0e@mailinator.com
+[2026-03-11T08:48:21.746Z] [NAV] Navigating to Login
+[2026-03-11T08:48:24.184Z] [ASSERT] Verifying toast message: Password reset sent successfully
+[2026-03-11T08:48:24.586Z] [SUCCESS] Password reset request submitted successfully

@@ -1,0 +1,2 @@
+[2026-03-11T08:49:34.722Z] [NAV] Navigating to Registration
+[2026-03-11T08:49:35.736Z] [STEP] Testing mandatory constraint: Email required on registration

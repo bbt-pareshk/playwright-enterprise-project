@@ -1,0 +1,54 @@
+[2026-03-11T08:55:40.813Z] [STEP] Submitting member registration form for: mh_11085540w0r0ez80@mailinator.com
+[2026-03-11T08:55:40.813Z] [STEP] Navigating to Registration Page
+[2026-03-11T08:55:41.726Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:41.826Z] [SUCCESS] Registration Page loaded
+[2026-03-11T08:55:41.826Z] [STEP] Filling registration form for: mh_11085540w0r0ez80@mailinator.com
+[2026-03-11T08:55:43.229Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:43.300Z] [STEP] Submitting registration form
+[2026-03-11T08:55:43.426Z] [SUCCESS] Registration form submitted
+[2026-03-11T08:55:43.426Z] [STEP] Waiting for OTP entry page to be ready
+[2026-03-11T08:55:48.272Z] [SUCCESS] OTP entry page is ready — registration email was sent
+[2026-03-11T08:55:48.272Z] [SUCCESS] Registration form submitted, OTP page reached
+[2026-03-11T08:55:48.273Z] [STEP] Verifying email for: mh_11085540w0r0ez80@mailinator.com
+[2026-03-11T08:55:48.273Z] [INFO] [OTP] Requesting real verification code for mh_11085540w0r0ez80@mailinator.com via Mailinator
+[2026-03-11T08:55:48.307Z] [STEP] Opening Mailinator inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085540w0r0ez80
+[2026-03-11T08:55:49.260Z] [SUCCESS] Mailinator inbox loaded
+[2026-03-11T08:55:49.260Z] [STEP] Searching for keywords: confirm, email, verify, otp, code in Inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085540w0r0ez80 (Timeout: 60000ms)
+[2026-03-11T08:55:49.304Z] [SUCCESS] Matched email: "	MentalHappy	Confirm your email address	just now..."
+[2026-03-11T08:55:52.345Z] [STEP] Extracting OTP
+[2026-03-11T08:55:55.354Z] [INFO] OTP extraction attempt 1/5
+[2026-03-11T08:55:55.400Z] [SUCCESS] OTP found in iframe #html_msg_body: 913876
+[2026-03-11T08:55:55.413Z] [STEP] Entering OTP: 913876
+[2026-03-11T08:55:55.413Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:55.596Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:55.745Z] [SUCCESS] OTP entered
+[2026-03-11T08:55:55.746Z] [STEP] Submitting OTP and syncing Parallel UI Events
+[2026-03-11T08:55:55.747Z] [ASSERT] Verifying toast message: /Email confirmed!/i
+[2026-03-11T08:55:56.473Z] [SUCCESS] Email verification (OTP) successful
+[2026-03-11T08:55:56.474Z] [STEP] Selecting Member role on Welcome page
+[2026-03-11T08:55:56.474Z] [STEP] Verifying Welcome Page is displayed
+[2026-03-11T08:55:56.474Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:56.751Z] [SUCCESS] Welcome Page verification successful (Role buttons visible)
+[2026-03-11T08:55:56.751Z] [STEP] Selecting path: Explore support groups
+[2026-03-11T08:55:56.751Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:56.877Z] [INFO] Clicked Explore support groups
+[2026-03-11T08:55:56.883Z] [SUCCESS] Explore Support Groups path selected
+[2026-03-11T08:55:56.883Z] [STEP] Clicking Welcome Continue button
+[2026-03-11T08:55:56.883Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:57.090Z] [SUCCESS] Welcome Continue clicked
+[2026-03-11T08:55:57.090Z] [SUCCESS] Role selection completed
+[2026-03-11T08:55:57.091Z] [STEP] Completing Member onboarding via SKIP path
+[2026-03-11T08:55:57.099Z] [STEP] Completing Member onboarding via SKIP
+[2026-03-11T08:55:57.099Z] [STEP] Clicking Onboarding Skip button
+[2026-03-11T08:55:57.099Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:58.130Z] [SUCCESS] Redirected to Dashboard via Skip
+[2026-03-11T08:55:58.130Z] [SUCCESS] Member onboarding (Skip) completed
+[2026-03-11T08:55:58.131Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:55:59.577Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:55:59.578Z] [STEP] Verifying Member Dashboard content
+[2026-03-11T08:55:59.578Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:55:59.606Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:55:59.623Z] [SUCCESS] Member dashboard verification successful
+[2026-03-11T08:56:00.297Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:56:01.629Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:56:01.630Z] [SUCCESS] Member SKIP journey completed successfully

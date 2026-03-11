@@ -1,0 +1,40 @@
+[2026-03-11T08:51:56.560Z] [STEP] Registering new leader with email: mh_11085156w5r00qyu@mailinator.com
+[2026-03-11T08:51:56.560Z] [STEP] Navigating to Registration Page
+[2026-03-11T08:51:57.480Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:51:57.580Z] [SUCCESS] Registration Page loaded
+[2026-03-11T08:51:57.581Z] [STEP] Filling registration form for: mh_11085156w5r00qyu@mailinator.com
+[2026-03-11T08:51:59.041Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:51:59.151Z] [STEP] Submitting registration form
+[2026-03-11T08:51:59.289Z] [SUCCESS] Registration form submitted
+[2026-03-11T08:51:59.289Z] [STEP] Waiting for OTP entry page to be ready
+[2026-03-11T08:52:04.137Z] [SUCCESS] OTP entry page is ready — registration email was sent
+[2026-03-11T08:52:04.138Z] [INFO] [OTP] Requesting real verification code for mh_11085156w5r00qyu@mailinator.com via Mailinator
+[2026-03-11T08:52:04.198Z] [STEP] Opening Mailinator inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085156w5r00qyu
+[2026-03-11T08:52:05.501Z] [SUCCESS] Mailinator inbox loaded
+[2026-03-11T08:52:05.501Z] [STEP] Searching for keywords: confirm, email, verify, otp, code in Inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085156w5r00qyu (Timeout: 60000ms)
+[2026-03-11T08:52:05.548Z] [SUCCESS] Matched email: "	MentalHappy	Confirm your email address	just now..."
+[2026-03-11T08:52:08.588Z] [STEP] Extracting OTP
+[2026-03-11T08:52:11.604Z] [INFO] OTP extraction attempt 1/5
+[2026-03-11T08:52:11.671Z] [SUCCESS] OTP found in iframe #html_msg_body: 519389
+[2026-03-11T08:52:11.687Z] [STEP] Entering OTP: 519389
+[2026-03-11T08:52:11.687Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:11.930Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:12.112Z] [SUCCESS] OTP entered
+[2026-03-11T08:52:12.112Z] [STEP] Submitting OTP and syncing Parallel UI Events
+[2026-03-11T08:52:12.114Z] [ASSERT] Verifying toast message: /Email confirmed!/i
+[2026-03-11T08:52:12.885Z] [SUCCESS] Leader registration and OTP verification completed
+[2026-03-11T08:52:12.886Z] [STEP] Selecting Leader role on Welcome page
+[2026-03-11T08:52:12.886Z] [STEP] Verifying Welcome Page is displayed
+[2026-03-11T08:52:12.886Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:13.132Z] [SUCCESS] Welcome Page verification successful (Role buttons visible)
+[2026-03-11T08:52:13.132Z] [STEP] Selecting path: Continue as a Group Leader
+[2026-03-11T08:52:13.132Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:13.317Z] [INFO] Clicked Continue as a Group Leader
+[2026-03-11T08:52:13.343Z] [SUCCESS] Group Leader path selected
+[2026-03-11T08:52:13.343Z] [STEP] Clicking Welcome Continue button
+[2026-03-11T08:52:13.343Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:13.704Z] [SUCCESS] Welcome Continue clicked
+[2026-03-11T08:52:13.704Z] [SUCCESS] Leader role selection completed
+[2026-03-11T08:52:13.704Z] [STEP] Clicking Onboarding Skip button
+[2026-03-11T08:52:13.704Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:52:14.799Z] [SUCCESS] Leader successfully skipped onboarding (accepted hosting-plan OR groups)

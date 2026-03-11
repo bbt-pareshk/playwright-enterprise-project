@@ -1,0 +1,59 @@
+[2026-03-11T08:55:19.448Z] [STEP] Submitting member registration form for: mh_11085519w0r0kfko@mailinator.com
+[2026-03-11T08:55:19.448Z] [STEP] Navigating to Registration Page
+[2026-03-11T08:55:20.351Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:20.457Z] [SUCCESS] Registration Page loaded
+[2026-03-11T08:55:20.457Z] [STEP] Filling registration form for: mh_11085519w0r0kfko@mailinator.com
+[2026-03-11T08:55:21.827Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:21.893Z] [STEP] Submitting registration form
+[2026-03-11T08:55:22.063Z] [SUCCESS] Registration form submitted
+[2026-03-11T08:55:22.063Z] [STEP] Waiting for OTP entry page to be ready
+[2026-03-11T08:55:26.920Z] [SUCCESS] OTP entry page is ready — registration email was sent
+[2026-03-11T08:55:26.920Z] [SUCCESS] Registration form submitted, OTP page reached
+[2026-03-11T08:55:26.921Z] [STEP] Verifying email for: mh_11085519w0r0kfko@mailinator.com
+[2026-03-11T08:55:26.921Z] [INFO] [OTP] Requesting real verification code for mh_11085519w0r0kfko@mailinator.com via Mailinator
+[2026-03-11T08:55:26.952Z] [STEP] Opening Mailinator inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085519w0r0kfko
+[2026-03-11T08:55:27.995Z] [SUCCESS] Mailinator inbox loaded
+[2026-03-11T08:55:27.996Z] [STEP] Searching for keywords: confirm, email, verify, otp, code in Inbox: https://www.mailinator.com/v4/public/inboxes.jsp?to=mh_11085519w0r0kfko (Timeout: 60000ms)
+[2026-03-11T08:55:28.036Z] [SUCCESS] Matched email: "	MentalHappy	Confirm your email address	just now..."
+[2026-03-11T08:55:31.080Z] [STEP] Extracting OTP
+[2026-03-11T08:55:34.089Z] [INFO] OTP extraction attempt 1/5
+[2026-03-11T08:55:34.132Z] [SUCCESS] OTP found in iframe #html_msg_body: 663371
+[2026-03-11T08:55:34.143Z] [STEP] Entering OTP: 663371
+[2026-03-11T08:55:34.143Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:34.306Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:34.455Z] [SUCCESS] OTP entered
+[2026-03-11T08:55:34.455Z] [STEP] Submitting OTP and syncing Parallel UI Events
+[2026-03-11T08:55:34.457Z] [ASSERT] Verifying toast message: /Email confirmed!/i
+[2026-03-11T08:55:35.187Z] [SUCCESS] Email verification (OTP) successful
+[2026-03-11T08:55:35.188Z] [STEP] Selecting Member role on Welcome page
+[2026-03-11T08:55:35.188Z] [STEP] Verifying Welcome Page is displayed
+[2026-03-11T08:55:35.189Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:35.478Z] [SUCCESS] Welcome Page verification successful (Role buttons visible)
+[2026-03-11T08:55:35.478Z] [STEP] Selecting path: Explore support groups
+[2026-03-11T08:55:35.478Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:35.587Z] [INFO] Clicked Explore support groups
+[2026-03-11T08:55:35.598Z] [SUCCESS] Explore Support Groups path selected
+[2026-03-11T08:55:35.598Z] [STEP] Clicking Welcome Continue button
+[2026-03-11T08:55:35.598Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:35.835Z] [SUCCESS] Welcome Continue clicked
+[2026-03-11T08:55:35.835Z] [SUCCESS] Role selection completed
+[2026-03-11T08:55:35.837Z] [STEP] Completing Member onboarding via CONTINUE path
+[2026-03-11T08:55:35.856Z] [STEP] Completing Member onboarding via 3-step sequence
+[2026-03-11T08:55:35.857Z] [STEP] Clicking Onboarding Continue button
+[2026-03-11T08:55:35.857Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:36.053Z] [INFO] Member Onboarding: Step 1 Continue clicked
+[2026-03-11T08:55:37.057Z] [STEP] Clicking Onboarding Continue button
+[2026-03-11T08:55:37.057Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:37.145Z] [INFO] Member Onboarding: Step 2 Continue clicked
+[2026-03-11T08:55:38.148Z] [STEP] Clicking final Find Support Group button
+[2026-03-11T08:55:38.148Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:55:38.255Z] [INFO] Member Onboarding: Step 3 Find Support Group clicked
+[2026-03-11T08:55:39.114Z] [SUCCESS] Redirected to Dashboard
+[2026-03-11T08:55:39.114Z] [SUCCESS] Member onboarding (Continue) completed
+[2026-03-11T08:55:39.114Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:55:40.586Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:55:40.587Z] [STEP] Verifying Member Dashboard content
+[2026-03-11T08:55:40.587Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:55:40.602Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:55:40.617Z] [SUCCESS] Member dashboard verification successful
+[2026-03-11T08:55:40.617Z] [SUCCESS] Member CONTINUE journey completed successfully

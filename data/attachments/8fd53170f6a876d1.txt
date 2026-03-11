@@ -1,0 +1,4 @@
+[2026-03-11T08:49:24.194Z] [NAV] Navigating to Registration
+[2026-03-11T08:49:25.161Z] [STEP] Testing field formatting: Email (System-wide Collision check)
+[2026-03-11T08:49:25.162Z] [STEP] Filling registration form for: aeshamangukiya1@gmail.com
+[2026-03-11T08:49:26.616Z] [INFO] Checking for generic support popups to dismiss...

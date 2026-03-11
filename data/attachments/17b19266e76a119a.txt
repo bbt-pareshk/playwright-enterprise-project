@@ -1,0 +1,25 @@
+[2026-03-11T08:49:32.217Z] [STEP] Selecting path: Continue as a Group Leader
+[2026-03-11T08:49:32.217Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:32.466Z] [INFO] Clicked Continue as a Group Leader
+[2026-03-11T08:49:32.472Z] [SUCCESS] Group Leader path selected
+[2026-03-11T08:49:32.472Z] [STEP] Clicking Welcome Continue button
+[2026-03-11T08:49:32.472Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:32.603Z] [SUCCESS] Welcome Continue clicked
+[2026-03-11T08:49:32.603Z] [INFO] Completing onboarding flow using method: continue
+[2026-03-11T08:49:32.603Z] [STEP] Completing Leader onboarding via 3-step CONTINUE sequence
+[2026-03-11T08:49:32.603Z] [STEP] Clicking Onboarding Continue button
+[2026-03-11T08:49:32.603Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:32.791Z] [INFO] Leader Onboarding: Step 1 Continue clicked
+[2026-03-11T08:49:33.802Z] [STEP] Clicking Onboarding Continue button
+[2026-03-11T08:49:33.802Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:33.894Z] [INFO] Leader Onboarding: Step 2 Continue clicked
+[2026-03-11T08:49:34.899Z] [STEP] Clicking Onboarding Continue button
+[2026-03-11T08:49:34.899Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:35.003Z] [INFO] Leader Onboarding: Step 3 Continue clicked
+[2026-03-11T08:49:36.890Z] [SUCCESS] Redirected to /hosting-plan
+[2026-03-11T08:49:36.892Z] [INFO] On hosting plan page, selecting Free plan
+[2026-03-11T08:49:36.892Z] [INFO] Checking for generic support popups to dismiss...
+[2026-03-11T08:49:38.636Z] [ASSERT] Verifying dashboard is loaded
+[2026-03-11T08:49:40.021Z] [SUCCESS] Dashboard load verified
+[2026-03-11T08:49:40.021Z] [INFO] Saving user verification status: true
+[2026-03-11T08:49:40.022Z] [SUCCESS] Step 3 Complete: User reached Dashboard.

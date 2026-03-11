@@ -1,0 +1,4 @@
+[2026-03-11T08:49:59.269Z] [STEP] Opening dashboard
+[2026-03-11T08:50:02.419Z] [SUCCESS] Login successful and dashboard loaded
+[2026-03-11T08:50:02.420Z] [STEP] Clicking on Find a support group
+[2026-03-11T08:50:02.859Z] [SUCCESS] Leader Explore section verified
