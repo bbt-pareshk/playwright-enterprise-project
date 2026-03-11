@@ -1,5 +1,0 @@
-[2026-03-11T12:54:38.634Z] [NAV] Navigating to Registration
-[2026-03-11T12:54:39.211Z] [STEP] Testing field formatting: Password (Minimum Complexity: Len, Mix, Digit)
-[2026-03-11T12:54:39.211Z] [STEP] Filling registration form for: mh_11125439w3r0jxfo@mailinator.com
-[2026-03-11T12:54:40.628Z] [INFO] Checking for generic support popups to dismiss...
-[2026-03-11T12:54:40.755Z] [INFO] Verifying form submission is blocked due to password constraints

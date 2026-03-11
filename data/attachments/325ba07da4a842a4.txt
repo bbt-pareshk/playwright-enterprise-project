@@ -1,3 +1,0 @@
-[2026-03-11T12:53:48.523Z] [STEP] Scanning Dashboard for broken or empty links
-[2026-03-11T12:53:53.728Z] [INFO] Found 6 links to audit
-[2026-03-11T12:53:53.837Z] [SUCCESS] Link integrity scan passed. No empty/placeholder links found.
