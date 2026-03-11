@@ -1,3 +1,0 @@
-[2026-03-11T11:36:39.439Z] [STEP] Attempting login for: aeshamangukiya1@gmail.com (Scenario: Registered member cannot login with incorrect password)
-[2026-03-11T11:36:39.440Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
-[2026-03-11T11:36:43.480Z] [SUCCESS] Success: Access denied as expected for "Registered member cannot login with incorrect password"
