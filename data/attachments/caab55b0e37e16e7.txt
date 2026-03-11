@@ -1,0 +1,6 @@
+[2026-03-11T11:20:16.851Z] [INFO] [member] Debug - CI: true, Skip: false, File: false at /home/runner/work/playwright-enterprise-project/playwright-enterprise-project/storage/auth/member.json
+[2026-03-11T11:20:16.852Z] [STEP] Logging in as member
+[2026-03-11T11:20:16.852Z] [NAV] Navigating to Login
+[2026-03-11T11:20:18.115Z] [INFO] Logging in user: aeshamangukiya1@gmail.com
+[2026-03-11T11:20:27.242Z] [SUCCESS] Login successful and dashboard loaded
+[2026-03-11T11:20:32.282Z] [SUCCESS] member session captured and cached.

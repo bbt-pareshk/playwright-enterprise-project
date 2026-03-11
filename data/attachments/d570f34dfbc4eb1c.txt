@@ -1,0 +1,6 @@
+[2026-03-11T11:20:37.364Z] [INFO] [leader] Debug - CI: true, Skip: false, File: false at /home/runner/work/playwright-enterprise-project/playwright-enterprise-project/storage/auth/leader.json
+[2026-03-11T11:20:37.364Z] [STEP] Logging in as leader
+[2026-03-11T11:20:37.366Z] [NAV] Navigating to Login
+[2026-03-11T11:20:38.127Z] [INFO] Logging in user: mh_04132953w3r02f4u@mailinator.com
+[2026-03-11T11:20:44.048Z] [SUCCESS] Login successful and dashboard loaded
+[2026-03-11T11:20:49.068Z] [SUCCESS] leader session captured and cached.
