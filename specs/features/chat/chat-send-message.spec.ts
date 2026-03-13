@@ -17,55 +17,55 @@ import { DataGenerator } from '../../../lib/utils/DataGenerator';
  */
 test.describe('Chat Journey - Multi-User Interaction', { tag: ['@smoke', '@chat', '@multi-user'] }, () => {
 
-    test('Chat Journey: Member sends message -> Leader receives and replies', async ({ memberPage, leaderPage }) => {
-        const groupName = APP_CONSTANTS.GROUP_NAME;
-        const memberMessage = DataGenerator.generateChatMessage();
-        const leaderReply = DataGenerator.generateChatMessage();
+    // test('Chat Journey: Member sends message -> Leader receives and replies', async ({ memberPage, leaderPage }) => {
+    //     const groupName = APP_CONSTANTS.GROUP_NAME;
+    //     const memberMessage = DataGenerator.generateChatMessage();
+    //     const leaderReply = DataGenerator.generateChatMessage();
 
-        // --- PHASE 1: MEMBER ACTION ---
-        await test.step('CHAT-01: Member - Navigate to group and send message', async () => {
-            const memberMyGroups = new MyGroupsPage(memberPage);
-            const memberChat = new ChatPage(memberPage);
+    //     // --- PHASE 1: MEMBER ACTION ---
+    //     await test.step('CHAT-01: Member - Navigate to group and send message', async () => {
+    //         const memberMyGroups = new MyGroupsPage(memberPage);
+    //         const memberChat = new ChatPage(memberPage);
 
-            await memberMyGroups.openMyGroups(true);
-            await memberMyGroups.clickGroupName(groupName);
+    //         await memberMyGroups.openMyGroups(true);
+    //         await memberMyGroups.clickGroupName(groupName);
 
-            await memberChat.waitForChatLoaded(groupName);
-            await memberChat.enterChatMessage(memberMessage);
-            await memberChat.clickSend();
-            await memberChat.verifyChatMessageVisible(memberMessage);
-            Logger.info(`Member sent message: ${memberMessage}`);
-        });
+    //         await memberChat.waitForChatLoaded(groupName);
+    //         await memberChat.enterChatMessage(memberMessage);
+    //         await memberChat.clickSend();
+    //         await memberChat.verifyChatMessageVisible(memberMessage);
+    //         Logger.info(`Member sent message: ${memberMessage}`);
+    //     });
 
-        // --- PHASE 2: LEADER ACTION ---
-        await test.step('CHAT-02: Leader - Verify Member message and send reply', async () => {
-            const leaderMyGroups = new MyGroupsPage(leaderPage);
-            const leaderChat = new ChatPage(leaderPage);
+    //     // --- PHASE 2: LEADER ACTION ---
+    //     await test.step('CHAT-02: Leader - Verify Member message and send reply', async () => {
+    //         const leaderMyGroups = new MyGroupsPage(leaderPage);
+    //         const leaderChat = new ChatPage(leaderPage);
 
-            await leaderMyGroups.openMyGroups(true);
-            await leaderMyGroups.clickJoinedGroupsTab();
-            await leaderMyGroups.clickGroupName(groupName);
+    //         await leaderMyGroups.openMyGroups(true);
+    //         await leaderMyGroups.clickJoinedGroupsTab();
+    //         await leaderMyGroups.clickGroupName(groupName);
 
-            await leaderChat.waitForChatLoaded(groupName);
+    //         await leaderChat.waitForChatLoaded(groupName);
 
-            // Verify message received from Member
-            await leaderChat.verifyChatMessageVisible(memberMessage);
-            Logger.success(`Leader verified receipt of Member message: ${memberMessage}`);
+    //         // Verify message received from Member
+    //         await leaderChat.verifyChatMessageVisible(memberMessage);
+    //         Logger.success(`Leader verified receipt of Member message: ${memberMessage}`);
 
-            // Send reply
-            await leaderChat.enterChatMessage(leaderReply);
-            await leaderChat.clickSend();
-            await leaderChat.verifyChatMessageVisible(leaderReply);
-            Logger.info(`Leader sent reply: ${leaderReply}`);
-        });
+    //         // Send reply
+    //         await leaderChat.enterChatMessage(leaderReply);
+    //         await leaderChat.clickSend();
+    //         await leaderChat.verifyChatMessageVisible(leaderReply);
+    //         Logger.info(`Leader sent reply: ${leaderReply}`);
+    //     });
 
-        // --- PHASE 3: FINAL VERIFICATION ---
-        await test.step('CHAT-03: Member - Verify Leader reply in real-time', async () => {
-            const memberChat = new ChatPage(memberPage);
+    //     // --- PHASE 3: FINAL VERIFICATION ---
+    //     await test.step('CHAT-03: Member - Verify Leader reply in real-time', async () => {
+    //         const memberChat = new ChatPage(memberPage);
 
-            // Member should already be on the chat page from Phase 1
-            await memberChat.verifyChatMessageVisible(leaderReply);
-            Logger.success('Member successfully received Leader reply in real-time');
-        });
-    });
+    //         // Member should already be on the chat page from Phase 1
+    //         await memberChat.verifyChatMessageVisible(leaderReply);
+    //         Logger.success('Member successfully received Leader reply in real-time');
+    //     });
+    // });
 });

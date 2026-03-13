@@ -175,15 +175,12 @@ export class CreateSessionModal extends BasePage {
       const doneBtn = overlay.getByRole('button', { name: /Done|Apply|Save|Add/i }).first();
       if (await doneBtn.isVisible()) {
         await doneBtn.click();
-      } else {
-        await this.page.keyboard.press('Escape');
       }
 
       await overlay.waitFor({ state: 'hidden', timeout: 5000 });
       Logger.success('Tags drawer closed');
     } catch (err: any) {
-      Logger.warn(`Tag selection flow issue: ${err.message}. Closing overlay.`);
-      await this.page.keyboard.press('Escape').catch(() => { });
+      Logger.warn(`Tag selection flow issue: ${err.message}.`);
     }
   }
 }
