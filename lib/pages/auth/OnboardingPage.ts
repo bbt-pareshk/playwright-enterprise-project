@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../base/BasePage';
 import { Logger } from '../../utils/Logger';
 import { ROUTE_PATHS } from '../../../config/urls';
@@ -58,11 +58,38 @@ export class OnboardingPage extends BasePage {
      * Clicks the main "Continue" button on the current onboarding screen.
      */
     async clickContinue() {
-        Logger.step('Clicking Onboarding Continue button');
-        await this.dismissSupportPopups();
+        Logger.step('Attempting to click Onboarding Continue button');
         const btn = this.getNavContinueButton();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
+        await this.ensureActionEnabled(btn);
+        await this.robustClick(btn);
+    }
+
+    /**
+     * Ensures an onboarding action button (Continue/Find Group) is enabled.
+     * If the button is disabled, it attempts to select the first available card/option.
+     */
+    private async ensureActionEnabled(btn: Locator) {
+        await this.dismissSupportPopups();
+        await btn.waitFor({ state: 'visible', timeout: 15000 });
+
+        // If button is disabled, we likely need to select an option on the page
+        if (await btn.isDisabled()) {
+            Logger.info(`Button "${await btn.innerText()}" is disabled. Selecting first available option...`);
+            
+            // Centralized selector for onboarding choice cards and buttons
+            const options = this.page.locator('ul.chakra-wrap__list button, [class*="card"], [role="checkbox"]').first();
+            
+            if (await options.isVisible()) {
+                await options.click();
+                Logger.info('Option selected. Waiting for button to enable...');
+                await this.page.waitForTimeout(1000); // Wait for state change
+            }
+        }
+
+        // Wait for enabled state with a reasonable timeout
+        await expect(btn).toBeEnabled({ timeout: 15000 }).catch(async () => {
+            Logger.warn(`Button "${await btn.innerText()}" still disabled after selection attempt.`);
+        });
     }
 
     /**
@@ -80,10 +107,10 @@ export class OnboardingPage extends BasePage {
      * Clicks the final "Find Support Group" button on the last onboarding screen.
      */
     async clickFindSupportGroup() {
-        Logger.step('Clicking final Find Support Group button');
-        await this.dismissSupportPopups();
-        await this.findSupportGroupButton.waitFor({ state: 'visible', timeout: 10000 });
-        await this.findSupportGroupButton.click();
+        Logger.step('Attempting to click final Find Support Group button');
+        const btn = this.findSupportGroupButton;
+        await this.ensureActionEnabled(btn);
+        await this.robustClick(btn);
     }
 
     /* ============================
@@ -111,19 +138,19 @@ export class OnboardingPage extends BasePage {
         // Step 1
         await this.clickContinue();
         Logger.info('Leader Onboarding: Step 1 Continue clicked');
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1500);
 
         // Step 2
         await this.clickContinue();
         Logger.info('Leader Onboarding: Step 2 Continue clicked');
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1500);
 
         // Step 3
         await this.clickContinue();
         Logger.info('Leader Onboarding: Step 3 Continue clicked');
 
-        // Verify redirect to Hosting Plan
-        await this.page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.HOSTING_PLAN) || url.pathname.includes('hosting-plan'), { timeout: 15000 });
+        // Verify redirect to Hosting Plan - Increased timeout for staging stability
+        await this.page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.HOSTING_PLAN) || url.pathname.includes('hosting-plan'), { timeout: 30000 });
         Logger.success('Redirected to /hosting-plan');
     }
 

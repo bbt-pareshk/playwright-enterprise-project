@@ -13,7 +13,7 @@ export const APP_CONSTANTS = {
     },
 
     // Group related constants
-    GROUP_NAME: 'PW_Group_20260311_085039_w4r0721hrh',
+    GROUP_NAME: '789DSAD',
     CHAT_MESSAGE: 'Automation_Chat_Test_Message_',
 
     // Path related constants

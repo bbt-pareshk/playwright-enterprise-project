@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../base/BasePage';
 import { Logger } from '../../utils/Logger';
 
@@ -33,8 +33,13 @@ export class FreeGroupPopup extends BasePage {
      */
     async verifyVisible() {
         Logger.step('Verifying Free Group popup visibility');
-        await this.expectVisible(this.modalContainer, 'Free Group popup should be visible');
-        await this.expectVisible(this.goToGroupButton, 'Go to Groups button should be visible in popup');
+        // Increased timeout significantly to account for slow backend response on staging
+        await this.expectVisible(this.modalContainer, 'Free Group popup should be visible', 30_000);
+        
+        // Match exact text from the provided DOM to ensure correct state
+        await expect(this.modalContainer.getByText(/You're all set!/i)).toBeVisible({ timeout: 15_000 });
+        await this.expectVisible(this.goToGroupButton, 'Go to Groups button should be visible in popup', 15_000);
+        
         Logger.success('Free Group popup verified');
     }
 
@@ -43,8 +48,8 @@ export class FreeGroupPopup extends BasePage {
      */
     async clickGoToGroup() {
         Logger.step('Clicking Go to Groups in popup');
-        await this.click(this.goToGroupButton);
-        await this.modalContainer.waitFor({ state: 'hidden', timeout: 10000 });
+        await this.robustClick(this.goToGroupButton);
+        await this.modalContainer.waitFor({ state: 'hidden', timeout: 15000 });
         Logger.success('Popup dismissed via Go to Groups');
     }
 

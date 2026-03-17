@@ -1,50 +1,73 @@
 import { test, expect } from '../../../lib/fixtures/index';
+import { Page, BrowserContext } from '@playwright/test';
 import { HostingPlanPage } from '../../../lib/pages/hosting/HostingPlanPage';
+import { LeaderHelper } from '../../../lib/helpers/LeaderHelper';
+import { DataGenerator } from '../../../lib/utils/DataGenerator';
 
-test.describe('Hosting Plan Selection', { tag: ['@smoke', '@leader'] }, () => {
+test.describe.serial('Hosting Plan Selection', { tag: ['@smoke', '@leader'] }, () => {
+    let sharedPage: Page;
+    let sharedContext: BrowserContext;
 
-    test.beforeEach(async ({ leaderPage }) => {
+    test.beforeAll(async ({ browser }) => {
         // Staging can be slow on hosting plan page
-        test.setTimeout(60_000);
-        const hostingPage = new HostingPlanPage(leaderPage);
-        await hostingPage.goto();
-    });
+        test.setTimeout(120_000);
 
-    test('Hosting-plan page loads for authenticated leader', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
+        sharedContext = await browser.newContext();
+        sharedPage = await sharedContext.newPage();
+
+        // Step 1: Register a fresh leader to ensure Hosting Plan buttons are enabled
+        const email = DataGenerator.generateEmail();
+        await LeaderHelper.registerNewLeader(sharedPage, sharedContext, email);
+        await LeaderHelper.selectRoleAndContinue(sharedPage);
+
+        // Step 2: Clear Onboarding to reach Hosting Page
+        await LeaderHelper.completeOnboardingViaSkip(sharedPage);
+
+        // Step 3: Land on target page and verify integrity
+        const hostingPage = new HostingPlanPage(sharedPage);
+        await hostingPage.goto();
         await hostingPage.verifyPageLoaded();
     });
 
-    test('Free plan (Group Listing) card is visible', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
-        await hostingPage.verifyPageLoaded(); // Already verifies Free card
+    test.afterAll(async () => {
+        if (sharedPage) await sharedPage.close();
+        if (sharedContext) await sharedContext.close();
     });
 
-    test('Active Group ($19/month) card is visible', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
+    test('Hosting-plan page loads for authenticated leader', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
+        await hostingPage.verifyPageLoaded();
+    });
+
+    test('Free plan (Group Listing) card is visible', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
+        // Already verified as part of verifyPageLoaded() in beforeAll/Load test
+        await expect(hostingPage.freePlanButton).toBeVisible();
+    });
+
+    test('Active Group ($19/month) card is visible', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
         await expect(hostingPage.activePlanButton).toBeVisible();
-        await expect(leaderPage.getByText('$19')).toBeVisible();
+        await expect(sharedPage.getByText('$19')).toBeVisible();
     });
 
-    test('Multi-Group/Org ($49/month) card is visible', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
+    test('Multi-Group/Org ($49/month) card is visible', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
         await expect(hostingPage.multiGroupPlanButton).toBeVisible();
-        await expect(leaderPage.getByText('$49')).toBeVisible();
+        await expect(sharedPage.getByText('$49')).toBeVisible();
     });
 
-    test('"Get Group Listing" CTA on Free plan is clickable', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
+    test('"Get Group Listing" CTA on Free plan is clickable', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
         await expect(hostingPage.freePlanButton).toBeEnabled();
     });
 
-    test('Clicking "Get Group Listing" shows Free group popup', async ({ leaderPage }) => {
-        const hostingPage = new HostingPlanPage(leaderPage);
+    test('Clicking "Get Group Listing" shows Free group popup', async () => {
+        const hostingPage = new HostingPlanPage(sharedPage);
         await hostingPage.selectFreePlan();
 
         // Verify modal/popup appears after clicking free plan CTA
-        // ⚠️ Note: The button INSIDE the popup may still say 'Go to Group' (different from the CTA on the plan page)
-        // Popup button text is unverified — see HANDOVER_SUMMARY.md Task 3 if this test fails
-        const modal = leaderPage.locator('.chakra-modal__content, section[role="dialog"]').first();
+        const modal = sharedPage.locator('.chakra-modal__content, section[role="dialog"]').first();
         await expect(modal).toBeVisible();
     });
 });

@@ -104,6 +104,8 @@ test.describe('Member E2E Journeys', { tag: ['@smoke', '@member'] }, () => {
             // Wait for onboarding indicator
             await expect(page.getByText(new RegExp(UI_CONSTANTS.AUTH.ONBOARDING.MEMBER_INTRO, 'i'))).toBeVisible({ timeout: 20000 });
             
+            // Wait a moment for the backend to save the state before reloading
+            await page.waitForTimeout(3000);
             await page.reload();
             
             // Should still be on onboarding, not kicked back to welcome or login

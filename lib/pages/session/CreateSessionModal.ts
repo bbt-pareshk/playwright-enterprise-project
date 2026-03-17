@@ -61,14 +61,11 @@ export class CreateSessionModal extends BasePage {
     Logger.step('Filling Create Session form');
 
     await this.setDateToNextDay();
-    await this.page.waitForTimeout(500);
 
     await this.ensureTimezoneSelected();
-    await this.page.waitForTimeout(500);
 
     // Title
     await this.titleInput.fill(data.title);
-    await this.page.waitForTimeout(300);
 
     // Description - Highly robust Lexical interaction
     Logger.info('Filling description editor');
@@ -84,7 +81,6 @@ export class CreateSessionModal extends BasePage {
 
     // New required step: Tags
     await this.ensureTagSelected();
-    await this.page.waitForTimeout(500);
 
     Logger.success('Form filling completed');
   }
@@ -131,15 +127,15 @@ export class CreateSessionModal extends BasePage {
 
     // Keyboard-first approach for React-Select/Combobox
     await this.timezoneControl.click({ delay: 100 });
-    await this.page.waitForTimeout(300);
+    await expect(this.timezoneOptions.first()).toBeVisible({ timeout: 5000 });
 
     // Search for a common timezone
     Logger.info('Searching for timezone "Pacific"');
     await this.page.keyboard.type('Pacific', { delay: 50 });
-    await this.page.waitForTimeout(1000); // Wait for results
+    await expect(this.timezoneOptions.filter({ hasText: /Pacific/i }).first()).toBeVisible({ timeout: 5000 }); // Wait for results
     await this.page.keyboard.press('Enter');
 
-    await this.page.waitForTimeout(500);
+    await expect(this.page.locator('.react-select__menu')).toBeHidden({ timeout: 5000 });
     Logger.info('Timezone selection attempted via keyboard');
   }
 

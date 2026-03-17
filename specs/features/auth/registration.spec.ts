@@ -83,38 +83,17 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
         const onboardingPage = new OnboardingPage(page);
         const welcomePage = new WelcomePage(page);
 
-        // 1. Select Role (Leader)
-        await welcomePage.selectGroupLeader();
+        // 1. Select Role (Member)
+        await welcomePage.selectSupportGroupMember();
         await welcomePage.clickContinue();
 
-        // 2. Complete Onboarding
-        await onboardingPage.completeOnboardingFlow('continue');
+        // 2. Complete Onboarding (Member sequence ends on /groups)
+        await onboardingPage.completeMemberOnboardingViaContinue();
 
-        // 3. Handle Hosting Plan
-        await page.waitForURL(/.*\/hosting-plan\/?/, { timeout: 15_000, waitUntil: 'domcontentloaded' }).catch(() => Logger.warn('Hosting plan page URL skip detected'));
-
-        const currentUrl = page.url();
-        if (currentUrl.includes(URLS.PATHS.HOSTING_PLAN) || currentUrl.includes('hosting-plan')) {
-            Logger.info('On hosting plan page, selecting Free plan');
-            await onboardingPage.dismissSupportPopups();
-
-            const freePlanButton = page.getByRole('button', { name: UI_CONSTANTS.GROUPS.HOSTING.FREE_CTA, exact: true });
-            await freePlanButton.waitFor({ state: 'visible', timeout: 20000 });
-            await freePlanButton.click();
-
-            const createGroupBtn = page.getByRole('button', { name: 'Create Your Group', exact: true });
-            try {
-                await createGroupBtn.waitFor({ state: 'visible', timeout: 15000 });
-                await createGroupBtn.click();
-            } catch (e) {
-                Logger.warn(' "Create Your Group" button not visible. Moving to dashboard validation.');
-            }
-        }
-
-        // 4. Verify Dashboard
+        // 3. Verify Dashboard Access (Members skip Hosting Plan)
         await AssertionHelper.verifyDashboardLoaded(page);
         RuntimeStore.saveUserVerified(true);
-        Logger.success('Step 3 Complete: User reached Dashboard.');
+        Logger.success('Step 3 Complete: Member reached Dashboard.');
     });
 });
 

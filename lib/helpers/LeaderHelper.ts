@@ -92,8 +92,8 @@ export class LeaderHelper {
     static async verifyDashboard(page: Page) {
         Logger.step('Verifying Leader Dashboard');
         await AssertionHelper.verifyDashboardLoaded(page);
-        // Leader specific element check (e.g., 'Start a Group' link)
-        const startGroupBtn = page.getByRole('link', { name: /Start a Group/i }).first();
+        // Leader specific element check (now an actual button)
+        const startGroupBtn = page.getByRole('button', { name: UI_CONSTANTS.DASHBOARD.START_GROUP_LINK }).first();
         await expect(startGroupBtn).toBeVisible({ timeout: 15000 });
         Logger.success('Leader dashboard verification successful');
     }

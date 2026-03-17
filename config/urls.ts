@@ -12,7 +12,8 @@ export const ROUTE_PATHS = {
   LOGIN: '/login',
   DASHBOARD: '/groups',
   MYGROUP: '/groups/my',
-  CREATE_GROUP: '/groups/new',
+  CREATE_GROUP: '/groups/create', // Updated from /groups/new based on staging behavior
+  CREATE_GROUP_LEGACY: '/groups/new',
   FORGOT_PASSWORD: '/forgot-password',
   RESET: '/reset',
   VERIFY_EMAIL: '/user/email/verify',

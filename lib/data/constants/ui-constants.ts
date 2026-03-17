@@ -48,7 +48,7 @@ export const UI_CONSTANTS = {
         },
     },
     DASHBOARD: {
-        START_GROUP_LINK: 'Start a Group',
+        START_GROUP_LINK: 'Create Your Support Group',
         FIND_SUPPORT_GROUP_BUTTON: 'Find a support group',
         SEARCH_PLACEHOLDER: 'Search support groups...',
     },
