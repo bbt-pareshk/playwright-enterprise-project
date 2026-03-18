@@ -192,10 +192,10 @@ export class LoginPage extends BasePage {
   }
 
   async verifyEmptyCredentialsError() {
-    // Lifetime Fix: Give the app a small buffer to show errors before falling back
-    await this.page.waitForTimeout(2000);
-    const isVisible = await this.emailError.isVisible().catch(() => false) || await this.passwordError.isVisible().catch(() => false);
-    if (!isVisible) {
+    // Lifetime Fix: Wait for the error dynamically instead of static wait
+    try {
+      await expect(this.emailError.or(this.passwordError)).toBeVisible({ timeout: 3000 });
+    } catch {
       await this.verifyLoginPageVisible();
     }
   }

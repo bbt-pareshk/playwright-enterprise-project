@@ -50,8 +50,11 @@ test.describe('Global Authentication Setup', () => {
                 Logger.info(`[${role}] Landed on ${url}. Navigating to Dashboard...`);
                 // Attempt to click 'Continue' or 'Skip' to reach dashboard
                 await page.locator('button:has-text("Continue"), button:has-text("Skip"), button:has-text("Leader")').first().click().catch(() => {});
-                await page.waitForTimeout(2000);
-                
+                // Wait dynamically for the next skip button or network idle instead of 2 seconds frozen
+                await Promise.race([
+                    page.waitForLoadState('networkidle', { timeout: 3000 }).catch(() => {}),
+                    page.locator('button:has-text("Skip")').waitFor({ state: 'visible', timeout: 3000 }).catch(() => {})
+                ]);
                 // If still on onboarding, try one more skip
                 if (page.url().includes('onboarding')) {
                    await page.locator('button:has-text("Skip")').first().click().catch(() => {});

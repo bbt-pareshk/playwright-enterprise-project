@@ -13,7 +13,7 @@ export default defineConfig({
 
   forbidOnly: isCI,
   retries: isCI ? 0 : 0,
-  workers: 2,
+  workers: isCI ? 3 : 3,
 
   outputDir: 'test-results',
 
@@ -57,7 +57,7 @@ export default defineConfig({
       use: { ...DEFAULT_BROWSER },
       testMatch: /specs\/features\/flows\/.*/,
       fullyParallel: false,
-      workers: 1,
+      workers: 2,
     },
   ],
 });
