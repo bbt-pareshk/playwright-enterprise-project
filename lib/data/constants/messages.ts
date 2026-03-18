@@ -35,6 +35,9 @@ export const MESSAGES = {
 
     GROUPS: {
         CREATED_SUCCESS: 'Group created successfully!',
+        ACTIVE_LIMIT_HEADING: "You've reached your active group limit",
+        ACTIVE_LIMIT_ACTIVE_PLAN: "Your current plan allows 1 active group only.\nTo create another group, you'll need to upgrade your plan.",
+        ACTIVE_LIMIT_MULTI_PLAN: 'Your current plan allows 3 active groups only.',
     },
 
     DASHBOARD: {

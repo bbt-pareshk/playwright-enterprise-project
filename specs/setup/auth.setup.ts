@@ -15,6 +15,14 @@ test.describe('Global Authentication Setup', () => {
 
     const rolesToAuthenticate: UserRole[] = [ROLES.MEMBER, ROLES.LEADER];
 
+    // Enterprise Optimization: Only authenticate hosting plan accounts if credentials are provided
+    if (ENV.LEADER_ACTIVE_HOSTING_PLAN_USERNAME) {
+        rolesToAuthenticate.push(ROLES.LEADER_ACTIVE_HOSTING_PLAN);
+    }
+    if (ENV.LEADER_MULTI_GROUP_HOSTING_PLAN_USERNAME) {
+        rolesToAuthenticate.push(ROLES.LEADER_MULTI_GROUP_HOSTING_PLAN);
+    }
+
     for (const role of rolesToAuthenticate) {
         test(`Authenticate ${role}`, async ({ loginAs, page, context }) => {
             const statePath = path.resolve(process.cwd(), `storage/auth/${role}.json`);
@@ -35,12 +43,26 @@ test.describe('Global Authentication Setup', () => {
 
             await loginAs(role);
 
+            // Self-Healing Setup: If we land on Welcome/Onboarding instead of Dashboard, 
+            // we must clear them now or every downstream test will fail.
+            const url = page.url();
+            if (url.includes('/welcome') || url.includes('/onboarding')) {
+                Logger.info(`[${role}] Landed on ${url}. Navigating to Dashboard...`);
+                // Attempt to click 'Continue' or 'Skip' to reach dashboard
+                await page.locator('button:has-text("Continue"), button:has-text("Skip"), button:has-text("Leader")').first().click().catch(() => {});
+                await page.waitForTimeout(2000);
+                
+                // If still on onboarding, try one more skip
+                if (page.url().includes('onboarding')) {
+                   await page.locator('button:has-text("Skip")').first().click().catch(() => {});
+                }
+            }
+
             const dashboard = new DashboardPage(page);
             await dashboard.verifyDashboardLoaded();
-            await page.waitForTimeout(5000);
 
             await context.storageState({ path: statePath });
-            Logger.success(`${role} session captured and cached.`);
+            Logger.success(`${role} session captured at Dashboard state.`);
         });
     }
 });

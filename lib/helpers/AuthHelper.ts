@@ -185,9 +185,16 @@ export class AuthHelper {
             throw new Error(`User role "${role}" not found.`);
         }
 
+        // Fresh login: Force logout first to ensure no session conflicts
+        await this.forceLogout(page);
 
         await NavigationHelper.gotoLogin(page);
         await loginPage.login(user.username, user.password);
+
+        // Verification: Ensure login actually worked
+        if (!(await loginPage.isLoggedIn())) {
+            throw new Error(`Login failed for role "${role}" using username: ${user.username}. User is still on the login page.`);
+        }
     }
 
 
@@ -206,17 +213,40 @@ export class AuthHelper {
      */
     static async forceLogout(page: Page) {
         Logger.step('Ensuring clean session state (Force Logout)');
+
+        // Optimization: If we are already on login or register, storage is likely clear/isolated
+        const url = page.url();
+        if (url.includes('/login') || url.includes('/register') || url === 'about:blank') {
+            Logger.info('Already on an anonymous page. Skipping logout logic.');
+            await page.context().clearCookies();
+            return;
+        }
+
         try {
-            // Try standard UI logout (works if on standard dashboard)
+            // Try standard UI logout logic first
             const logoutPage = new LogoutPage(page);
             await logoutPage.logout();
         } catch (error) {
-            Logger.warn('UI Logout failed or not available on this page. Clearing session memory.');
-            // Fallback: Clear all cookies and local storage to force session termination
+            Logger.warn('UI Logout failed or not available. Clearing storage manually.');
+            
+            // Clear browser cookies at the context level
             await page.context().clearCookies();
-            await page.evaluate(() => localStorage.clear());
-            await page.evaluate(() => sessionStorage.clear());
-            await NavigationHelper.gotoLogin(page);
+
+            // Clear storage at the page level only if we are on a valid, non-blank page
+            const currentUrl = page.url();
+            if (currentUrl && currentUrl !== 'about:blank') {
+                try {
+                    await page.evaluate(() => {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                    });
+                } catch (e) {
+                    // Ignore security errors (e.g. if page is blank or cross-origin)
+                }
+            }
+            
+            // Ensure we finish on a known state (Login)
+            await NavigationHelper.gotoLogin(page).catch(() => {});
         }
     }
 }

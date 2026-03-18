@@ -1,8 +1,7 @@
-import { test } from '../../../lib/fixtures/index';
+import { test, expect } from '../../../lib/fixtures/index';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { LeaderHelper } from '../../../lib/helpers/LeaderHelper';
 import { PaymentHelper } from '../../../lib/helpers/PaymentHelper';
-import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { Logger } from '../../../lib/utils/Logger';
 
 /**
@@ -37,9 +36,13 @@ test.describe('Leader Flow - Active Group Subscription', { tag: ['@smoke', '@lea
             await PaymentHelper.fillStripeAndPay(page);
         });
 
-        await test.step('TC-LAG-06: Payment Success - Verify redirect to Dashboard', async () => {
+        await test.step('TC-LAG-06: Payment Success - Verify redirect to Group Creation', async () => {
+            // Post-payment, the app now redirects directly to /groups/create (no popup).
+            // verifySuccessAndContinue() handles both the popup path and the direct redirect.
             await PaymentHelper.verifySuccessAndContinue(page);
-            await AssertionHelper.verifyDashboardLoaded(page);
+            // Confirm we are on the group creation or groups section
+            await expect(page).toHaveURL(/.*\/groups(\/create)?$/, { timeout: 15_000 });
+            Logger.success('Leader Active Group Subscription Journey completed successfully');
         });
     });
 });

@@ -125,7 +125,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
         await loginPage.openLoginPage();
         Logger.step(`Attempting login for: ${data.user} (Scenario: ${data.scenario})`);
 
-        await loginPage.login(data.user, data.pass);
+        await loginPage.login(data.user, data.pass, false);
         await loginPage.verifyInvalidLoginError();
 
         Logger.success(`Success: Access denied as expected for "${data.scenario}"`);
@@ -146,7 +146,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
         await loginPage.openLoginPage();
         Logger.step(`Testing mandatory fields: ${fieldData.name}`);
 
-        await loginPage.login(fieldData.email, fieldData.pass);
+        await loginPage.login(fieldData.email, fieldData.pass, false);
         await loginPage.verifyEmptyCredentialsError();
 
         Logger.success(`Success: Form correctly blocked "${fieldData.name}"`);

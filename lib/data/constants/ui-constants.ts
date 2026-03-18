@@ -88,6 +88,11 @@ export const UI_CONSTANTS = {
             PAY_AND_ACTIVATE: 'pay and activate group'
         },
         MEMBERS_REGEX: 'Members?',
+        LIMIT_MODAL: {
+            OK_BUTTON: 'OK',
+            CANCEL_BUTTON: 'Cancel',
+            UPGRADE_BUTTON: 'Upgrade to Multi',
+        },
         CREATE: {
             INPUTS: {
                 NAME: 'Group name',

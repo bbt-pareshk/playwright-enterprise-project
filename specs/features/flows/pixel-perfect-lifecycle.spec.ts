@@ -1,4 +1,4 @@
-import { test } from '../../../lib/fixtures/index';
+import { test, expect } from '../../../lib/fixtures/index';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { LeaderHelper } from '../../../lib/helpers/LeaderHelper';
 import { PaymentHelper } from '../../../lib/helpers/PaymentHelper';
@@ -67,9 +67,12 @@ test.describe('Pixel Perfect Lifecycle Flow', { tag: ['@smoke', '@leader'] }, ()
             await PaymentHelper.fillStripeAndPay(page);
         });
 
-        await test.step('LIFECYCLE-07: Payment Success - Dismiss popup and verify Dashboard', async () => {
+        await test.step('LIFECYCLE-07: Payment Success - Verify redirect to Group Creation', async () => {
+            // Post-payment, the app now redirects directly to /groups/create (no popup).
             await PaymentHelper.verifySuccessAndContinue(page);
-            await LeaderHelper.verifyDashboard(page);
+            // Confirm we landed on the group creation or groups section
+            await expect(page).toHaveURL(/.*\/groups(\/create)?$/, { timeout: 15_000 });
+            Logger.success('Payment succeeded and redirected to Group Creation flow');
         });
 
         // --- PHASE 4: FEATURE USAGE ---

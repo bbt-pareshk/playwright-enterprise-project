@@ -17,9 +17,34 @@ export class AssertionHelper {
      * Verifies that a toast/success message is visible on the page.
      */
     static async verifyToastMessage(page: Page, message: string | RegExp) {
-        Logger.assertion(`Verifying toast message: ${message}`);
-        const toast = page.getByText(message);
-        await expect(toast).toBeVisible({ timeout: 15_000 });
+        Logger.assertion(`Verifying toast message matching: ${message}`);
+        
+        const searchPattern = typeof message === 'string' 
+            ? new RegExp(message.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '.*'), 'i') 
+            : message;
+
+        // Lifetime Fix: Use a broader selector for any alert/toast container
+        const toastSelector = '.chakra-toast, .chakra-alert, [role="status"], [role="alert"]';
+        const toast = page.locator(toastSelector).filter({ hasText: searchPattern }).first();
+        
+        try {
+            // Shortened timeout for the initial 'soft' check to keep suite fast
+            await expect(toast).toBeVisible({ timeout: 10_000 });
+        } catch (e) {
+            // If the URL has already changed, the toast might be gone. 
+            // In that case, we log a warning instead of failing the test.
+            const anyToast = page.locator(toastSelector).first();
+            const textContent = await anyToast.innerText().catch(() => 'none');
+            
+            Logger.warn(`Toast mismatch/timeout. Expected: ${message}. Found: ${textContent}`);
+            
+            // If we didn't find the specific text but we found A toast, we report it clearly.
+            if (textContent !== 'none') {
+                throw new Error(`Toast text mismatch. Expected: ${message}, Found: ${textContent}`);
+            }
+            // If no toast at all, only throw if we hasn't redirected yet
+            throw e;
+        }
     }
 
     /**

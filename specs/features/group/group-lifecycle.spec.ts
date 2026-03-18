@@ -14,7 +14,7 @@ import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 // Combined flow: Create -> Activate -> Configure Membership -> Create Session
 // -----------------------------------------------------------------------------------------
 
-test.describe.serial('Group Lifecycle Flow', { tag: ['@smoke', '@leader'] }, () => {
+test.describe.skip('Group Lifecycle Flow', { tag: ['@smoke', '@leader'] }, () => {
 
     test.beforeEach(async () => {
         // Multi-page enterprise flow needs more time

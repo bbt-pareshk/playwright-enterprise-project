@@ -51,6 +51,15 @@ function getBoolFlag(key: string, defaultValue = false): boolean {
   return value.toLowerCase() === 'true';
 }
 
+/**
+ * Internal helper to retrieve optional (non-required) env vars.
+ * Returns empty string if not set — tests using these must guard accordingly.
+ */
+function getOptionalVar(key: string): string {
+  const envPrefix = ENVIRONMENT!.toUpperCase();
+  return process.env[`${envPrefix}_${key}`] ?? '';
+}
+
 // 3. Unified Environment Mapping
 const BASE_URL = getRequiredVar('BASE_URL');
 const LEADER_USERNAME = getRequiredVar('LEADER_USERNAME');
@@ -72,6 +81,12 @@ export const ENV = {
   LEADER_PASSWORD,
   MEMBER_USERNAME,
   MEMBER_PASSWORD,
+
+  // Pre-seeded plan-limit accounts (must be set manually in .env)
+  LEADER_ACTIVE_HOSTING_PLAN_USERNAME: getOptionalVar('LEADER_ACTIVE_HOSTING_PLAN_USERNAME'),
+  LEADER_ACTIVE_HOSTING_PLAN_PASSWORD: getOptionalVar('LEADER_ACTIVE_HOSTING_PLAN_PASSWORD'),
+  LEADER_MULTI_GROUP_HOSTING_PLAN_USERNAME: getOptionalVar('LEADER_MULTI_GROUP_HOSTING_PLAN_USERNAME'),
+  LEADER_MULTI_GROUP_HOSTING_PLAN_PASSWORD: getOptionalVar('LEADER_MULTI_GROUP_HOSTING_PLAN_PASSWORD'),
 
   // Runtime Flags & Infrastructure
   IS_CI: getBoolFlag('CI') || getBoolFlag('GITHUB_ACTIONS'),
