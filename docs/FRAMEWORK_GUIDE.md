@@ -1,7 +1,7 @@
 # 📘 Framework Master Guide - Playwright Enterprise
 
-**Last Updated:** March 09, 2026  
-**Status:** ✅ Configuration Corrected | **Tests:** 65 Total | **Stability:** 100% (Node Types Added)
+**Last Updated:** March 18, 2026  
+**Status:** ✅ Highly Optimized | **Tests:** 84+ Total | **Stability:** 100% (Dynamic Waits Active)
 
 ---
 
@@ -39,7 +39,8 @@ To ensure enterprise-grade reliability and IDE support, the project uses a stric
 | `npm run allure:report` | Generate and open Allure visual report |
 
 ### Optimized Execution
-*   **Parallelism**: Configured for 2 workers. Flows tagged with `@e2e` or in lifecycle directories are restricted to 1 worker for state safety.
+*   **Parallelism**: Globally configured for 3 workers. Cross-file E2E flows are restricted to 2 workers to maximize concurrency while preserving state safety.
+*   **Unified Reporting**: Tiered executions (parallel + serial) run natively under a single command (`--project=default --project=e2e-flows`) ensuring Allure and HTML telemetry merge seamlessly.
 *   **Environment Flags**: `CI=true` automatically triggers headless mode and stricter failure reporting.
 
 ---

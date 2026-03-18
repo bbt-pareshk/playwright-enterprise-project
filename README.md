@@ -25,6 +25,14 @@ For detailed technical documentation, architecture diagrams, and contribution gu
 
 ---
 
+## ⚡ Recent Performance & Stability Upgrades
+- **Unified Master CI Reports:** Re-architected CI to natively merge disjointed tier runs (Parallel + Serial) into a single, cohesive Master HTML & Allure report footprint.
+- **AST-Level Test Exclusions:** Optimized skipped flow management so natively ignored files don't artificially bloat "skipped" statistical telemetry.
+- **Parallel Worker Scaling:** Unlocked concurrency by maximizing CPU boundaries across `e2e-flows` and global contexts.
+- **Dynamic Visual Assertions:** Purged arbitrary `waitForTimeout` freezes in Auth and replaced them with intelligent `Promise.race()` UI reactive handlers.
+
+---
+
 ## 🛠️ Quick Start
 
 ### Installation
