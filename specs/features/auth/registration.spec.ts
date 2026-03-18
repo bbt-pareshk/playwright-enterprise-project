@@ -163,8 +163,7 @@ test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member
     ];
 
     for (const scenario of FIELD_FORMAT_SCENARIOS) {
-        test(`Format Constraint: ${scenario.name}`, async ({ page }) => {
-            const registrationPage = new RegistrationPage(page);
+        test(`Format Constraint: ${scenario.name}`, async ({ page, registrationPage }) => {
             await NavigationHelper.gotoRegistration(page);
 
             Logger.step(`Testing field formatting: ${scenario.name}`);
@@ -200,8 +199,7 @@ test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member
     ];
 
     for (const mandatory of MANDATORY_FIELD_SCENARIOS) {
-        test(`Validation: ${mandatory.name}`, async ({ page }) => {
-            const registrationPage = new RegistrationPage(page);
+        test(`Validation: ${mandatory.name}`, async ({ page, registrationPage }) => {
             await NavigationHelper.gotoRegistration(page);
 
             Logger.step(`Testing mandatory constraint: ${mandatory.name}`);
@@ -217,8 +215,7 @@ test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member
 test.describe('Registration - Password Visibility', () => {
 
     test('Verify password visibility can be toggled in Registration',
-        { tag: ['@regression', '@member'] }, async ({ page }) => {
-            const registrationPage = new RegistrationPage(page);
+        { tag: ['@regression', '@member'] }, async ({ page, registrationPage }) => {
 
             // 1. Navigate to Registration page
             await NavigationHelper.gotoRegistration(page);

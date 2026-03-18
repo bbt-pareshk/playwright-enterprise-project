@@ -41,7 +41,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
   test(
     'Verify Logout functionality from Dashboard',
     { tag: ['@smoke', '@member'] },
-    async ({ loginAs, page }) => {
+    async ({ loginAs, page, loginPage }) => {
       // 1. Login as Member
       await loginAs(ROLES.MEMBER);
       await AssertionHelper.verifyDashboardLoaded(page);
@@ -51,7 +51,6 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
       await AuthHelper.logout(page);
 
       // 3. Verify redirection to Login page
-      const loginPage = new LoginPage(page);
       await loginPage.verifyLoginPageVisible();
 
       Logger.success('Logout successful: User redirected to Login page.');
@@ -61,7 +60,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
   test(
     'Security Check: Post-Logout Back-Button Restriction',
     { tag: ['@regression', '@member'] },
-    async ({ loginAs, page }) => {
+    async ({ loginAs, page, loginPage }) => {
       // 1. Login and navigate to dashboard to establish session and history
       await loginAs(ROLES.MEMBER);
       await AssertionHelper.verifyDashboardLoaded(page);
@@ -70,7 +69,6 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
       Logger.step('Performing Logout to establish post-auth state');
       await AuthHelper.logout(page);
       
-      const loginPage = new LoginPage(page);
       await loginPage.verifyLoginPageVisible();
 
       // 3. Attempt to navigate back to protected dashboard
@@ -86,12 +84,11 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
   test(
     'Security Check: Unauthorized Access Redirect',
     { tag: ['@regression', '@member'] },
-    async ({ page }) => {
+    async ({ page, loginPage }) => {
       Logger.step('Attempting to access protected dashboard URL directly without session');
       await page.goto(URLS.DASHBOARD);
 
       // Verify redirection to login
-      const loginPage = new LoginPage(page);
       await loginPage.verifyLoginPageVisible();
       Logger.success('Security Verified: Redirected to login from protected route.');
     }
@@ -119,9 +116,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
     ];
 
     for (const data of CREDENTIAL_FAILURE_SCENARIOS) {
-      test(`Scenario: ${data.scenario}`, async ({ page }) => {
-        const loginPage = new LoginPage(page);
-
+      test(`Scenario: ${data.scenario}`, async ({ page, loginPage }) => {
         await loginPage.openLoginPage();
         Logger.step(`Attempting login for: ${data.user} (Scenario: ${data.scenario})`);
 
@@ -140,9 +135,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
     ];
 
     for (const fieldData of MANDATORY_FIELD_SCENARIOS) {
-      test(`Validation: ${fieldData.name}`, async ({ page }) => {
-        const loginPage = new LoginPage(page);
-
+      test(`Validation: ${fieldData.name}`, async ({ page, loginPage }) => {
         await loginPage.openLoginPage();
         Logger.step(`Testing mandatory fields: ${fieldData.name}`);
 
@@ -158,8 +151,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
   test.describe('Advanced Login Features', { tag: ['@member'] }, () => {
     test(
       'Social Auth (Google) navigation',
-      async ({ page }) => {
-        const loginPage = new LoginPage(page);
+      async ({ page, loginPage }) => {
         await loginPage.openLoginPage();
 
         Logger.step('Initiate Social Auth provider flow');
@@ -173,8 +165,7 @@ test.describe('Login – Single User', { tag: ['@smoke'] }, () => {
 
     test(
       'Password visibility toggle',
-      async ({ page }) => {
-        const loginPage = new LoginPage(page);
+      async ({ page, loginPage }) => {
         await loginPage.openLoginPage();
 
         const testPassword = APP_CONSTANTS.TEST_DATA.PASSWORD_TEST.TEST;

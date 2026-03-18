@@ -1,13 +1,27 @@
 import { test as base, expect, BrowserContext, TestInfo } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { ENV } from '../../config/env';
+import { LoginPage } from '../pages/auth/LoginPage';
+import { RegistrationPage } from '../pages/auth/RegistrationPage';
+
+type BaseFixtures = {
+  loginPage: LoginPage;
+  registrationPage: RegistrationPage;
+};
 
 /**
  * Enterprise Base Fixture
  * -----------------------
  * Provides core stability enhancements and automated reporting metadata.
  */
-export const test = base.extend({
+export const test = base.extend<BaseFixtures>({
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
+  },
+  registrationPage: async ({ page }, use) => {
+    await use(new RegistrationPage(page));
+  },
+
   // Override context to apply global stability rules (like chat blocking)
   context: async ({ context }, use, testInfo) => {
     await applyEnterpriseContextSettings(context, testInfo);
