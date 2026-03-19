@@ -10,6 +10,7 @@ type AuthFixtures = {
     loginAs: (role: UserRole) => Promise<void>;
     memberPage: Page;
     leaderPage: Page;
+    paidLeaderPage: Page;
 };
 
 /**
@@ -80,6 +81,40 @@ export const test = baseFixture.extend<AuthFixtures>({
 
         const context = await browser.newContext(options);
 
+        await applyEnterpriseContextSettings(context, testInfo);
+
+        const page = await context.newPage();
+        await use(page);
+
+        const video = page.video();
+        await context.close();
+
+        if (video && projectUse.video && projectUse.video !== 'off') {
+            const isFailed = testInfo.status !== testInfo.expectedStatus;
+            const shouldRetain = projectUse.video === 'on' || (projectUse.video === 'retain-on-failure' && isFailed);
+            if (shouldRetain) {
+                const videoPath = await video.path();
+                await testInfo.attach('video', { path: videoPath, contentType: 'video/webm' });
+            }
+        }
+    },
+
+    paidLeaderPage: async ({ browser, playwright, baseURL }, use, testInfo) => {
+        const projectUse = testInfo.project.use;
+
+        const options: BrowserContextOptions = {
+            ...projectUse,
+            storageState: path.resolve(process.cwd(), 'storage/auth/leader_functional.json'),
+            baseURL: baseURL
+        };
+
+        if (projectUse.video && projectUse.video !== 'off') {
+            options.recordVideo = {
+                dir: testInfo.outputPath('videos')
+            };
+        }
+
+        const context = await browser.newContext(options);
         await applyEnterpriseContextSettings(context, testInfo);
 
         const page = await context.newPage();

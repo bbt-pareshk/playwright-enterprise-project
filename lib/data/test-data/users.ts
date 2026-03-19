@@ -12,4 +12,8 @@ export const users: Record<UserRole, any> = {
     username: ENV.LEADER_MULTI_GROUP_HOSTING_PLAN_USERNAME, 
     password: ENV.LEADER_MULTI_GROUP_HOSTING_PLAN_PASSWORD 
   },
+  [ROLES.LEADER_FUNCTIONAL]: { 
+    username: ENV.LEADER_FUNCTIONAL_USERNAME, 
+    password: ENV.LEADER_FUNCTIONAL_PASSWORD 
+  },
 };

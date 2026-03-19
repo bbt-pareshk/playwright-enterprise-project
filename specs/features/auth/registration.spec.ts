@@ -12,6 +12,7 @@ import { NavigationHelper } from '../../../lib/helpers/NavigationHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { RuntimeStore } from '../../../lib/utils/RuntimeStore';
 import { UI_CONSTANTS } from '../../../lib/data/constants/ui-constants';
+import { AuthHelper } from '../../../lib/helpers/AuthHelper';
 import { ENV } from '../../../config/env';
 
 
@@ -101,6 +102,12 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
 });
 
 test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member'] }, () => {
+    
+    test.beforeEach(async ({ page }) => {
+        // Ensure anonymous state to prevent auto-redirects to dashboard
+        await AuthHelper.forceLogout(page);
+    });
+
 
     // 1. Data-Driven Field Formatting (In-line / Blur validation)
     const FIELD_FORMAT_SCENARIOS = [
@@ -213,6 +220,12 @@ test.describe('Registration - Integrity Matrix', { tag: ['@regression', '@member
 
 
 test.describe('Registration - Password Visibility', () => {
+
+    test.beforeEach(async ({ page }) => {
+        // Ensure anonymous state to prevent auto-redirects to dashboard
+        await AuthHelper.forceLogout(page);
+    });
+
 
     test('Verify password visibility can be toggled in Registration',
         { tag: ['@regression', '@member'] }, async ({ page, registrationPage }) => {

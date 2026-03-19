@@ -223,30 +223,25 @@ export class AuthHelper {
         }
 
         try {
-            // Try standard UI logout logic first
-            const logoutPage = new LogoutPage(page);
-            await logoutPage.logout();
-        } catch (error) {
-            Logger.warn('UI Logout failed or not available. Clearing storage manually.');
-            
-            // Clear browser cookies at the context level
+            // First: network/context level clearing (fastest)
             await page.context().clearCookies();
-
-            // Clear storage at the page level only if we are on a valid, non-blank page
-            const currentUrl = page.url();
-            if (currentUrl && currentUrl !== 'about:blank') {
-                try {
-                    await page.evaluate(() => {
-                        localStorage.clear();
-                        sessionStorage.clear();
-                    });
-                } catch (e) {
-                    // Ignore security errors (e.g. if page is blank or cross-origin)
-                }
-            }
             
-            // Ensure we finish on a known state (Login)
-            await NavigationHelper.gotoLogin(page).catch(() => {});
+            // Second: UI logout logic attempt
+            const logoutPage = new LogoutPage(page);
+            await logoutPage.logout().catch(() => {}); // Swallow errors to fall through to manual clear
+            
+            // Third: Force-clear everything in the DOM/Storage
+            await page.evaluate(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+            });
+
+            // Ensure we are truly in a blank state before next navigation
+            await page.goto('about:blank');
+            Logger.success('Session state forcefully cleared.');
+        } catch (error) {
+            Logger.warn('Force logout encountered errors, but continued with manual cleanup.');
+            await page.context().clearCookies();
         }
     }
 }

@@ -95,6 +95,12 @@ test.describe.serial('Forgot Password Journey', { tag: ['@member', '@smoke'] }, 
     });
 
     test.describe('Forgot Password - Boundary Validation', () => {
+        
+        test.beforeEach(async ({ page }) => {
+            // Ensure anonymous state to prevent auto-redirects
+            await AuthHelper.forceLogout(page);
+        });
+
         test('Validation: Reset Password button is disabled on empty email submission', { tag: ['@regression'] }, async ({ page }) => {
             const loginPage = new LoginPage(page);
             const forgotPasswordPage = new ForgotPasswordPage(page);

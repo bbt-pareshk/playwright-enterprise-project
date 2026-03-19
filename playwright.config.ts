@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 import { ENV } from './config/env';
 import { DEFAULT_BROWSER } from './config/browser';
 
-const isCI = ENV.IS_CI;
+// Force CI mode always as requested by the user
+const isCI = true; // ENV.IS_CI;
 
 export default defineConfig({
   testDir: './specs',
@@ -40,6 +41,22 @@ export default defineConfig({
     {
       name: 'setup-auth',
       testMatch: /.*\.setup\.ts/,
+      testIgnore: [/.*leader-functional\.setup\.ts/],
+    },
+
+    {
+      name: 'setup-leader-functional',
+      testMatch: /specs\/setup\/leader-functional\.setup\.ts/,
+      dependencies: ['setup-auth'],
+    },
+
+    // Optimized Group Lifecycle (V2)
+    {
+      name: 'group-v2',
+      use: { ...DEFAULT_BROWSER },
+      dependencies: ['setup-leader-functional'],
+      testMatch: /specs\/features\/group\/group-lifecycle-v2\.spec\.ts/,
+      fullyParallel: false, // Maintain serial execution within file as requested
     },
 
     // Parallel-safe isolated tests (existing + new onboarding/hosting/payment specs)
@@ -47,7 +64,7 @@ export default defineConfig({
       name: 'default',
       use: { ...DEFAULT_BROWSER },
       dependencies: ['setup-auth'],
-      testIgnore: [/.*\.setup\.ts/, /specs\/features\/flows\/.*/],
+      testIgnore: [/.*\.setup\.ts/, /specs\/features\/flows\/.*/, /specs\/features\/group\/group-lifecycle-v2\.spec\.ts/],
       fullyParallel: true,
     },
 
@@ -55,6 +72,7 @@ export default defineConfig({
     {
       name: 'e2e-flows',
       use: { ...DEFAULT_BROWSER },
+      dependencies: ['setup-auth'],
       testMatch: /specs\/features\/flows\/.*/,
       fullyParallel: false,
       workers: 2,
