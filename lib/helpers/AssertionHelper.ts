@@ -57,7 +57,7 @@ export class AssertionHelper {
         await expect(page).toHaveURL(new RegExp(URLS.DASHBOARD), { timeout: 15_000 });
 
         // Use a common dashboard element to confirm load
-        const findButton = page.getByRole('button', { name: /find a support group/i }).first();
+        const findButton = page.getByRole('link', { name: UI_CONSTANTS.DASHBOARD.FIND_SUPPORT_GROUP_BUTTON }).first();
         await Wait.forVisible(findButton, 30_000);
         Logger.success('Dashboard load verified');
     }

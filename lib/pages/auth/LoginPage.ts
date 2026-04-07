@@ -16,54 +16,37 @@ export class LoginPage extends BasePage {
   private readonly loginHeading: Locator;
   private readonly loginErrorMessage: Locator;
   private readonly googleLoginButton: Locator;
+  private readonly appleLoginButton: Locator;
   private readonly emailError: Locator;
   private readonly passwordError: Locator;
-
-  // Internal UI Text (moved from constants for better context)
-  private static readonly LABELS = {
-    EMAIL: 'Email or Username',
-    PASSWORD: 'Password',
-    LOGIN_BUTTON: 'Log in',
-    SIGN_UP: 'Sign Up',
-    FORGOT_PASSWORD: 'Forget Password?',
-    HEADING: 'Welcome Back!',
-  };
+  private readonly passwordToggleBtn: Locator;
 
   constructor(page: Page) {
     super(page);
 
-    // UPDATED — labels now internal to class
-    this.usernameInput = page.getByLabel(LoginPage.LABELS.EMAIL);
-    this.passwordInput = page.getByLabel(LoginPage.LABELS.PASSWORD);
+    // 1. Core Form Locators (Chakra UI)
+    this.usernameInput = page.getByLabel(UI_CONSTANTS.AUTH.LOGIN.EMAIL_LABEL, { exact: true });
+    this.passwordInput = page.getByLabel(UI_CONSTANTS.AUTH.LOGIN.PASSWORD_LABEL, { exact: true });
+    this.logInButton = page.getByRole('button', { name: UI_CONSTANTS.AUTH.LOGIN.BUTTON, exact: true });
+    
+    // 2. Navigation Links
+    this.createAccountLink = page.getByRole('link', { name: UI_CONSTANTS.AUTH.LOGIN.SIGN_UP_LINK });
+    this.forgotPasswordLink = page.getByRole('link', { name: UI_CONSTANTS.AUTH.LOGIN.FORGOT_PASSWORD_LINK });
 
-    // Button and Links
-    this.logInButton = page.getByRole('button', { name: LoginPage.LABELS.LOGIN_BUTTON });
-    this.createAccountLink = page.getByRole('link', { name: LoginPage.LABELS.SIGN_UP });
-    this.forgotPasswordLink = page.getByRole('link', { name: LoginPage.LABELS.FORGOT_PASSWORD });
+    // 3. Structural Elements
+    // In the new DOM, heading is a <p> tag, not h1-h6
+    this.loginHeading = page.locator('p.chakra-text').filter({ hasText: UI_CONSTANTS.AUTH.LOGIN.HEADING }).first();
 
-    // Heading
-    this.loginHeading = page.getByRole('heading', { name: LoginPage.LABELS.HEADING });
-
-    // No error DOM provided — keeping old locator
-    this.loginErrorMessage = page.getByText(
-      MESSAGES.AUTH.LOGIN.INVALID_CREDENTIALS,
-      { exact: true }
-    );
-
-    // Password Toggle Button - using the right element button as it's the toggle for password visibility
-    this.passwordToggleBtn = page.locator('input[name="password"] ~ .chakra-input__right-element button');
-
-    // Social Login - assuming standard button text
-
+    // 4. Social & Interactive
     this.googleLoginButton = page.getByRole('button', { name: /Google/i });
+    this.appleLoginButton = page.getByRole('button', { name: /Apple/i });
+    this.passwordToggleBtn = page.getByRole('button', { name: /password/i }).filter({ has: page.locator('svg') });
 
-    // Field Errors (Common in Chakra/React forms)
-    this.emailError = page.locator('#email-feedback, [id*="email-error"], .chakra-form__error-message').first();
-    this.passwordError = page.locator('#password-feedback, [id*="password-error"], .chakra-form__error-message').last();
+    // 5. Validation & Errors
+    this.loginErrorMessage = page.getByText(MESSAGES.AUTH.LOGIN.INVALID_CREDENTIALS, { exact: true });
+    this.emailError = page.locator('.chakra-form-control').filter({ hasText: UI_CONSTANTS.AUTH.LOGIN.EMAIL_LABEL }).locator('.chakra-form__error-message');
+    this.passwordError = page.locator('.chakra-form-control').filter({ hasText: UI_CONSTANTS.AUTH.LOGIN.PASSWORD_LABEL }).locator('.chakra-form__error-message');
   }
-
-  private readonly passwordToggleBtn: Locator;
-
 
   /**
    * Toggles the password visibility by clicking the show/hide icon.
@@ -78,16 +61,9 @@ export class LoginPage extends BasePage {
    */
   async verifyPasswordVisibility(isVisible: boolean) {
     const expectedType = isVisible ? 'text' : 'password';
-    const actualType = await this.passwordInput.getAttribute('type');
-
-    if (actualType !== expectedType) {
-      throw new Error(`${MESSAGES.AUTH.REGISTRATION.PASSWORD_VISIBILITY_ERROR} "${expectedType}", but found "${actualType}"`);
-    }
-
-    Logger.info(`${APP_CONSTANTS.LOGS.AUTH.PASS_VISIBILITY} ${isVisible ? 'visible' : 'hidden'} (type="${actualType}")`);
+    await expect(this.passwordInput).toHaveAttribute('type', expectedType, { timeout: 5000 });
+    Logger.info(`${APP_CONSTANTS.LOGS.AUTH.PASS_VISIBILITY} ${isVisible ? 'visible' : 'hidden'}`);
   }
-
-
 
   async isLoggedIn(): Promise<boolean> {
     const url = this.page.url();
@@ -111,72 +87,54 @@ export class LoginPage extends BasePage {
   }
 
   /**
-   * High-Performance Login Action.
+   * Enterprise-Grade High-Performance Login Action.
    */
   async login(username: string, password: string, expectSuccess: boolean = true) {
-    Logger.info(`Attempting login for user: ${username} | Password: ${password || '******'} (expectSuccess: ${expectSuccess})`);
+    Logger.info(`Attempting login for user: ${username} | Password: ${password || '[EMPTY]'} (expectSuccess: ${expectSuccess})`);
 
-    // Prerequisite: If already on dashboard/welcome, skip login attempt
     if (await this.isLoggedIn()) {
       Logger.success('User already has an active session. Skipping login.');
       return;
     }
 
-    if (username) await this.stableFill(this.usernameInput, username);
-    if (password) await this.stableFill(this.passwordInput, password);
+    // Fill credentials
+    if (username !== undefined) await this.stableFill(this.usernameInput, username);
+    if (password !== undefined) await this.stableFill(this.passwordInput, password);
 
-    // Dismiss any blocking overlays before clicking
-    const modal = this.page.locator('.chakra-modal__content, section[role="dialog"]').first();
-    if (await modal.isVisible()) {
-        await this.page.keyboard.press('Escape');
+    // Ensure button is ready (Chakra might have a brief disabled state during validation)
+    await this.logInButton.waitFor({ state: 'visible', timeout: 5000 });
+    
+    // Explicitly check for disabled state and wait for it to be enabled if credentials are provided
+    if (username && password && await this.logInButton.getAttribute('disabled') !== null) {
+        await expect(this.logInButton).toBeEnabled({ timeout: 5000 }).catch(() => {
+            Logger.warn('Login button remained disabled. Attempting Enter key fallback.');
+        });
     }
 
-    await this.logInButton.waitFor({ state: 'visible', timeout: 5000 });
-
     if (await this.logInButton.isEnabled()) {
-      // Perform submission with robust interaction
-      try {
-        await this.logInButton.click({ timeout: 5000 });
-      } catch (e) {
-        await this.passwordInput.press('Enter');
-      }
+        await this.logInButton.click();
     } else {
-      Logger.info('Login button is disabled. Triggering validation via Enter key.');
-      await this.passwordInput.press('Enter');
+        await this.passwordInput.press('Enter');
     }
 
     if (expectSuccess) {
-      // Wait for ANY valid post-auth landing page
-      try {
-        await this.page.waitForURL(url => 
-           url.pathname.includes('/groups') || 
-           url.pathname.includes('/welcome') || 
-           url.pathname.includes('/onboarding') || 
-           url.pathname.includes('/plans') || 
-           url.pathname.includes('/pricing'), 
-           { timeout: 15_000 }
-        );
-        
-        const currentUrl = this.page.url();
-        Logger.success(`Login successful. Landed on: ${currentUrl}`);
-
-        // Lifetime Fix: If we land on Welcome or Onboarding during SETUP, we must not stop there.
-        // Downstream tests expect the Dashboard.
-      } catch (error) {
-        const currentUrl = this.page.url();
-        if (currentUrl.includes('/login')) {
-           const isErrorVisible = await this.loginErrorMessage.isVisible().catch(() => false);
-           const errorText = isErrorVisible ? await this.loginErrorMessage.innerText() : 'No error message visible';
-           throw new Error(`Login failed: Stalled on /login. Reason: ${errorText}`);
-        }
-      }
+      await this.page.waitForURL(url => 
+         url.pathname.includes('/groups') || 
+         url.pathname.includes('/welcome') || 
+         url.pathname.includes('/onboarding') || 
+         url.pathname.includes('/plans') || 
+         url.pathname.includes('/pricing'), 
+         { timeout: 15_000 }
+      );
+      Logger.success(`Login successful. Landed on: ${this.page.url()}`);
     } else {
+       // Small wait for client-side validation to manifest
        await this.page.waitForTimeout(1000);
     }
   }
 
   async verifyInvalidLoginError() {
-    // Lifetime Fix: Use sensitive but flexible text search for error messages 
+    // Dynamic text check for stability against minor wording changes
     const errorMsg = this.page.locator('text=/incorrect|invalid|wrong/i').first();
     await expect(errorMsg).toBeVisible({ timeout: 10_000 });
   }
@@ -186,17 +144,14 @@ export class LoginPage extends BasePage {
   }
 
   async verifyLoginPageVisible() {
-    // Lifetime Fix: Use flexible regex for heading to ignore minor text or case changes
-    const heading = this.page.locator('h1, h2, h3').filter({ hasText: /welcome/i }).first();
-    await expect(heading).toBeVisible({ timeout: 10_000 });
+    await expect(this.loginHeading).toBeVisible({ timeout: 15_000 });
   }
 
   async verifyEmptyCredentialsError() {
-    // Lifetime Fix: Wait for the error dynamically instead of static wait
-    try {
-      await expect(this.emailError.or(this.passwordError)).toBeVisible({ timeout: 3000 });
-    } catch {
-      await this.verifyLoginPageVisible();
-    }
+    // Wait for at least one field validation to appear
+    await expect(this.emailError.or(this.passwordError).first()).toBeVisible({ timeout: 5000 }).catch(async () => {
+        // Fallback for generic toast or summary errors if field level fails
+        await this.verifyLoginPageVisible();
+    });
   }
 }

@@ -15,17 +15,20 @@ export const UI_CONSTANTS = {
             FORGOT_PASSWORD_LINK: 'Forget Password?',
         },
         REGISTRATION: {
-            HEADING: 'Create Account',
+            HEADING: 'Create an Account',
+            FIRST_NAME_LABEL: 'First Name',
+            LAST_NAME_LABEL: 'Last Name',
+            EMAIL_LABEL: 'Email',
+            PASSWORD_LABEL: 'Password',
             CREATE_ACCOUNT_BUTTON: 'Create Account',
-            PASSWORD_INPUT_NAME: 'password',
             VERIFY_EMAIL_BUTTON: 'verify email',
             RESEND_OTP_BUTTON: 'resend code',
         },
         FORGOT_PASSWORD: {
-            HEADING: 'Reset password',
+            HEADING: 'Forget password',
             EMAIL_LABEL: 'Email',
-            RESET_BUTTON: 'Reset Password',
-            BACK_TO_LOGIN_LINK: 'Back to Login',
+            RESET_BUTTON: 'Send Reset Link',
+            BACK_TO_LOGIN_LINK: 'Back To Log In',
         },
         RESET_PASSWORD: {
             HEADING: 'Create new password',
@@ -49,8 +52,8 @@ export const UI_CONSTANTS = {
     },
     DASHBOARD: {
         START_GROUP_LINK: 'Create Your Support Group',
-        FIND_SUPPORT_GROUP_BUTTON: 'Find a support group',
-        SEARCH_PLACEHOLDER: 'Search support groups...',
+        FIND_SUPPORT_GROUP_BUTTON: 'Explore Groups',
+        SEARCH_PLACEHOLDER: 'Search for groups names or leaders',
     },
     CHAT: {
         BUTTONS: {

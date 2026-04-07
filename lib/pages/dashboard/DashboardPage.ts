@@ -16,8 +16,9 @@ export class DashboardPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.startGroupLink = page.getByRole('button', { name: UI_CONSTANTS.DASHBOARD.START_GROUP_LINK });
-    this.findSupportGroupButton = page.getByRole('button', { name: UI_CONSTANTS.DASHBOARD.FIND_SUPPORT_GROUP_BUTTON });
+    this.startGroupLink = page.getByRole('button', { name: UI_CONSTANTS.DASHBOARD.START_GROUP_LINK, exact: true });
+    // In the new DOM, Explore Groups is a link in the sidebar, not a standalone button
+    this.findSupportGroupButton = page.getByRole('link', { name: UI_CONSTANTS.DASHBOARD.FIND_SUPPORT_GROUP_BUTTON, exact: true });
     this.searchSupportGroupsInput = page.getByPlaceholder(UI_CONSTANTS.DASHBOARD.SEARCH_PLACEHOLDER);
     this.noGroupsMessage = page.getByText(MESSAGES.DASHBOARD.NO_GROUPS);
   }

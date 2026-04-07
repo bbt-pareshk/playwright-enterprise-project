@@ -4,6 +4,7 @@ import { Wait } from '../../utils/Wait';
 import { ROUTES, ROUTE_PATHS } from '../../../config/urls';
 import { MESSAGES } from '../../data/constants/messages';
 import { Logger } from '../../utils/Logger';
+import { UI_CONSTANTS } from '../../data/constants/ui-constants';
 
 /**
  * RegistrationPage
@@ -28,39 +29,34 @@ export class RegistrationPage extends BasePage {
   public readonly emailError: Locator;
   public readonly passwordError: Locator;
 
-  // Internal UI Labels (Static)
-  private static readonly LABELS = {
-    FIRST_NAME_NAME: 'firstname',
-    LAST_NAME_NAME: 'lastname',
-    EMAIL_NAME: 'email',
-    PASSWORD_NAME: 'password',
-    CREATE_ACCOUNT_BUTTON: 'Create Account',
-    VERIFY_EMAIL_BUTTON: 'verify email',
-    RESEND_OTP_BUTTON: 'resend code',
-  };
 
   constructor(page: Page) {
     super(page);
 
-    // Inputs (stable by name attribute)
-    this.firstNameInput = page.locator(`input[name="${RegistrationPage.LABELS.FIRST_NAME_NAME}"]`);
-    this.lastNameInput = page.locator(`input[name="${RegistrationPage.LABELS.LAST_NAME_NAME}"]`);
-    this.emailInput = page.locator(`input[name="${RegistrationPage.LABELS.EMAIL_NAME}"]`);
-    this.passwordInput = page.locator(`input[name="${RegistrationPage.LABELS.PASSWORD_NAME}"]`);
+    // Inputs (primary: label-based, secondary: name-based for stability)
+    this.firstNameInput = page.getByLabel(UI_CONSTANTS.AUTH.REGISTRATION.FIRST_NAME_LABEL, { exact: true });
+    this.lastNameInput = page.getByLabel(UI_CONSTANTS.AUTH.REGISTRATION.LAST_NAME_LABEL, { exact: true });
+    this.emailInput = page.getByLabel(UI_CONSTANTS.AUTH.REGISTRATION.EMAIL_LABEL, { exact: true });
+    this.passwordInput = page.getByLabel(UI_CONSTANTS.AUTH.REGISTRATION.PASSWORD_LABEL, { exact: true });
 
-    // Button
-    this.createAccountButton = page.locator('button[type="submit"]', {
-      hasText: RegistrationPage.LABELS.CREATE_ACCOUNT_BUTTON,
+    // Buttons
+    this.createAccountButton = page.getByRole('button', {
+      name: UI_CONSTANTS.AUTH.REGISTRATION.CREATE_ACCOUNT_BUTTON,
+      exact: true
     });
 
     // Error messages - resolved dynamically from each input's form-control ancestor
-    this.firstNameError = this.firstNameInput.locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]');
-    this.lastNameError = this.lastNameInput.locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]');
-    this.emailError = this.emailInput.locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]');
-    this.passwordError = this.passwordInput.locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]');
+    // We retain name-based selectors for the error parent resolution to ensure precision
+    const getErrorByInputName = (name: string) => page.locator(`input[name="${name}"]`)
+      .locator('xpath=ancestor::div[contains(@class,"chakra-form-control")]//div[contains(@id,"-feedback")]');
 
-    // Password Toggle Button
-    this.passwordToggleBtn = page.locator(`input[name="${RegistrationPage.LABELS.PASSWORD_NAME}"] ~ .chakra-input__right-element button`);
+    this.firstNameError = getErrorByInputName('firstname');
+    this.lastNameError = getErrorByInputName('lastname');
+    this.emailError = getErrorByInputName('email');
+    this.passwordError = getErrorByInputName('password');
+
+    // Password Toggle Button (aria-label fluctuates between Show/Hide)
+    this.passwordToggleBtn = page.getByRole('button', { name: /password/i }).filter({ has: page.locator('svg') });
   }
 
   /**
@@ -189,7 +185,7 @@ export class RegistrationPage extends BasePage {
   }
 
   async clickVerifyEmail(): Promise<void> {
-    const verifyButton = this.page.getByRole('button', { name: new RegExp(RegistrationPage.LABELS.VERIFY_EMAIL_BUTTON, 'i') });
+    const verifyButton = this.page.getByRole('button', { name: new RegExp(UI_CONSTANTS.AUTH.REGISTRATION.VERIFY_EMAIL_BUTTON, 'i') });
     await this.expectVisible(verifyButton, 'Verify Email button should be visible');
     await this.click(verifyButton);
   }
@@ -210,38 +206,33 @@ export class RegistrationPage extends BasePage {
   async clickResendOTP(): Promise<boolean> {
     Logger.step('Handling Resend Code button logic');
 
+    const countdownLocator = this.page.getByText(/resend in/i).first();
     const resendButton = this.page.getByRole('button').filter({
-      hasText: new RegExp(RegistrationPage.LABELS.RESEND_OTP_BUTTON, 'i')
+      hasText: new RegExp(UI_CONSTANTS.AUTH.REGISTRATION.RESEND_OTP_BUTTON, 'i')
     });
 
-    await resendButton.waitFor({ state: 'visible', timeout: 20000 });
-
-    const countdownLocator = this.page.getByText(/resend in/i).first();
     let totalSeconds = 0;
 
-    for (let attempt = 0; attempt < 10; attempt++) {
-      if (!await countdownLocator.isVisible().catch(() => false)) {
-        await this.page.waitForTimeout(500);
-        continue;
+    // Check for countdown visibility with a short internal wait
+    for (let attempt = 0; attempt < 5; attempt++) {
+      if (await countdownLocator.isVisible().catch(() => false)) {
+        const fullText = await countdownLocator.innerText();
+        const minMatch = fullText.match(/(\d+)\s*minutes?/i) || fullText.match(/(\d+):/);
+        const secMatch = fullText.match(/(\d+)\s*seconds?/i) || fullText.match(/:(\d+)/);
+        const bareNumberMatch = !minMatch ? fullText.match(/(\d+)/) : null;
+
+        let currentSeconds = 0;
+        if (minMatch) currentSeconds += parseInt(minMatch[1]) * 60;
+        if (secMatch) currentSeconds += parseInt(secMatch[1]);
+        else if (bareNumberMatch) currentSeconds += parseInt(bareNumberMatch[1]);
+
+        if (currentSeconds > 0) {
+          totalSeconds = currentSeconds;
+          break;
+        }
       }
-
-      const fullText = await countdownLocator.innerText();
-      const minMatch = fullText.match(/(\d+)\s*minutes?/i);
-      const explicitSecMatch = fullText.match(/(\d+)\s*seconds?/i);
-      const outputSecMatch = fullText.match(/minutes?\s*(\d+)\s*$/i);
-      const bareNumberMatch = !minMatch ? fullText.match(/(\d+)/) : null;
-
-      let currentSeconds = 0;
-      if (minMatch) currentSeconds += parseInt(minMatch[1]) * 60;
-      if (explicitSecMatch) currentSeconds += parseInt(explicitSecMatch[1]);
-      else if (outputSecMatch) currentSeconds += parseInt(outputSecMatch[1]);
-      else if (bareNumberMatch) currentSeconds += parseInt(bareNumberMatch[1]);
-
-      if (currentSeconds > 0) {
-        totalSeconds = currentSeconds;
-        break;
-      }
-      await this.page.waitForTimeout(500);
+      if (await resendButton.isVisible()) break; // Button is already there
+      await this.page.waitForTimeout(1000);
     }
 
     if (totalSeconds > 0) {
@@ -254,7 +245,9 @@ export class RegistrationPage extends BasePage {
       await this.page.waitForTimeout((totalSeconds + 1) * 1000);
     }
 
-    await expect(resendButton, 'Resend button should be enabled after countdown').toBeEnabled({ timeout: 70_000 });
+    // Now that countdown is cleared (or was never there), wait for and click the button
+    await resendButton.waitFor({ state: 'visible', timeout: 20000 });
+    await expect(resendButton, 'Resend button should be enabled').toBeEnabled({ timeout: 10_000 });
     await this.robustClick(resendButton);
     Logger.success('Resend OTP button clicked');
     return true;

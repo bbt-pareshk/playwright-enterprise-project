@@ -179,7 +179,10 @@ export abstract class BasePage {
       '.chameleon-close-button',
       '.intercom-post-close',
       '[class*="chameleon"] button',
-      'button:has-text("✕")'
+      'button:has-text("✕")',
+      '.gleap-close-button',
+      '.gleap-notification-container button',
+      '[class^="gleap-"] button'
     ];
 
     Logger.info('Checking for generic support popups to dismiss...');

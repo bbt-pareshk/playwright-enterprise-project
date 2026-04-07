@@ -131,18 +131,24 @@ export class DataGenerator {
     );
   }
 
+  /**
+   * Enterprise-grade unique email generator.
+   * Handles OTP bypass logic and Mailinator truncation constraints.
+   */
   static generateEmail(
     domain = APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN,
     entropyLength = 4
   ): string {
-    // Enterprise Bypass Logic: Determine prefix based on flag and environment
     const isBypassActive = ENV.USE_OTP_BYPASS && ENV.CURRENT === 'staging';
     const prefix = isBypassActive
       ? APP_CONSTANTS.AUTH.OTP_BYPASS.PREFIX
       : APP_CONSTANTS.AUTH.OTP_BYPASS.STANDARD_PREFIX;
 
-    // Mailinator UI truncates after 25 chars. 
-    // Format: [prefix]_[DDHHMMSS][worker][retry][rnd]
+    // Use a sample domain if bypass is active to reflect that mailbox is unnecessary
+    const finalDomain = (isBypassActive && domain === APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN)
+      ? 'mentalhappy.com'
+      : domain;
+
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const day = pad(now.getDate());
@@ -157,8 +163,9 @@ export class DataGenerator {
 
     const rnd = this.generateRandomString(entropyLength, entropyLength);
 
-    return `${prefix}_${day}${hhmmss}${info.worker}${info.retry}${rnd}@${domain}`.toLowerCase();
+    return `${prefix}_${day}${hhmmss}${info.worker}${info.retry}${rnd}@${finalDomain}`.toLowerCase();
   }
+
   /* =====================================================
      Compatibility Methods (DO NOT REMOVE)
      ===================================================== */

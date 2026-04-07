@@ -2,6 +2,7 @@ import { Page, Locator } from '@playwright/test';
 import { BasePage } from '../base/BasePage';
 import { MESSAGES } from '../../data/constants/messages';
 import { Logger } from '../../utils/Logger';
+import { UI_CONSTANTS } from '../../data/constants/ui-constants';
 
 export class ResetPasswordPage extends BasePage {
     private readonly passwordInput: Locator;
@@ -10,20 +11,13 @@ export class ResetPasswordPage extends BasePage {
     private readonly pageHeading: Locator;
     private readonly successToast: Locator;
 
-    // Internal UI Labels (Static)
-    private static readonly LABELS = {
-        PASSWORD_NAME: 'password',
-        CONFIRM_PASSWORD_NAME: 'password-confirm',
-        CONFIRM_BUTTON: 'Create new password',
-        HEADING: 'Create new password',
-    };
-
     constructor(page: Page) {
         super(page);
-        this.passwordInput = page.locator(`input[name="${ResetPasswordPage.LABELS.PASSWORD_NAME}"]`);
-        this.confirmPasswordInput = page.locator(`input[name="${ResetPasswordPage.LABELS.CONFIRM_PASSWORD_NAME}"]`);
-        this.confirmButton = page.getByRole('button', { name: ResetPasswordPage.LABELS.CONFIRM_BUTTON });
-        this.pageHeading = page.getByRole('heading', { name: ResetPasswordPage.LABELS.HEADING });
+        this.passwordInput = page.locator(`input[name="${UI_CONSTANTS.AUTH.RESET_PASSWORD.PASSWORD_NAME}"]`);
+        this.confirmPasswordInput = page.locator(`input[name="${UI_CONSTANTS.AUTH.RESET_PASSWORD.CONFIRM_PASSWORD_NAME}"]`);
+        this.confirmButton = page.getByRole('button', { name: UI_CONSTANTS.AUTH.RESET_PASSWORD.CONFIRM_BUTTON });
+        // HEADING is now a <p> tag
+        this.pageHeading = page.getByText(UI_CONSTANTS.AUTH.RESET_PASSWORD.HEADING).first();
         this.successToast = page.getByText(MESSAGES.AUTH.RESET_PASSWORD.SUCCESS);
     }
 
@@ -43,7 +37,7 @@ export class ResetPasswordPage extends BasePage {
 
     async clickConfirmPasswordButton() {
         Logger.info('Clicking Confirm Password button');
-        await this.click(this.confirmButton);
+        await this.robustClick(this.confirmButton);
     }
 
     async verifyPasswordUpdatedMessage() {

@@ -1,0 +1,149 @@
+<div id="__next">
+    <style>
+        #nprogress {
+            pointer-events: none;
+        }
+
+        #nprogress .bar {
+            background: var(--chakra-colors-primary-color);
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        #nprogress .peg {
+            display: block;
+            position: absolute;
+            right: 0px;
+            width: 100px;
+            height: 100%;
+            box-shadow: 0 0 10px var(--chakra-colors-primary-color), 0 0 5px var(--chakra-colors-primary-color);
+            opacity: 1;
+            -webkit-transform: rotate(3deg) translate(0px, -4px);
+            -ms-transform: rotate(3deg) translate(0px, -4px);
+            transform: rotate(3deg) translate(0px, -4px);
+        }
+
+        #nprogress .spinner {
+            display: block;
+            position: fixed;
+            z-index: 1031;
+            top: 15px;
+            right: 15px;
+        }
+
+        #nprogress .spinner-icon {
+            width: 18px;
+            height: 18px;
+            box-sizing: border-box;
+            border: solid 2px transparent;
+            border-top-color: var(--chakra-colors-primary-color);
+            border-left-color: var(--chakra-colors-primary-color);
+            border-radius: 50%;
+            -webkit-animation: nprogresss-spinner 400ms linear infinite;
+            animation: nprogress-spinner 400ms linear infinite;
+        }
+
+        .nprogress-custom-parent {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .nprogress-custom-parent #nprogress .spinner,
+        .nprogress-custom-parent #nprogress .bar {
+            position: absolute;
+        }
+
+        @-webkit-keyframes nprogress-spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes nprogress-spinner {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <div class="Toastify"></div>
+    <div class="css-1od0y2f">
+        <div class="chakra-spinner css-3hhxh0"><span class="css-8b45rq">Loading...</span></div>
+    </div>
+    <div class="css-6l715q">
+        <div class="css-17v2qyq"></div>
+        <div class="css-1euuhs8"></div>
+        <div class="css-y7d5dl"></div>
+        <div class="css-tn8yi9"></div>
+        <div class="css-1o3f2sq">
+            <div class="chakra-stack css-3ztxe6">
+                <div class="css-fk96wx"><button type="button" class="chakra-button css-1li50lk"><span
+                            class="chakra-button__icon css-1wh2kri"><svg stroke="currentColor" fill="currentColor"
+                                stroke-width="0" viewBox="0 0 20 20" focusable="false" class="chakra-icon css-bnbfmc"
+                                aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg></span>Back</button></div><a class="chakra-link css-spn4bz" href="/"><img
+                        alt="MentalHappy logo" fetchpriority="high" width="243" height="65" decoding="async"
+                        data-nimg="1" src="/_next/static/media/mentalhappy-mental-health-wellness-logo.0ad368d3.svg"
+                        style="color: transparent; width: clamp(110px, 14vw, 200px); height: auto; object-fit: contain;"></a>
+                <div class="chakra-stack css-1daolcl">
+                    <div class="chakra-stack css-1e7d0tu">
+                        <p class="chakra-text css-13u33ju">We've sent you a confirmation code</p>
+                        <div class="chakra-stack css-dk69dq">
+                            <p class="chakra-text css-ptdm7w">Enter the 6-digit verification code we sent to <span
+                                    class="chakra-text css-1s91e1f">pw_auto_mh_07145554w4rssgne@gmail.com</span>.</p>
+                            <p class="chakra-text css-ptdm7w">Please check both your inbox and junk/spam folder.</p>
+                        </div>
+                        <div class="css-enviux"><img alt="send icon" loading="lazy" width="135" height="135"
+                                decoding="async" data-nimg="1"
+                                src="/_next/static/media/email-confirmation-paper-plane.0be3c63b.svg"
+                                style="color: transparent; width: 100%; height: auto; object-fit: contain;"></div>
+                    </div>
+                    <div class="chakra-stack css-7oj3mm">
+                        <div class="chakra-stack css-14inlnl">
+                            <div role="group" class="chakra-form-control css-1kxonj9">
+                                <div class="chakra-stack css-j2067d"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-0" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value=""
+                                        data-index="0"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-1" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value=""
+                                        data-index="1"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-2" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value=""
+                                        data-index="2"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-3" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value=""
+                                        data-index="3"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-4" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value=""
+                                        data-index="4"><input aria-label="Please enter your pin code"
+                                        inputmode="numeric" type="tel" id="pin-input-:r5:-5" autocomplete="off"
+                                        placeholder="0" class="chakra-pin-input css-11074bv" value="" data-index="5">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chakra-stack css-yy1nas"><button type="button" class="chakra-button css-bthmsg"
+                                disabled="">Verify Email</button>
+                            <p class="chakra-text css-1apzfpn">Didn't receive a code <span
+                                    class="chakra-text css-uefjbj">Resend In 39:32</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><span id="__chakra_env" hidden=""></span>
+</div>

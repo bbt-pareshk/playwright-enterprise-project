@@ -74,10 +74,8 @@ export class WelcomePage extends BasePage {
         // The Continue button is inside css-1dnp1c1 container and must be enabled
         const continueBtn = this.getContinueButton();
 
-        // Wait for it to exist and be enabled (Chakra UI enables it after role selection)
-        await continueBtn.waitFor({ state: 'attached', timeout: 10000 });
-        await expect(continueBtn).toBeEnabled({ timeout: 10000 });
-        await continueBtn.click();
+        // Use robustClick to handle pointer interceptions from "Gleap" or other support popups
+        await this.robustClick(continueBtn);
         Logger.success('Welcome Continue clicked');
     }
 

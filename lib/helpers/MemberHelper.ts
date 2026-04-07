@@ -110,11 +110,11 @@ export class MemberHelper {
         Logger.step('Verifying Member Dashboard content');
         await AssertionHelper.verifyDashboardLoaded(page);
 
-        // Specific Member Dashboard element: "Find a support group" button or "Explore Groups"
-        const exploreHeading = page.getByRole('heading', { name: /Support Groups/i }).or(page.getByText(/Explore Groups/i)).first();
+        // Specific Member Dashboard element: "Explore Groups" link
+        const exploreHeading = page.getByRole('heading', { name: /Support Groups/i }).or(page.getByText(UI_CONSTANTS.DASHBOARD.FIND_SUPPORT_GROUP_BUTTON)).first();
         await expect(exploreHeading).toBeVisible({ timeout: 15000 });
 
-        const findButton = page.getByRole('button', { name: /find a support group/i }).first();
+        const findButton = page.getByRole('link', { name: UI_CONSTANTS.DASHBOARD.FIND_SUPPORT_GROUP_BUTTON }).first();
         await expect(findButton).toBeVisible();
 
         Logger.success('Member dashboard verification successful');
