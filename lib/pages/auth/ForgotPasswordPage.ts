@@ -17,7 +17,7 @@ export class ForgotPasswordPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.emailInput = page.getByLabel(UI_CONSTANTS.AUTH.FORGOT_PASSWORD.EMAIL_LABEL).first();
+        this.emailInput = page.locator('input[name="email"]').first();
         this.resetPasswordButton = page.getByRole('button', { name: UI_CONSTANTS.AUTH.FORGOT_PASSWORD.RESET_BUTTON });
         this.backToLoginLink = page.getByRole('link', { name: UI_CONSTANTS.AUTH.FORGOT_PASSWORD.BACK_TO_LOGIN_LINK, exact: false });
         // HEADING is now a <p> tag, not a <h1>-<h6> role
@@ -33,13 +33,16 @@ export class ForgotPasswordPage extends BasePage {
     }
 
     async enterEmail(email: string) {
-        // Use pressSequentially + blur to reliably trigger validation in React/Chakra UI
-        await this.emailInput.waitFor({ state: 'visible' });
-        await this.emailInput.clear();
-        await this.emailInput.pressSequentially(email, { delay: 30 });
-        await this.emailInput.blur(); // Force validation trigger
+        // 1. Ensure any blocking popups are dismissed
+        await this.dismissSupportPopups();
+
+        // 2. Use stableFill for atomic value setting (avoids "click while typing" races)
+        await this.stableFill(this.emailInput, email);
+
+        // 3. Force a Tab press to ensure React/Chakra UI validation triggers
         await this.page.keyboard.press('Tab');
-        Logger.info(`Email entered via sequence: ${email}`);
+
+        Logger.info(`Email entered via stableFill: ${email}`);
     }
 
     async clickResetPassword() {

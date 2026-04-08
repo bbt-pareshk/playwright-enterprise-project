@@ -155,16 +155,11 @@ export class DataGenerator {
     const day = pad(now.getDate());
     const hhmmss = pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
 
-    const info = { worker: 'w0', retry: 'r0' };
-    try {
-      const playwrightInfo = test.info();
-      info.worker = `w${playwrightInfo.workerIndex}`;
-      info.retry = `r${playwrightInfo.retry}`;
-    } catch (e) { }
-
     const rnd = this.generateRandomString(entropyLength, entropyLength);
 
-    return `${prefix}_${day}${hhmmss}${info.worker}${info.retry}${rnd}@${finalDomain}`.toLowerCase();
+    // Shortened format: [prefix]_[day][hhmmss][rnd]@[domain]
+    // Total length is roughly 11 + 2 + 6 + 4 + 1 + 14 = 38 chars
+    return `${prefix}_${day}${hhmmss}${rnd}@${finalDomain}`.toLowerCase();
   }
 
   /* =====================================================
