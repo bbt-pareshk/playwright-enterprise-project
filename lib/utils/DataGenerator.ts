@@ -136,7 +136,7 @@ export class DataGenerator {
    * Handles OTP bypass logic and Mailinator truncation constraints.
    */
   static generateEmail(
-    domain = APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN,
+    domain: string | null = null,
     entropyLength = 4
   ): string {
     const isBypassActive = ENV.USE_OTP_BYPASS && ENV.CURRENT === 'staging';
@@ -144,10 +144,11 @@ export class DataGenerator {
       ? APP_CONSTANTS.AUTH.OTP_BYPASS.PREFIX
       : APP_CONSTANTS.AUTH.OTP_BYPASS.STANDARD_PREFIX;
 
-    // Use a sample domain if bypass is active to reflect that mailbox is unnecessary
-    const finalDomain = (isBypassActive && domain === APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN)
+    const baseDomain = domain || APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN;
+    // Only use mock domain if bypass is active AND no specific domain was requested
+    const finalDomain = (isBypassActive && domain === null)
       ? 'mentalhappy.com'
-      : domain;
+      : baseDomain;
 
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');

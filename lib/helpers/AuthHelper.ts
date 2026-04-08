@@ -160,10 +160,19 @@ export class AuthHelper {
         let testEmail: string;
         try {
             testEmail = RuntimeStore.getUserEmail();
-            Logger.info(`[DISPOSABLE USER] Using existing user email from store: ${testEmail}`);
+            
+            // DOMAIN-AWARE RECYCLING: Only reuse if the email has a real mailbox (Mailinator)
+            // This prevents using mock @mentalhappy.com emails for flows that require link verification.
+            const domain = testEmail.split('@')[1];
+            if (domain !== 'mailinator.com') {
+                Logger.info(`[DISPOSABLE USER] Cached user ${testEmail} uses a mock domain. Regenerating for mailbox compatibility.`);
+                throw new Error('Incompatible Domain');
+            }
+
+            Logger.info(`[DISPOSABLE USER] Recycling compatible Mailinator user from store: ${testEmail}`);
         } catch (e) {
-            testEmail = DataGenerator.generateEmail();
-            Logger.info(`[DISPOSABLE USER] RuntimeStore empty. Using generated email: ${testEmail}`);
+            testEmail = DataGenerator.generateEmail('mailinator.com');
+            Logger.info(`[DISPOSABLE USER] Cache empty or incompatible. Generating fresh Mailinator email: ${testEmail}`);
         }
 
         await this.ensureUserExists(page, testEmail);

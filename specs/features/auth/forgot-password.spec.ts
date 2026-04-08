@@ -45,8 +45,12 @@ test.describe.serial('Forgot Password Journey', { tag: ['@member', '@smoke'] }, 
             await forgotPasswordPage.enterEmail(testEmail);
             await forgotPasswordPage.clickResetPassword();
 
-            await AssertionHelper.verifyToastMessage(page, MESSAGES.AUTH.FORGOT_PASSWORD.SUCCESS);
-            Logger.success('Password reset request submitted successfully');
+            // Updated check: Handles both legacy toast and new "Check your inbox" screen
+            await forgotPasswordPage.verifySuccessMessage();
+            await forgotPasswordPage.verifyCheckInboxVisible();
+            await forgotPasswordPage.verifyResendTimerVisible();
+            
+            Logger.success('Password reset request submitted and "Check your inbox" screen verified');
         });
     });
 

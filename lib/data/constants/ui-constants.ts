@@ -29,6 +29,9 @@ export const UI_CONSTANTS = {
             EMAIL_LABEL: 'Email',
             RESET_BUTTON: 'Send Reset Link',
             BACK_TO_LOGIN_LINK: 'Back To Log In',
+            CHECK_INBOX_HEADING: 'Check your inbox',
+            RESEND_TEXT: "Didn't receive a code",
+            RESEND_TIMER_PREFIX: 'Resend in',
         },
         RESET_PASSWORD: {
             HEADING: 'Create new password',
