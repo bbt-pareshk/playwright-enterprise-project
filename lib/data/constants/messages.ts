@@ -11,7 +11,7 @@ export const MESSAGES = {
             INVALID_CREDENTIALS: "The username/email or password you've entered is incorrect.",
         },
         REGISTRATION: {
-            EMAIL_CONFIRMED: 'Email confirmed!',
+            EMAIL_CONFIRMED: 'Email Verified Successfully',
             PASSWORD_VISIBILITY_ERROR: 'Password visibility mismatch: expected type',
             EMAIL_UNAVAILABLE: 'Email already exists',
 
@@ -29,7 +29,7 @@ export const MESSAGES = {
             SUCCESS: 'Password reset sent successfully',
         },
         RESET_PASSWORD: {
-            SUCCESS: 'Password updated!',
+            SUCCESS: 'Success: Password Changed Successfully',
         }
     },
 

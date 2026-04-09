@@ -24,25 +24,32 @@ export class AssertionHelper {
             : message;
 
         // Lifetime Fix: Use a broader selector for any alert/toast container
-        const toastSelector = '.chakra-toast, .chakra-alert, [role="status"], [role="alert"]';
+        const toastSelector = '.chakra-toast, .chakra-alert, .Toastify__toast, [role="status"], [role="alert"]';
         const toast = page.locator(toastSelector).filter({ hasText: searchPattern }).first();
         
         try {
             // Shortened timeout for the initial 'soft' check to keep suite fast
             await expect(toast).toBeVisible({ timeout: 10_000 });
         } catch (e) {
-            // If the URL has already changed, the toast might be gone. 
-            // In that case, we log a warning instead of failing the test.
-            const anyToast = page.locator(toastSelector).first();
-            const textContent = await anyToast.innerText().catch(() => 'none');
+            // Find ALL elements matching the toast selector
+            const possibleToasts = page.locator(toastSelector);
+            const count = await possibleToasts.count();
+            let foundMessages = [];
+
+            for (let i = 0; i < count; i++) {
+                const text = await possibleToasts.nth(i).innerText().catch(() => '');
+                // Filtering out the "MentalHappy" logo false positive
+                if (text && !text.includes('MentalHappy')) {
+                    foundMessages.push(text.trim());
+                }
+            }
             
-            Logger.warn(`Toast mismatch/timeout. Expected: ${message}. Found: ${textContent}`);
+            const textContent = foundMessages.length > 0 ? foundMessages.join(' | ') : 'none';
+            Logger.warn(`Toast mismatch/timeout. Expected pattern: ${searchPattern}. Found: ${textContent}`);
             
-            // If we didn't find the specific text but we found A toast, we report it clearly.
             if (textContent !== 'none') {
                 throw new Error(`Toast text mismatch. Expected: ${message}, Found: ${textContent}`);
             }
-            // If no toast at all, only throw if we hasn't redirected yet
             throw e;
         }
     }

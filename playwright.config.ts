@@ -29,6 +29,11 @@ export default defineConfig({
   use: {
     ...DEFAULT_BROWSER,
     baseURL: ENV.BASE_URL,
+    // Enterprise Fix: Force Full HD Desktop view to prevent responsive UI changes (e.g. text shortening/menu collapsing)
+    viewport: { width: 1920, height: 1080 },
+    launchOptions: {
+      args: ['--start-maximized']
+    },
     headless: isCI,
     trace: 'retain-on-failure',
     video: 'retain-on-failure',

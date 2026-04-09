@@ -10,6 +10,7 @@ export class ResetPasswordPage extends BasePage {
     private readonly confirmButton: Locator;
     private readonly pageHeading: Locator;
     private readonly successToast: Locator;
+    private readonly backToLoginLink: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -19,6 +20,7 @@ export class ResetPasswordPage extends BasePage {
         // HEADING is now a <p> tag
         this.pageHeading = page.getByText(UI_CONSTANTS.AUTH.RESET_PASSWORD.HEADING).first();
         this.successToast = page.getByText(MESSAGES.AUTH.RESET_PASSWORD.SUCCESS);
+        this.backToLoginLink = page.getByRole('link', { name: 'Back to Log in', exact: false });
     }
 
     async verifyResetPasswordPageVisible() {
@@ -42,5 +44,10 @@ export class ResetPasswordPage extends BasePage {
 
     async verifyPasswordUpdatedMessage() {
         await this.expectVisible(this.successToast, 'Password updated toast should be visible');
+    }
+
+    async clickBackToLogin() {
+        Logger.info('Clicking Back to Log in link');
+        await this.robustClick(this.backToLoginLink);
     }
 }

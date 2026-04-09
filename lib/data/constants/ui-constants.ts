@@ -34,10 +34,10 @@ export const UI_CONSTANTS = {
             RESEND_TIMER_PREFIX: 'Resend in',
         },
         RESET_PASSWORD: {
-            HEADING: 'Create new password',
+            HEADING: 'Create a new password',
             PASSWORD_NAME: 'password',
             CONFIRM_PASSWORD_NAME: 'password-confirm',
-            CONFIRM_BUTTON: 'Create new password',
+            CONFIRM_BUTTON: 'Reset Password',
         },
         ONBOARDING: {
             CONTINUE_AS_LEADER: 'Continue as a Group Leader',
@@ -54,8 +54,9 @@ export const UI_CONSTANTS = {
         },
     },
     DASHBOARD: {
-        START_GROUP_LINK: 'Create Your Support Group',
-        FIND_SUPPORT_GROUP_BUTTON: 'Explore Groups',
+        // Robust Regex handles "Create Your Support Group", "+ Create Group", and icon-only states:
+        START_GROUP_LINK: /Create.*Group/i,
+        FIND_SUPPORT_GROUP_BUTTON: /Explore|Find.*Group/i,
         SEARCH_PLACEHOLDER: 'Search for groups names or leaders',
     },
     CHAT: {

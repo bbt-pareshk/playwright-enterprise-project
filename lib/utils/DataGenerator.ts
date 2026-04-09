@@ -144,11 +144,11 @@ export class DataGenerator {
       ? APP_CONSTANTS.AUTH.OTP_BYPASS.PREFIX
       : APP_CONSTANTS.AUTH.OTP_BYPASS.STANDARD_PREFIX;
 
-    const baseDomain = domain || APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN;
-    // Only use mock domain if bypass is active AND no specific domain was requested
-    const finalDomain = (isBypassActive && domain === null)
-      ? 'mentalhappy.com'
-      : baseDomain;
+    // Domain selection Logic:
+    // 1. Specific domain (e.g. Forgot Password flow)
+    // 2. Mock domain (Bypass active)
+    // 3. Default domain (mailinator.com)
+    const finalDomain = domain || (isBypassActive ? 'mentalhappy.com' : APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN);
 
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -179,7 +179,7 @@ export class DataGenerator {
   }
 
   static email(
-    domain = APP_CONSTANTS.TEST_DATA.DEFAULTS.EMAIL_DOMAIN
+    domain: string | null = null
   ): string {
     return this.generateEmail(domain);
   }
