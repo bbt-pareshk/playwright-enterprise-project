@@ -42,16 +42,15 @@ export class OnboardingPage extends BasePage {
      * Uses the same locator strategy as Playwright codegen.
      */
     private getNavContinueButton() {
-        // Codegen uses: page.getByRole('button', { name: 'Continue' })
-        // The icon inside the button does NOT affect accessible name
-        return this.page.getByRole('button', { name: 'Continue' });
+        // Enforce exact match to prevent conflict with "Continue as a Group Leader"
+        return this.page.getByRole('button', { name: 'Continue', exact: true });
     }
 
     /**
      * Returns a fresh locator for the onboarding nav "Skip" button.
      */
     private getNavSkipButton() {
-        return this.page.getByRole('button', { name: 'Skip' });
+        return this.page.getByRole('button', { name: 'Skip', exact: true });
     }
 
     /**

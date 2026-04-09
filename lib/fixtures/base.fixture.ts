@@ -45,49 +45,85 @@ export const test = base.extend<BaseFixtures>({
  */
 export async function applyEnterpriseContextSettings(context: BrowserContext, testInfo: TestInfo) {
   /**
-   * Only show the third-party chat widget (Gleap/Feedback button) if:
-   * 1. The test is explicitly tagged with @chat-widget
+   * Only show third-party support widgets (Gleap, Chameleon, etc.) if:
+   * 1. The test is explicitly tagged with @chat-widget or @keep-widget
    * 2. The test file is specifically 'chat-widget.spec.ts'
    * 3. ENV.ALLOW_CHAT is set to true
    */
-  const isWidgetTest = testInfo.file.includes('chat-widget.spec');
-  const allowWidget = testInfo.tags.includes('@chat-widget') || isWidgetTest || ENV.ALLOW_CHAT;
+  const filename = testInfo.file.toLowerCase();
+  const isWidgetTest = filename.includes('chat-widget.spec') || filename.includes('onboarding-tour.spec');
+  const allowWidget = testInfo.tags.includes('@chat-widget') || 
+                      testInfo.tags.includes('@keep-widget') || 
+                      isWidgetTest || 
+                      ENV.ALLOW_CHAT;
 
   if (!allowWidget) {
-    // 1. Network level blocking for Gleap and common third-party chat libs
-    // We avoid generic 'chat' keyword here to not break internal API calls
-    await context.route(/gleap|livechatinc|intercom|drift/i, route => route.abort());
+    // 1. Network level blocking: Block scripts from common third-party providers
+    // This prevents the widgets from even starting to load in most cases.
+    await context.route(/gleap|chameleon|intercom|drift|hubspot|livechatinc/i, route => route.abort());
 
-    // 2. DOM level hiding (fallback and visual cleanup)
+    // 2. DOM level "Surgical Removal" (Fallback for locally cached or inline scripts)
     await context.addInitScript(() => {
+      // List of known third-party widget/onboarding root selectors
+      const widgetSelectors = [
+        '#gleap-container',
+        '[class*="gleap-"]',
+        '[id^="gleap"]',
+        '.bb-feedback-button',
+        '[class*="chameleon"]',
+        '[id^="chameleon"]',
+        '#chameleon-container',
+        '.intercom-app',
+        '.intercom-launcher-frame',
+        '#hubspot-messages-iframe-container',
+        'iframe[title*="Gleap"]',
+        'iframe[src*="gleap"]',
+        'iframe[src*="chameleon"]'
+      ];
+
+      // Add a CSS "Force Hide" layer as the fastest line of defense
       const style = document.createElement('style');
-      style.setAttribute('data-test', 'chat-widget-hidden-style');
+      style.setAttribute('data-test', 'enterprise-widget-kill-switch');
       style.innerHTML = `
-        /* Target Gleap specifically and the known feedback button */
-        #gleap-container,
-        .bb-feedback-button,
-        [id^="gleap"],
-        [class*="gleap"] {
+        ${widgetSelectors.join(',\n')} {
           display: none !important;
           visibility: hidden !important;
           pointer-events: none !important;
+          opacity: 0 !important;
+          width: 0 !important;
+          height: 0 !important;
         }
       `;
       document.documentElement.appendChild(style);
 
-      // Aggressive removal loop for dynamic widgets
-      const kill = () => {
-        document
-          .querySelectorAll('#gleap-container, .bb-feedback-button, [id^="gleap"]')
-          .forEach(el => (el as HTMLElement).remove());
+      /**
+       * Recursive function to find and remove widgets, including those 
+       * hidden inside Shadow DOMs.
+       */
+      const surgicalRemoval = (root: Document | ShadowRoot) => {
+        widgetSelectors.forEach(selector => {
+          root.querySelectorAll(selector).forEach(el => {
+            (el as HTMLElement).remove();
+          });
+        });
+
+        // Drill into all sub-elements to find any hidden Shadow Roots
+        root.querySelectorAll('*').forEach(el => {
+          if (el.shadowRoot) surgicalRemoval(el.shadowRoot);
+        });
       };
 
-      new MutationObserver(kill).observe(document, {
+      // Periodic "Janitor" to handle dynamic re-injection
+      const runJanitor = () => surgicalRemoval(document);
+      
+      // Observe all DOM changes to kill widgets the moment they are added
+      new MutationObserver(runJanitor).observe(document, {
         childList: true,
         subtree: true,
       });
 
-      kill();
+      // Initial sweep
+      runJanitor();
     });
   }
 }
