@@ -78,7 +78,9 @@ test.describe('Pixel Perfect Lifecycle Flow', { tag: ['@smoke', '@leader'] }, ()
         // --- PHASE 4: FEATURE USAGE ---
         await test.step('LIFECYCLE-08: Group - Create first group and verify success', async () => {
             await GroupHelper.createGroup(page, groupName);
-            await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.GROUPS.CREATED_SUCCESS, 'i'));
+            // Verification: Ensure redirection to the new group's dashboard/listing
+            await page.waitForURL(/.*\/groups\/.*/, { timeout: 15_000 });
+            await page.getByText(groupName).first().waitFor({ state: 'visible' });
             Logger.success(`Full Gold Standard Cycle Complete: Group "${groupName}" created.`);
         });
     });

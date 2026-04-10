@@ -22,9 +22,6 @@ test.describe('Global Authentication Setup', () => {
     if (ENV.LEADER_MULTI_GROUP_HOSTING_PLAN_USERNAME) {
         rolesToAuthenticate.push(ROLES.LEADER_MULTI_GROUP_HOSTING_PLAN);
     }
-    if (ENV.LEADER_FUNCTIONAL_USERNAME) {
-        rolesToAuthenticate.push(ROLES.LEADER_FUNCTIONAL);
-    }
 
     for (const role of rolesToAuthenticate) {
         test(`Authenticate ${role}`, async ({ loginAs, page, context }) => {

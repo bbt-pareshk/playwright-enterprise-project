@@ -18,7 +18,7 @@ export class WelcomePage extends BasePage {
     private static readonly LABELS = {
         HEADING: 'Welcome!',
         LEADER_BUTTON: 'Continue as a Group Leader',
-        MEMBER_BUTTON: 'Explore support groups',
+        MEMBER_BUTTON: 'Explore Support Groups',
         CONTINUE: 'Continue',
     };
 

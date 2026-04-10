@@ -1,0 +1,133 @@
+<div id="__next">
+    <style>
+        #nprogress {
+            pointer-events: none;
+        }
+
+        #nprogress .bar {
+            background: var(--chakra-colors-primary-color);
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        #nprogress .peg {
+            display: block;
+            position: absolute;
+            right: 0px;
+            width: 100px;
+            height: 100%;
+            box-shadow: 0 0 10px var(--chakra-colors-primary-color), 0 0 5px var(--chakra-colors-primary-color);
+            opacity: 1;
+            -webkit-transform: rotate(3deg) translate(0px, -4px);
+            -ms-transform: rotate(3deg) translate(0px, -4px);
+            transform: rotate(3deg) translate(0px, -4px);
+        }
+
+        #nprogress .spinner {
+            display: block;
+            position: fixed;
+            z-index: 1031;
+            top: 15px;
+            right: 15px;
+        }
+
+        #nprogress .spinner-icon {
+            width: 18px;
+            height: 18px;
+            box-sizing: border-box;
+            border: solid 2px transparent;
+            border-top-color: var(--chakra-colors-primary-color);
+            border-left-color: var(--chakra-colors-primary-color);
+            border-radius: 50%;
+            -webkit-animation: nprogresss-spinner 400ms linear infinite;
+            animation: nprogress-spinner 400ms linear infinite;
+        }
+
+        .nprogress-custom-parent {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .nprogress-custom-parent #nprogress .spinner,
+        .nprogress-custom-parent #nprogress .bar {
+            position: absolute;
+        }
+
+        @-webkit-keyframes nprogress-spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes nprogress-spinner {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <div class="Toastify"></div>
+    <div class="css-1od0y2f">
+        <div class="chakra-spinner css-3hhxh0"><span class="css-8b45rq">Loading...</span></div>
+    </div>
+    <div class="css-lo0f12">
+        <div class="css-1351fd9">
+            <div class="css-1qd29h8"></div>
+            <div class="css-dg0vv7"></div>
+            <div class="css-12kb4hf"></div>
+        </div>
+        <div class="css-pmpk0d"><img alt="MentalHappy" fetchpriority="high" width="184" height="49" decoding="async"
+                data-nimg="1" src="/_next/static/media/mentalhappy-mental-health-wellness-logo.0ad368d3.svg"
+                style="color: transparent; width: auto; height: 49px;"></div>
+        <div class="css-3fi02i">
+            <div class="css-116wp8c"><img alt="MentalHappy" fetchpriority="high" width="150" height="40"
+                    decoding="async" data-nimg="1"
+                    src="/_next/static/media/mentalhappy-mental-health-wellness-logo.0ad368d3.svg"
+                    style="color: transparent; width: auto; height: 40px;"></div>
+            <div class="css-15y92lb">
+                <div class="chakra-stack css-1bbqq5">
+                    <div class="chakra-stack css-bef60c">
+                        <div class="chakra-stack css-enj3l8">
+                            <p class="chakra-text css-1xd9fyp">Welcome to <span
+                                    class="chakra-text css-193k0ul">MentalHappy</span></p>
+                            <p class="chakra-text css-1xd9fyp">We're happy you're here..</p>
+                        </div>
+                        <p class="chakra-text css-6k95wk">Whether you're here to create or find support, you're in the
+                            right place.</p>
+                    </div>
+                    <div class="chakra-stack css-omf2qm"><button type="button" class="chakra-button css-jvil0a">Continue
+                            as a Group Leader</button><button type="button" class="chakra-button css-jvil0a">Explore
+                            Support Groups</button></div>
+                </div>
+            </div>
+            <div class="css-8atqhb">
+                <div class="css-nb2z2f">
+                    <div class="chakra-stack css-chgbhg">
+                        <div class="css-3nts62"></div>
+                        <div class="css-1d682d9"></div>
+                        <div class="css-1d682d9"></div>
+                        <div class="css-1d682d9"></div>
+                    </div>
+                    <div class="chakra-stack css-gyp5rf"><button type="button" class="chakra-button css-ufb8k9"
+                            disabled="">Continue<span class="chakra-button__icon css-1hzyiq5"><svg stroke="currentColor"
+                                    fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                    stroke-linejoin="round" focusable="false" class="chakra-icon css-13otjrl"
+                                    aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg></span></button></div>
+                </div>
+            </div>
+        </div>
+    </div><span id="__chakra_env" hidden=""></span>
+</div>

@@ -26,23 +26,20 @@ import { ENV } from '../../../config/env';
  * 3. Robustness: Integrated prerequisite user creation.
  */
 test.describe.serial('Forgot Password Journey', { tag: ['@member', '@smoke'] }, () => {
-    let testEmail: string;
+    // Standard Enterprise Config: Using dedicated static user for consistent recovery testing
+    const TEST_EMAIL = ENV.FORGOT_PASSWORD_USERNAME;
 
     test('Phase 1: Recovery Request & Validation', async ({ page }) => {
-        const loginPage = new LoginPage(page);
+        if (!TEST_EMAIL) throw new Error('FORGOT_PASSWORD_USERNAME is not defined in .env');
+        
         const forgotPasswordPage = new ForgotPasswordPage(page);
 
-        await test.step('FORGOT-01: Prerequisite - Ensure disposable user exists', async () => {
-            testEmail = await AuthHelper.ensureDisposableUserExists(page);
-            Logger.info(`Using test email: ${testEmail}`);
-        });
-
-        await test.step('FORGOT-02: Request - Navigate to Forgot Password and submit email', async () => {
+        await test.step('FORGOT-01: Request - Navigate to Forgot Password and submit email', async () => {
             await NavigationHelper.gotoLogin(page);
-            await loginPage.clickForgotPassword();
+            await new LoginPage(page).clickForgotPassword();
+            
             await forgotPasswordPage.verifyForgotPasswordPageVisible();
-
-            await forgotPasswordPage.enterEmail(testEmail);
+            await forgotPasswordPage.enterEmail(TEST_EMAIL);
             await forgotPasswordPage.clickResetPassword();
 
             // Updated check: Handles both legacy toast and new "Check your inbox" screen
@@ -65,7 +62,6 @@ test.describe.serial('Forgot Password Journey', { tag: ['@member', '@smoke'] }, 
         const resetPasswordPage = new ResetPasswordPage(page);
         try {
             await resetPasswordPage.verifyResetPasswordPageVisible();
-            // If it is visible, it should not have success elements or should show error (simplified check)
         } catch (e) {
             Logger.info('Reset page not visible for invalid token, which is a safe/correct default.');
         }
@@ -74,12 +70,11 @@ test.describe.serial('Forgot Password Journey', { tag: ['@member', '@smoke'] }, 
     });
 
     test('Phase 3: Successful Password Update Journey', async ({ page }) => {
-        // Enterprise email flow needs additional time
         test.setTimeout(240_000);
 
         await test.step('FORGOT-03: Email Verification - Retrieve reset link and navigate', async () => {
-            // Use VerificationService to handle Mailinator tab and link clicking
-            const resetPage = await VerificationService.getResetPage(page, testEmail);
+            // Use static config email directly
+            const resetPage = await VerificationService.getResetPage(page, TEST_EMAIL!);
             Logger.success(`Reset page identified: ${resetPage.url()}`);
 
             const resetPasswordPage = new ResetPasswordPage(resetPage);

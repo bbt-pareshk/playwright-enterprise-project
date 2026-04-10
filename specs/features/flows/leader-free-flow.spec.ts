@@ -48,7 +48,9 @@ test.describe('Leader Journey - Free Subscription', { tag: ['@smoke', '@leader']
 
         await test.step('LEADER-FREE-05: Group Creation - Create and verify first group', async () => {
             await GroupHelper.createGroup(page, groupName);
-            await AssertionHelper.verifyToastMessage(page, new RegExp(MESSAGES.GROUPS.CREATED_SUCCESS, 'i'));
+            // Verification: Ensure redirection to the new group details/listing page
+            await page.waitForURL(/.*\/groups\/.*/, { timeout: 15_000 });
+            await page.getByText(groupName).first().waitFor({ state: 'visible' });
             Logger.success(`Leader Free Plan Journey complete: Group "${groupName}" created.`);
         });
     });

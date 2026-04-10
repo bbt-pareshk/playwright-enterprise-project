@@ -17,12 +17,12 @@ export const MESSAGES = {
 
 
             OTP_RESENT: 'email sent',
-            FIRST_NAME_INVALID: 'only letters are allowed',
-            LAST_NAME_INVALID: 'only letters are allowed',
-            FIRST_NAME_REQUIRED: 'firstname is required',
-            LAST_NAME_REQUIRED: 'lastname is required',
-            EMAIL_REQUIRED: 'email is required',
-            PASSWORD_REQUIRED: 'password is required',
+            FIRST_NAME_INVALID: 'Only letters are allowed.',
+            LAST_NAME_INVALID: 'Only letters are allowed.',
+            FIRST_NAME_REQUIRED: 'First name is required.',
+            LAST_NAME_REQUIRED: 'Last name is required.',
+            EMAIL_REQUIRED: 'Email is required.',
+            PASSWORD_REQUIRED: 'Password is required.',
         },
 
         FORGOT_PASSWORD: {

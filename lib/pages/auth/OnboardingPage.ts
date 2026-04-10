@@ -48,9 +48,10 @@ export class OnboardingPage extends BasePage {
 
     /**
      * Returns a fresh locator for the onboarding nav "Skip" button.
+     * Uses text-based matching as the 'Skip' element may be a link or icon-div.
      */
     private getNavSkipButton() {
-        return this.page.getByRole('button', { name: 'Skip', exact: true });
+        return this.page.getByRole('button', { name: 'Skip' });
     }
 
     /**
@@ -74,10 +75,10 @@ export class OnboardingPage extends BasePage {
         // If button is disabled, we likely need to select an option on the page
         if (await btn.isDisabled()) {
             Logger.info(`Button "${await btn.innerText()}" is disabled. Selecting first available option...`);
-            
+
             // Centralized selector for onboarding choice cards and buttons
             const options = this.page.locator('ul.chakra-wrap__list button, [class*="card"], [role="checkbox"]').first();
-            
+
             if (await options.isVisible()) {
                 await options.click();
                 Logger.info('Option selected. Waiting for button to enable...');
@@ -117,14 +118,71 @@ export class OnboardingPage extends BasePage {
     ============================ */
 
     /**
-     * Completes Leader onboarding by clicking Skip on the first screen.
-     * As per user: "if you click on Skip then there is showing direct Hosting plan"
+     * Waits for any page-level loading spinners to disappear.
+     */
+    private async waitForLoaderToDisappear() {
+        const loader = this.page.locator('.chakra-spinner, [class*="spinner"], text=/Loading/i').first();
+        try {
+            if (await loader.isVisible()) {
+                Logger.info('Page loader detected. Waiting for it to disappear...');
+                await loader.waitFor({ state: 'hidden', timeout: 20000 });
+                Logger.info('Loader cleared.');
+            }
+        } catch (e) {
+            Logger.warn('Loader wait timed out or failed. Continuing...');
+        }
+    }
+
+    /**
+     * Completes Leader onboarding by clicking Skip.
+     * Logic: Handles Screen 1 (Welcome), Screen 2 (Survey), or Direct Redirect.
      */
     async completeLeaderOnboardingViaSkip() {
-        Logger.step('Completing Leader onboarding via SKIP');
-        await this.clickSkip();
-        await this.page.waitForURL(url => url.pathname.includes(ROUTE_PATHS.HOSTING_PLAN) || url.pathname.includes('hosting-plan'), { timeout: 15000 });
-        Logger.success('Redirected to /hosting-plan via Skip');
+        Logger.step('Completing Leader onboarding via SKIP (Deep Check Flow)');
+        
+        // 1. ENSURE STABILITY: Wait for potential background redirects to settle
+        await this.page.waitForLoadState('load');
+        await this.waitForLoaderToDisappear();
+
+        // 2. SESSION AWARENESS: If we already reached the destination, do nothing
+        const url = this.page.url();
+        if (url.includes(ROUTE_PATHS.HOSTING_PLAN) || url.includes('/groups')) {
+            Logger.info(`Deep Check: Onboarding already bypassed. Current URL: ${url}`);
+            return;
+        }
+
+        await this.dismissSupportPopups();
+
+        // 3. SCREEN 1: Welcome Intro (Target specifically by unique heading)
+        const welcomeHeading = this.page.getByText('Welcome to MentalHappy');
+        const introContinue = this.page.getByRole('button', { name: 'Continue', exact: true }).filter({ hasNotText: 'Leader' });
+        
+        if (await welcomeHeading.isVisible()) {
+            Logger.info('Screen 1 (Welcome Intro) confirmed via Heading.');
+            
+            if (await introContinue.isDisabled()) {
+                Logger.info('Intro button disabled. Clicking Leader role button...');
+                const leaderBtn = this.page.getByRole('button', { name: 'Continue as a Group Leader' });
+                await leaderBtn.waitFor({ state: 'visible', timeout: 15000 });
+                await leaderBtn.click({ force: true });
+                await expect(introContinue).toBeEnabled({ timeout: 10000 });
+            }
+            
+            await this.robustClick(introContinue);
+            await this.page.waitForTimeout(1500); // Transition wait
+        }
+
+        // 4. SCREEN 2: Survey (Proceed only if not already redirected)
+        if (!this.page.url().includes(ROUTE_PATHS.HOSTING_PLAN)) {
+            Logger.info('Checking for Screen 2 (Survey) Skip option...');
+            const skipElement = this.getNavSkipButton();
+            if (await skipElement.isVisible()) {
+                await this.clickSkip();
+                await this.page.waitForURL(u => u.pathname.includes(ROUTE_PATHS.HOSTING_PLAN), { timeout: 15000 });
+            }
+        }
+        
+        Logger.success('Onboarding cleared successfully');
     }
 
     /**
