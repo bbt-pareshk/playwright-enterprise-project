@@ -165,90 +165,13 @@ export abstract class BasePage {
 
 
   /**
-   * Dismisses common support/onboarding popups (e.g., Chameleon, Intercom)
+   * Dismisses common support/onboarding popups (e.g., Chameleon, Intercom, Gleap)
    * that might obscure elements during E2E runs.
+   * 
+   * NOTE: For stability, 3rd party widgets are now blocked at the context level 
+   * via Network Route Aborting in fixtures. This method is kept as a placeholder.
    */
   async dismissSupportPopups() {
-    const popupSelectors = [
-      '[class*="chameleon"] button:has-text("Skip")',
-      '[class*="chameleon"] button:has-text("Next")',
-      'button:has-text("Got it")',
-      'button:has-text("Dismiss")',
-      'button[aria-label="Close"]',
-      'button:has-text("Done")',
-      '.chameleon-close-button',
-      '.intercom-post-close',
-      '[class*="chameleon"] button',
-      'button:has-text("✕")',
-      '.gleap-close-button',
-      '.gleap-notification-container button',
-      '[class^="gleap-"] button'
-    ];
-
-    Logger.info('Checking for generic support popups to dismiss...');
-
-    // Some walkthroughs have multiple steps (1/2, 2/2). 
-    // We loop a few times to clear them all.
-    for (let i = 0; i < 4; i++) {
-      let dismissedAny = false;
-
-      // Try Escape key as first-line defense
-      await this.page.keyboard.press('Escape').catch(() => { });
-
-      // Use a JS-based "popup buster" to handle shadow DOM or complex overlays
-      await this.page.evaluate(() => {
-        const selectors = ['button', 'div[role="button"]', 'a[role="button"]'];
-        // Specific labels for support/tour popups. 
-        // We EXCLUDE "Continue" and "Skip" here to avoid clicking Onboarding buttons by mistake.
-        const labels = [/Got it/i, /Dismiss/i, /Done/i, /Close/i, /✕/];
-
-        // Chameleon specific targets
-        const chameleonLabels = [/Next/i, /Skip Walkthrough/i, /End Tour/i];
-
-        const clickPopups = (root: Document | ShadowRoot) => {
-          selectors.forEach(sel => {
-            root.querySelectorAll(sel).forEach(el => {
-              const htmlEl = el as HTMLElement;
-              const style = window.getComputedStyle(htmlEl);
-              const isVisible = style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-
-              if (isVisible) {
-                const text = htmlEl.innerText || htmlEl.getAttribute('aria-label') || '';
-                const isChameleon = htmlEl.closest('[class*="chameleon"]') !== null;
-
-                const shouldClick = labels.some(regex => regex.test(text)) ||
-                  (isChameleon && chameleonLabels.some(regex => regex.test(text)));
-
-                if (shouldClick) {
-                  htmlEl.click();
-                }
-              }
-            });
-          });
-
-          // Recurse into shadow DOMs
-          root.querySelectorAll('*').forEach(el => {
-            if (el.shadowRoot) clickPopups(el.shadowRoot);
-          });
-        };
-
-        clickPopups(document);
-      }).catch(() => { });
-
-      for (const selector of popupSelectors) {
-        try {
-          const popup = this.page.locator(selector).filter({ visible: true }).first();
-          if (await popup.isVisible().catch(() => false)) {
-            Logger.info(`Dismissing popup element: ${selector}`);
-            await popup.click({ force: true, timeout: 3000 }).catch(() => { });
-            await this.page.waitForTimeout(800);
-            dismissedAny = true;
-          }
-        } catch (e) {
-          // Ignore errors in dismissal
-        }
-      }
-      if (!dismissedAny) break;
-    }
+    Logger.info('3rd-party widgets are handled via Enterprise Kill-Switch in fixtures. Skipping manual dismissal.');
   }
 }

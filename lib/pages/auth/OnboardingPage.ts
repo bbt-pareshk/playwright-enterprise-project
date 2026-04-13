@@ -21,14 +21,14 @@ export class OnboardingPage extends BasePage {
         CONTINUE: 'Continue',
         SKIP: 'Skip',
         CONTINUE_AS_LEADER: 'Continue as a Group Leader',
-        FIND_SUPPORT_GROUP: 'Find Support Group',
+        FIND_SUPPORT_GROUP: /Explore Support Groups|Find Support Group/i,
     };
 
     constructor(page: Page) {
         super(page);
 
         // Static locators for buttons with unique names
-        this.findSupportGroupButton = page.getByRole('button', { name: OnboardingPage.LABELS.FIND_SUPPORT_GROUP });
+        this.findSupportGroupButton = page.locator('button').filter({ hasText: OnboardingPage.LABELS.FIND_SUPPORT_GROUP });
         this.continueAsLeaderLegacyButton = page.getByRole('button', { name: OnboardingPage.LABELS.CONTINUE_AS_LEADER });
 
         // Continue and Skip share names with other potential buttons, so we set these here

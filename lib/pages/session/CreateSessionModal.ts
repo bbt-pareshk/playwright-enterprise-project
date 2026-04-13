@@ -18,12 +18,12 @@ export class CreateSessionModal extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    this.modalHeading = page.getByRole('heading', {
-      name: new RegExp(UI_CONSTANTS.SESSION.SCHEDULE_SESSION, 'i'),
-    });
+    this.modalHeading = page.locator('.chakra-modal__header, [role="heading"], h2, p')
+      .filter({ hasText: new RegExp(UI_CONSTANTS.SESSION.SCHEDULE_SESSION, 'i') })
+      .first();
 
     this.modalRoot = page.locator('.chakra-modal__content, [role="dialog"]').filter({
-      has: this.modalHeading,
+      hasText: new RegExp(UI_CONSTANTS.SESSION.SCHEDULE_SESSION, 'i'),
     }).last();
 
     this.dateInput = this.modalRoot.locator('input[name="date"]');
@@ -36,7 +36,7 @@ export class CreateSessionModal extends BasePage {
     this.selectTagsButton = this.modalRoot.locator('button').filter({ hasText: /^Select Tags$/i });
 
     this.submitButton = this.modalRoot.getByRole('button', {
-      name: new RegExp(`^${UI_CONSTANTS.SESSION.SCHEDULE_SESSION}$`, 'i')
+      name: /Schedule (Now|a Session)/i
     });
 
     this.timezoneControl = this.modalRoot.locator('.react-select__control').first();
@@ -50,7 +50,15 @@ export class CreateSessionModal extends BasePage {
 
   async waitForVisible(): Promise<void> {
     Logger.step('Waiting for Create Session modal');
-    await this.modalHeading.waitFor({ state: 'visible', timeout: 20_000 });
+    
+    // Step 1: Wait for modal root to be VISIBLE
+    await this.modalRoot.waitFor({ state: 'visible', timeout: 20_000 });
+    
+    // Step 2: Final visibility check on heading
+    await this.modalHeading.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {
+         Logger.warn('Modal heading check timed out, but root is visible. Proceeding...');
+    });
+    
     Logger.success('Create Session modal visible');
   }
 

@@ -1,0 +1,2393 @@
+<body class="chakra-ui-light"><div id="__next"><style>
+    #nprogress {
+      pointer-events: none;
+    }
+    #nprogress .bar {
+      background: var(--chakra-colors-primary-color);
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+    #nprogress .peg {
+      display: block;
+      position: absolute;
+      right: 0px;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px var(--chakra-colors-primary-color), 0 0 5px var(--chakra-colors-primary-color);
+      opacity: 1;
+      -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+      transform: rotate(3deg) translate(0px, -4px);
+    }
+    #nprogress .spinner {
+      display: block;
+      position: fixed;
+      z-index: 1031;
+      top: 15px;
+      right: 15px;
+    }
+    #nprogress .spinner-icon {
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+      border: solid 2px transparent;
+      border-top-color: var(--chakra-colors-primary-color);
+      border-left-color: var(--chakra-colors-primary-color);
+      border-radius: 50%;
+      -webkit-animation: nprogresss-spinner 400ms linear infinite;
+      animation: nprogress-spinner 400ms linear infinite;
+    }
+    .nprogress-custom-parent {
+      overflow: hidden;
+      position: relative;
+    }
+    .nprogress-custom-parent #nprogress .spinner,
+    .nprogress-custom-parent #nprogress .bar {
+      position: absolute;
+    }
+    @-webkit-keyframes nprogress-spinner {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+    @keyframes nprogress-spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style><div class="Toastify"></div><div class="css-1od0y2f"><div class="chakra-spinner css-3hhxh0"><span class="css-8b45rq">Loading...</span></div></div><div class="css-vfmhxi"><div class="chakra-stack css-ji9q2d"><div class="chakra-stack css-jmue3"><button type="button" class="chakra-button css-jdwzd9" aria-label="menu"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-l607zq" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg></button><a class="chakra-link css-1hymt3e" href="/groups"><div class="css-7iptza"><img alt="cover" loading="lazy" decoding="async" data-nimg="fill" class="css-g98gbd" src="/_next/static/media/mentalhappy-mental-health-wellness-logo.0ad368d3.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></div></a><div class="chakra-stack css-1shwtr0"><a target="_self" class="chakra-link css-ane698" href="/groups"><div class="chakra-stack css-1fpryqu"><div class="chakra-stack css-w8giwy"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-1jo1w06" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><p class="chakra-text css-1qh2siz">Explore Groups</p></div><div class="css-1rharz8"></div></div></a><a target="_self" class="chakra-link css-ane698" href="/groups/my"><div class="chakra-stack css-2v2muo"><div class="chakra-stack css-w8giwy"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-1dpguev" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><p class="chakra-text css-p5g8g2">My Groups</p></div><div class="css-1akvwwr"></div></div></a><a target="_self" class="chakra-link css-ane698" href="/user/sessions"><div class="chakra-stack css-1fpryqu"><div class="chakra-stack css-w8giwy"><svg viewBox="0 0 20 22" focusable="false" class="chakra-icon chakra-icon css-mmcbcr"><path d="M18.75 6.75H0.75M13.75 0.75V3.75M5.75 0.75V3.75M5.55 20.75H13.95C15.6302 20.75 16.4702 20.75 17.112 20.423C17.6765 20.1354 18.1354 19.6765 18.423 19.112C18.75 18.4702 18.75 17.6302 18.75 15.95V7.55C18.75 5.86984 18.75 5.02976 18.423 4.38803C18.1354 3.82354 17.6765 3.3646 17.112 3.07698C16.4702 2.75 15.6302 2.75 13.95 2.75H5.55C3.86984 2.75 3.02976 2.75 2.38803 3.07698C1.82354 3.3646 1.3646 3.82354 1.07698 4.38803C0.75 5.02976 0.75 5.86984 0.75 7.55V15.95C0.75 17.6302 0.75 18.4702 1.07698 19.112C1.3646 19.6765 1.82354 20.1354 2.38803 20.423C3.02976 20.75 3.86984 20.75 5.55 20.75ZM9.74726 11.0806C8.94752 10.1716 7.6139 9.92708 6.61188 10.7594C5.60986 11.5918 5.46879 12.9835 6.25568 13.9679C6.827 14.6827 8.40927 16.0897 9.23333 16.8069C9.41198 16.9624 9.5013 17.0402 9.60597 17.071C9.69664 17.0977 9.79788 17.0977 9.88855 17.071C9.99322 17.0402 10.0825 16.9624 10.2612 16.8069C11.0853 16.0897 12.6675 14.6827 13.2388 13.9679C14.0257 12.9835 13.9019 11.5831 12.8826 10.7594C11.8634 9.93584 10.547 10.1716 9.74726 11.0806Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg><p class="chakra-text css-1qh2siz">My Sessions</p></div><div class="css-1rharz8"></div></div></a></div></div><div class="chakra-stack css-mmjj4x"><div id="menu-button-:rj:" aria-expanded="false" aria-haspopup="menu" aria-controls="menu-list-:rj:" class="chakra-menu__menu-button css-1yany9k"><span class="css-xl71ch"><div class="css-1lk94xg"><div class="css-85qv6v">1</div><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-f2v9sg" aria-label="notifications" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div></span></div><div class="css-r6z5ec" style="visibility: hidden; position: absolute; min-width: max-content; inset: 0px auto auto 0px;"><div class="chakra-menu__menu-list css-dntwhr" tabindex="-1" role="menu" id="menu-list-:rj:" aria-orientation="vertical" style="transform-origin: var(--popper-transform-origin); opacity: 0; visibility: hidden; transform: scale(0.8) translateZ(0px);"><div class="css-3zn2tk"><div class="css-j7qwjs"><div class="css-jkyyy1"><div class="css-mbx0dj"><div class="chakra-stack css-chgbhg"><p class="chakra-text css-mft9a5">Notifications</p></div><button type="button" class="chakra-button css-1tvswzi">Mark all as read</button></div><div class="chakra-stack css-1arne71"><button type="button" class="chakra-button css-1i81wbp">All</button><button type="button" class="chakra-button css-2dvgy5">Requests</button><button type="button" class="chakra-button css-2dvgy5">Sessions</button></div></div><div class="css-0"><button class="css-1b3ujkx"><div class="chakra-stack css-g21rxu"><div class="css-1f0j0ta"><img alt="Yash Dhameliya" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent;"></div><div class="chakra-stack css-6wt7pr"><div class="chakra-stack css-7273wz"><p class="chakra-text css-p3dc90">Yash Dhameliya</p><p class="chakra-text css-ewagfi">— Group Update • 1 days ago</p></div><p class="chakra-text css-fibqjb">Join the new group "Mindful Stress Relief Circle" now!</p></div><div class="css-ws67m0"></div></div></button><div class="css-1orxso7"><button type="button" class="chakra-button css-ehxv2h">View All</button></div></div></div></div></div></div></div><div class="chakra-stack css-1smykox"><div id="menu-button-:rl:" aria-expanded="false" aria-haspopup="menu" aria-controls="menu-list-:rl:" class="chakra-menu__menu-button css-1yany9k"><span class="css-xl71ch"><div class="css-1lk94xg"><div class="css-85qv6v">1</div><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-f2v9sg" aria-label="notifications" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div></span></div><div class="css-r6z5ec" style="visibility: hidden; position: absolute; min-width: max-content; inset: 0px auto auto 0px;"><div class="chakra-menu__menu-list css-dntwhr" tabindex="-1" role="menu" id="menu-list-:rl:" aria-orientation="vertical" style="transform-origin: var(--popper-transform-origin); opacity: 0; visibility: hidden; transform: scale(0.8) translateZ(0px);"><div class="css-3zn2tk"><div class="css-j7qwjs"><div class="css-jkyyy1"><div class="css-mbx0dj"><div class="chakra-stack css-chgbhg"><p class="chakra-text css-mft9a5">Notifications</p></div><button type="button" class="chakra-button css-1tvswzi">Mark all as read</button></div><div class="chakra-stack css-1arne71"><button type="button" class="chakra-button css-1i81wbp">All</button><button type="button" class="chakra-button css-2dvgy5">Requests</button><button type="button" class="chakra-button css-2dvgy5">Sessions</button></div></div><div class="css-0"><button class="css-1b3ujkx"><div class="chakra-stack css-g21rxu"><div class="css-1f0j0ta"><img alt="Yash Dhameliya" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocKh5N_DU5iVaU5_IwZdPSo2ZUglwOO8gZSUDGK99CaDDXZU9Q%3Ds96-c&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent;"></div><div class="chakra-stack css-6wt7pr"><div class="chakra-stack css-7273wz"><p class="chakra-text css-p3dc90">Yash Dhameliya</p><p class="chakra-text css-ewagfi">— Group Update • 1 days ago</p></div><p class="chakra-text css-fibqjb">Join the new group "Mindful Stress Relief Circle" now!</p></div><div class="css-ws67m0"></div></div></button><div class="css-1orxso7"><button type="button" class="chakra-button css-ehxv2h">View All</button></div></div></div></div></div></div><hr aria-orientation="vertical" class="chakra-divider css-2wacbm"><div aria-label="User menu" id="menu-button-:r8:" aria-expanded="false" aria-haspopup="menu" aria-controls="menu-list-:r8:" class="chakra-menu__menu-button css-1fhxhux"><span class="css-xl71ch"><div class="chakra-stack css-zpd0pq"><div class="css-1rj88k3"><img alt="user avatar" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75 3840w" src="https://staging.mentalhappy.com/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent; opacity: 1;"></div><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-ur8x5e" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></div></span></div><div class="css-r6z5ec" style="visibility: hidden; position: absolute; min-width: max-content; inset: 0px auto auto 0px;"><div class="chakra-menu__menu-list css-uejhak" tabindex="-1" role="menu" id="menu-list-:r8:" aria-orientation="vertical" style="transform-origin: var(--popper-transform-origin); opacity: 0; visibility: hidden; transform: scale(0.8) translateZ(0px);"><button type="button" id="menu-list-:r8:-menuitem-:r9:" role="menuitem" tabindex="-1" class="chakra-menu__menuitem css-1krpbfg" data-index="0"><div class="chakra-stack css-147p9mk"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-pxrx3d" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><div class="css-1j8xfff">My Profile</div></div></button><hr aria-orientation="horizontal" class="chakra-menu__divider css-b2bcq8"><button type="button" id="menu-list-:r8:-menuitem-:ra:" role="menuitem" tabindex="-1" class="chakra-menu__menuitem css-1krpbfg" data-index="1"><div class="chakra-stack css-147p9mk"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-pxrx3d" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg><div class="css-1j8xfff">Edit profile</div></div></button><button type="button" id="menu-list-:r8:-menuitem-:rb:" role="menuitem" tabindex="-1" class="chakra-menu__menuitem css-1krpbfg" data-index="2"><div class="chakra-stack css-147p9mk"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-pxrx3d" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><div class="css-1j8xfff">User Guide</div></div></button><button type="button" id="menu-list-:r8:-menuitem-:rc:" role="menuitem" tabindex="-1" class="chakra-menu__menuitem css-1krpbfg" data-index="3"><div class="chakra-stack css-147p9mk"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-pxrx3d" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="css-1j8xfff">Help Center</div></div></button><hr aria-orientation="horizontal" class="chakra-menu__divider css-b2bcq8"><button type="button" id="menu-list-:r8:-menuitem-:rd:" role="menuitem" tabindex="-1" class="chakra-menu__menuitem css-1krpbfg" data-index="4"><div class="chakra-stack css-147p9mk"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-pxrx3d" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><div class="css-1j8xfff">Logout</div></div></button></div></div><hr aria-orientation="vertical" class="chakra-divider css-2wacbm"><button type="button" class="chakra-button css-u8i8sx"><span class="chakra-button__icon css-1wh2kri"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-1gm3tio" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>Create Group</button></div></div><div class="css-1u1x26e"><div class="css-y5jj8d"><div class="chakra-stack css-1038hhc"><div class="css-1g2feo0"><div class="chakra-stack css-1cyyl4u"><div class="chakra-stack css-pzco6c"><div class="chakra-stack css-4zainq"><p class="chakra-text css-8kql4i">My Support Groups</p><div class="chakra-stack css-1igwmid"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-1m8d0hp" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><p class="chakra-text css-f4xdi8">3 total groups • 2 owned • 1 joined</p></div></div><button type="button" class="chakra-button css-rpz6w3"><span class="chakra-button__icon css-1wh2kri"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-y4cznu" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>Find a support group</button><button type="button" class="chakra-button css-qigjbf" aria-label="search"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" focusable="false" class="chakra-icon css-13otjrl" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button></div></div></div><div class="css-1g2feo0"><div class="chakra-tabs css-13o7eu2"><div role="tablist" aria-orientation="horizontal" class="chakra-tabs__tablist css-fgp5ep"><button type="button" id="tabs-:rm:--tab-0" role="tab" tabindex="0" aria-selected="true" aria-controls="tabs-:rm:--tabpanel-0" class="chakra-tabs__tab css-1if3lp2" data-index="0"><div class="chakra-stack css-1uodvt1"><p class="chakra-text css-0">My Groups</p><div class="css-1x3ddv6">2</div></div></button><button type="button" id="tabs-:rm:--tab-1" role="tab" tabindex="-1" aria-selected="false" aria-controls="tabs-:rm:--tabpanel-1" class="chakra-tabs__tab css-1if3lp2" data-index="1"><div class="chakra-stack css-1uodvt1"><p class="chakra-text css-0">Joined Groups</p><div class="css-1x3ddv6">1</div></div></button></div><div class="chakra-tabs__tab-panels css-8atqhb"><div tabindex="0" role="tabpanel" aria-labelledby="tabs-:rm:--tab-0" id="tabs-:rm:--tabpanel-0" class="chakra-tabs__tab-panel css-adm2jf"><div class="chakra-stack css-1cggwyz"><div class="chakra-wrap css-0"><ul class="chakra-wrap__list css-g055m0"><li class="chakra-wrap__listitem css-1yp4ln"><div data-testid="group-card" class="css-1juslry"><div class="css-e7kcv3"><img alt="cover" loading="lazy" decoding="async" data-nimg="fill" class="css-1phd9a0" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Ffcdd4a45-5161-4058-8568-38fb14dc359a.png&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></div><div class="chakra-stack css-g5dof1"><div class="css-1hkdwck"><div class="css-sz3opf"><p class="chakra-text css-lxj3e7" title="PW_Group_20260317_170137_w8r083168c">PW_Group_20260317_170137_w8r083168c</p><p class="chakra-text css-9u14ya">1 Member</p></div><div class="chakra-stack css-12im7zb"><div class="css-1mfuhhg"><img alt="user avatar" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75 3840w" src="https://staging.mentalhappy.com/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent; opacity: 1;"></div></div></div></div><div class="css-f6fnay"><p class="chakra-text css-1347fc">Activate your group</p></div></div></li><li class="chakra-wrap__listitem css-1yp4ln"><div data-testid="group-card" class="css-1juslry"><div class="css-e7kcv3"><img alt="cover" loading="lazy" decoding="async" data-nimg="fill" class="css-1phd9a0" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fd457ba00-df66-4992-8257-446f388b70f5.png&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></div><div class="chakra-stack css-g5dof1"><div class="css-1hkdwck"><div class="css-sz3opf"><p class="chakra-text css-lxj3e7" title="PW_Group_20260317_181116_w4r0490d1q">PW_Group_20260317_181116_w4r0490d1q</p><p class="chakra-text css-9u14ya">1 Member</p></div><div class="chakra-stack css-12im7zb"><div class="css-1mfuhhg"><img alt="user avatar" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75 3840w" src="https://staging.mentalhappy.com/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F760a8cd3-184c-426c-8e52-10556b44a342.jpeg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent; opacity: 1;"></div></div></div></div><div class="css-f6fnay"><p class="chakra-text css-1347fc">Activate your group</p></div></div></li></ul></div></div></div><div tabindex="0" role="tabpanel" aria-labelledby="tabs-:rm:--tab-1" hidden="" id="tabs-:rm:--tabpanel-1" class="chakra-tabs__tab-panel css-adm2jf"><div class="chakra-stack css-1cggwyz"><div class="chakra-wrap css-0"><ul class="chakra-wrap__list css-g055m0"><li class="chakra-wrap__listitem css-1yp4ln"><div data-testid="group-card" class="css-1juslry"><div class="css-e7kcv3"><img alt="cover" loading="lazy" decoding="async" data-nimg="fill" class="css-1phd9a0" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2Fe2213c24-0e57-4068-9f55-d2956843580f.jpg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></div><div class="chakra-stack css-g5dof1"><div class="css-1hkdwck"><div class="css-sz3opf"><p class="chakra-text css-lxj3e7" title="789">789</p><p class="chakra-text css-9u14ya">7 Members</p></div><div class="chakra-stack css-12im7zb"><div class="css-1mfuhhg"><div class="chakra-spinner css-qitvqq"><span class="css-8b45rq">Loading...</span></div><img alt="user avatar" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=3840&amp;q=75 3840w" src="https://staging.mentalhappy.com/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F56d1982d-9532-49ea-b7db-fee379d582ab.jpg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent; opacity: 0;"></div><div class="css-17i5h7z"><p class="chakra-text css-1d0zk8k">7</p></div><div class="css-1mfuhhg"><div class="chakra-spinner css-qitvqq"><span class="css-8b45rq">Loading...</span></div><img alt="user avatar" loading="lazy" decoding="async" data-nimg="fill" sizes="100vw" srcset="/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=640&amp;q=75 640w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=750&amp;q=75 750w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=828&amp;q=75 828w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=1080&amp;q=75 1080w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=1200&amp;q=75 1200w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=1920&amp;q=75 1920w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=2048&amp;q=75 2048w, /_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=3840&amp;q=75 3840w" src="https://staging.mentalhappy.com/_next/image?url=https%3A%2F%2Fmental-happy.s3.amazonaws.com%2Fstaging%2Fimages%2F50a4c379-9354-412a-b6c1-aed01df30fb2.jpg&amp;w=3840&amp;q=75" style="position: absolute; height: 100%; width: 100%; inset: 0px; object-fit: cover; color: transparent; opacity: 0;"></div></div></div></div></div></li></ul></div></div></div></div></div></div></div></div></div></div><span id="__chakra_env" hidden=""></span></div><script id="__NEXT_DATA__" type="application/json" crossorigin="">{"props":{"pageProps":{}},"page":"/groups/my","query":{},"buildId":"DNSYG2uPo6Gf51IjLBI2L","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script><next-route-announcer><p aria-live="assertive" id="__next-route-announcer__" role="alert" style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; top: 0px; width: 1px; white-space: nowrap; overflow-wrap: normal;"></p></next-route-announcer><div class="chakra-portal"><div role="region" aria-live="polite" id="chakra-toast-manager-top" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; margin: 0px auto; top: env(safe-area-inset-top, 0px); right: env(safe-area-inset-right, 0px); left: env(safe-area-inset-left, 0px);"></div><div role="region" aria-live="polite" id="chakra-toast-manager-top-left" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; top: env(safe-area-inset-top, 0px); left: env(safe-area-inset-left, 0px);"></div><div role="region" aria-live="polite" id="chakra-toast-manager-top-right" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; top: env(safe-area-inset-top, 0px); right: env(safe-area-inset-right, 0px);"></div><div role="region" aria-live="polite" id="chakra-toast-manager-bottom-left" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; bottom: env(safe-area-inset-bottom, 0px); left: env(safe-area-inset-left, 0px);"></div><div role="region" aria-live="polite" id="chakra-toast-manager-bottom" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; margin: 0px auto; bottom: env(safe-area-inset-bottom, 0px); right: env(safe-area-inset-right, 0px); left: env(safe-area-inset-left, 0px);"></div><div role="region" aria-live="polite" id="chakra-toast-manager-bottom-right" style="position: fixed; z-index: var(--toast-z-index, 5500); pointer-events: none; display: flex; flex-direction: column; bottom: env(safe-area-inset-bottom, 0px); right: env(safe-area-inset-right, 0px);"></div></div>
+<script type="text/javascript" id="" charset="">!function(b,e,f,g,a,c,d){b.fbq||(a=b.fbq=function(){a.callMethod?a.callMethod.apply(a,arguments):a.queue.push(arguments)},b._fbq||(b._fbq=a),a.push=a,a.loaded=!0,a.version="2.0",a.queue=[],c=e.createElement(f),c.async=!0,c.src=g,d=e.getElementsByTagName(f)[0],d.parentNode.insertBefore(c,d))}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","590039635006107");fbq("track","PageView");</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=590039635006107&amp;ev=PageView&amp;noscript=1"></noscript>
+<style class="gleap-styles">
+    .gleap-font, .gleap-font * {
+      font-style: normal;
+      font-variant-caps: normal;
+      font-variant-ligatures: normal;
+      font-variant-numeric: normal;
+      font-variant-east-asian: normal;
+      font-weight: normal;
+      font-stretch: normal;
+      font-size: 100%;
+      line-height: 1;
+      font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+    .gleap-input-highlight {
+      box-shadow: 0 0 0 3px #00879b !important;
+    }
+    .gleap-frame-container {
+      right: 20px;
+      bottom: 81px;
+      width: calc(100% - 40px);
+      max-width: 410px;
+      position: fixed;
+      z-index: 2147483631;
+      visibility: visible;
+      box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.16);
+      border-radius: 24px;
+      overflow: hidden;
+      animation-duration: .3s;
+      animation-fill-mode: both;
+      animation-name: gleapFadeInUp;
+      user-select: none;
+      pointer-events: none;
+      transition: max-width 0.3s ease-out;
+    }
+
+    .gleap-admin-highlight {
+      box-shadow: 0px 0px 0px 4px red;
+    }
+
+    :root {
+      --gleap-margin-top: 50px;
+    }
+
+    .gleap-tooltip-anchor {
+      position: relative;
+      display: inline-block;
+      float: left;
+      max-width: 0px;
+      width: 17px;
+    }
+
+    .gleap-tooltip-hotspot {
+      position: absolute;
+      display: block;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+      top: 0px;
+      left: 0px;
+    }
+
+    @keyframes gleap-pulse {
+      0% {
+        transform: scale(0);
+        opacity: 0.25;
+      }
+      45% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+
+    .gleap-tooltip-hotspot-animation {
+      position: absolute;
+      border-radius: 17px;
+      opacity: 0.25;
+      display: block;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+      top: 0px;
+      left: 0px;
+      animation: gleap-pulse 5s infinite;
+    }
+
+    .gleap-tooltip-hotspot svg {
+      width: 17px;
+      height: 17px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .gleap-tooltip-inner {
+      position: relative;
+      overflow: visible;
+      font-size: 14px;
+      font-weight: normal;
+      color: #000;
+      line-height: 1.3;
+    }
+
+    .gleap-tooltip {
+      position: absolute;
+      background-color: #fff;
+      color: #000;
+      font-size: 15px;
+      line-height: 18px;
+      padding: 16px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      border-radius: 4px;
+      max-width: min(350px, 80vw);
+      box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 2147483700;
+    }
+
+    .gleap-tooltip a {
+      color: #00879b;
+      text-decoration: underline;
+      display: inline !important;
+      margin: 0px !important;
+      padding: 0px !important;
+      word-break: break-word;
+    }
+
+    .gleap-tooltip ul {
+      padding-left: 16px;
+    }
+
+    .gleap-tooltip b {
+      font-weight: 600;
+    }
+
+    .gleap-tooltip h2 {
+      font-size: 18px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .gleap-tooltip h3 {
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .gleap-tooltip p {
+      padding: 0px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .gleap-tooltip img {
+      max-width: 100%;
+      max-height: 300px;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+    }
+
+    .gleap-tooltip iframe,
+    .gleap-tooltip video {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      min-height: 200px;
+      display: block;
+      border: none;
+      outline: none;
+      padding: 0px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+    }
+
+    .gleap-tooltip-arrow {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+    }
+
+    .gleap-tooltip-arrow svg {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .gleap-b-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: auto;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .gleap-b-shown {
+      transition: margin 0.3s ease-out;
+      margin-top: var(--gleap-margin-top);
+      position: relative;
+      z-index: 10000;
+    }
+
+    .gleap-b-f {
+      margin-top: 0px;
+    }
+
+    .gleap-b {
+      display: none;
+      position: absolute;
+      top: calc(-1 * var(--gleap-margin-top));
+      left: 0px;
+      width: 100vw;
+      height: var(--gleap-margin-top);
+      z-index: 2147483699;
+    }
+
+    @keyframes gleapSlideIn {
+      from {
+          top: calc(-1 * var(--gleap-margin-top));
+      }
+      to {
+          top: 10px;
+      }
+    }
+
+    .gleap-b-f .gleap-b {
+      position: fixed;
+      top: 10px;
+      animation: gleapSlideIn .25s ease-out forwards;
+      max-width: 800px;
+      width: calc(100% - 20px);
+      left: 50%;
+      z-index: 2147483699;
+      transform: translateX(-50%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15), 0px 5px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .gleap-b-shown .gleap-b {
+      display: block;
+    }
+
+    .gleap-image-view {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2147483699;
+      background-color: #000000cc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gleap-image-view-image {
+      width: 90%;
+      height: auto;
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .gleap-image-view-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      opacity: 0.8;
+      z-index: 2147483740;
+      box-shadow: 0px 5px 18px rgba(0, 0, 0, 0.16);
+      cursor: pointer;
+    }
+
+    .gleap-image-view-close:hover {
+      opacity: 1;
+    }
+
+    .gleap-image-view-close svg path {
+      fill: #ffffff;
+    }
+
+    [dir=rtl].gleap-frame-container {
+      right: auto;
+      left: 20px;
+      bottom: 81px;
+    }
+
+    .gleap-frame-container--loading iframe {
+      opacity: 0;
+    }
+
+    .gleap-frame-container--loading::before {
+      content: " ";
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      height: 100%;
+      max-height: 380px;
+      background: linear-gradient(
+        130deg,
+        #006478 0%,
+        #00879b 100%
+      );
+    }
+    
+    .gleap-frame-container--loading::after {
+      content: " ";
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      height: 100%;
+      height: 100%;
+      max-height: 380px;
+      background: linear-gradient(
+        180deg,
+        transparent 60%,
+        #ffffff1A 70%,
+        #ffffff 100%
+      );
+    }
+
+    .gleap-frame-container--loading-nogradient::before {
+      max-height: 340px;
+      background: #00879b !important;
+    }
+
+    .gleap-frame-container--loading-nofade::after {
+      display: none !important;
+    }
+
+    .gleap-frame-container--survey {
+      bottom: 20px !important;
+    }
+
+    .gleap-frame-container--extended {
+      max-width: 690px !important;
+    }
+
+    .gleap-frame-container--survey-full {
+      position: fixed;
+      top: 0 !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      right: 0 !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100vh;
+      height: 100dvh !important;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      max-height: 100vh;
+      max-height: 100dvh !important;
+      border-radius: 0 !important;
+      animation-name: none !important;
+    }
+
+    .gleap-frame-container--survey-full .gleap-frame-container-inner {
+      max-width: 640px !important;
+      width: calc(100% - 24px);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .gleap-frame-container--classic {
+      right: 20px;
+      bottom: 20px;
+    }
+
+    [dir=rtl].gleap-frame-container--classic {
+      right: auto;
+      left: 20px;
+      bottom: 20px;
+    }
+
+    .gleap-frame-container--no-button {
+      bottom: 20px;
+    }
+
+    [dir=rtl].gleap-frame-container--classic-left {
+      bottom: 20px;
+    }
+
+    .gleap-frame-container--classic-left {
+      right: auto;
+      left: 20px;
+      bottom: 20px;
+    }
+
+    [dir=rtl].gleap-frame-container--classic-left {
+      left: auto;
+      right: 20px;
+      bottom: 20px;
+    }
+
+    .gleap-frame-container--modern-left {
+      right: auto;
+      left: 20px;
+      bottom: 81px;
+    }
+
+    [dir=rtl].gleap-frame-container--modern-left {
+      left: auto;
+      right: 20px;
+      bottom: 81px;
+    }
+
+    .gleap-frame-container--animate {
+      pointer-events: auto !important;
+    }
+
+    @keyframes gleapFadeInUp {
+      from {
+          opacity: 0;
+          transform: translate3d(0, 100%, 0);
+      }
+      to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes gleapFadeInUpMobile {
+      from {
+          opacity: 0;
+          transform: translate3d(0, 10%, 0);
+      }
+      to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+      }
+    }
+
+    .gleap-notification-container {
+      position: fixed;
+      bottom: 77px;
+      right: 20px;
+      z-index: 2147483630;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      width: 100%;
+      max-width: min(340px, 80vw);
+    }
+
+    .gleap-notification-container--left {
+      left: 24px;
+      right: initial !important;
+    }
+
+    [dir=rtl].gleap-notification-container {
+      left: 24px;
+      right: initial !important;
+    }
+
+    [dir=rtl].gleap-notification-container--left {
+      left: initial !important;
+      right: 20px !important;
+      align-items: flex-start !important;
+    }
+
+    .gleap-notification-container--no-button {
+      bottom: 20px;
+    }
+
+    .gleap-notification-item {
+      animation-duration: 0.7s;
+      animation-fill-mode: both;
+      animation-name: bbFadeInOpacity;
+    }
+
+    .gleap-notification-close {
+      border-radius: 100%;
+      width: 28px;
+      height: 28px;
+      background-color: #878787;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gleap-notification-container:hover .gleap-notification-close {
+      visibility: visible;
+      pointer-events: auto;
+      animation-duration: 0.7s;
+      animation-fill-mode: both;
+      animation-name: bbFadeInOpacity;
+    }
+
+    @media only screen and (max-width: 450px) {
+      .gleap-notification-close {
+        visibility: visible;
+        pointer-events: auto;
+        animation-duration: 0.7s;
+        animation-fill-mode: both;
+        animation-name: bbFadeInOpacity;
+      }
+    }
+
+    .gleap-notification-close svg {
+      width: 45%;
+      height: 45%;
+      object-fit: contain;
+      fill: #ffffff;
+    }
+
+    .gleap-notification-item-checklist-container {
+      display: flex;
+      animation: fadeIn;
+      animation-duration: .45s;
+      background-color: #ffffff;
+      border-radius: #878787;
+      box-sizing: border-box;
+      cursor: pointer;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 18px;
+      margin-bottom: 12px;
+    }
+
+    .gleap-notification-item-checklist-content {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      width: 100%;
+      width: min(310px, 70vw);
+      max-width: min(310px, 70vw);
+    }
+
+    .gleap-notification-item-checklist-content-title {
+      color: #000000;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 21px;
+      margin-bottom: 10px;
+      max-width: 100%;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .gleap-notification-item-checklist-content-progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 8px;
+      background-color: #f3f3f3;
+    }
+
+    .gleap-notification-item-checklist-content-progress-inner {
+      height: 100%;
+      border-radius: 8px;
+      background-color: #00879b;
+    }
+
+    .gleap-notification-item-checklist-content-next {
+      color: #878787;
+      font-size: 15px;
+      font-weight: normal;
+      line-height: 21px;
+      margin-top: 10px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+    }
+
+    .gleap-notification-item-checklist-content-next svg {
+      height: 18px;
+      margin-right: 5px;
+      width: auto;
+    }
+
+    .gleap-notification-item-checklist-content-next b {
+      font-size: 15px;
+      font-weight: normal;
+      color: #000000;
+    }
+
+    .gleap-notification-item-news {
+      width: 100%;
+    }
+
+    .gleap-news-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .gleap-news-page-indicator {
+      font-size: 12px;
+      color: #878787;
+    }
+
+    .gleap-news-next-button {
+      background-color: #00879b;
+      color: #ffffff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 21px;
+      border: none;
+      text-align: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: none !important;
+      outline: none !important;^
+    }
+
+    .gleap-notification-item-news-content {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .gleap-notification-item-news-preview {
+      color: #878787;
+      font-size: 14px;
+      line-height: 21px;
+      font-weight: 400;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      display: block;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .gleap-notification-item-news-sender {
+      display: flex;
+      align-items: center;
+      color: #878787;
+      font-size: 15px;
+      line-height: 21px;
+      font-weight: 400;
+    }
+    
+    .gleap-notification-item-news-content-title {
+      color: #000000;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 21px;
+      margin-bottom: 6px;
+      max-width: 100%;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gleap-notification-item-news-sender img {
+      border-radius: 100%;
+      height: 20px;
+      margin-right: 8px;
+      object-fit: cover;
+      width: 20px;
+    }
+
+    [dir=rtl] .gleap-notification-item-news-sender img {
+      margin-left: 8px;
+      margin-right: 0px !important;
+    }
+
+    .gleap-notification-item-news-container {
+      display: flex;
+      animation: fadeIn;
+      animation-duration: .45s;
+      background-color: #ffffff;
+      border-radius: #878787;
+      box-sizing: border-box;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 18px;
+      margin-bottom: 12px;
+    }
+
+    .gleap-notification-item-news-image {
+      background-color: #878787;
+      height: 170px;
+      max-height: 170px;
+      object-fit: cover;
+      width: 100%;
+      cursor: pointer;
+    }
+      
+    .gleap-notification-item-news-content-title:hover {
+      color: #00879b;
+    }
+
+    .gleap-notification-item {
+      display: flex;
+      align-items: flex-end;
+      cursor: pointer;
+    }
+
+    .gleap-notification-item img {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 100%;
+      object-fit: cover;
+      margin-right: 8px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    [dir=rtl] .gleap-notification-item img {
+      margin-left: 8px;
+      margin-right: 0px !important;
+    }
+
+    .gleap-notification-item-container {
+      box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 18px;
+      border-bottom-left-radius: 0px;
+      padding: 20px;
+      background-color: #ffffff;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 21px;
+      color: #000000;
+      position: relative;
+    }
+
+    .gleap-notification-item-container::after {
+      content: " ";
+      position: absolute;
+      bottom: 0px;
+      width: 0px;
+      height: 0px;
+      left: -6px;
+      border-style: solid;
+      border-width: 0px 0px 10px 6px;
+      border-color: transparent transparent #ffffff;
+    }
+
+    .gleap-notification-item-sender {
+      color: #878787;
+      line-height: 20px;
+    }
+
+    .gleap-notification-item-content {
+      line-height: 20px;
+      color: #000000;
+      margin-top: 4px;
+      min-width: min(200px, 50vw);
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .gleap-frame-container-inner {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 104px);
+      max-height: 700px;
+    }
+
+    .gleap-frame-container--survey .gleap-frame-container-inner {
+      height: calc(100vh - 40px);
+    }
+    
+    .gleap-frame-container-inner:before {
+      content: " ";
+      position: absolute;
+      width: 100%;
+      height: calc(100% - 24px);
+      top: 24px;
+      background-color: #ffffff;
+      z-index: -1;
+    }
+    
+    .gleap-frame-container iframe {
+      height: 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      display: block !important;
+      pointer-events: auto !important;
+    }
+    
+    .gleap-frame-container--hidden {
+      display: none !important;
+      pointer-events: none;
+      animation: none !important;
+    }
+    
+    .bb-feedback-button {
+      margin: 0px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      background-color: transparent;
+      color: #000000;
+      z-index: 2147483630;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding: 0px;
+    }
+
+    [dir=rtl].bb-feedback-button {
+      bottom: 20px;
+      right: auto;
+      left: 20px;
+    }
+    
+    .bb-feedback-button--bottomleft {
+      bottom: 20px;
+      right: auto;
+      left: 20px;
+    }
+
+    [dir=rtl].bb-feedback-button--bottomleft {
+      bottom: 20px;
+      right: 20px;
+      left: auto;
+    }
+    
+    .bb-feedback-button--disabled {
+      display: none !important;
+    }
+
+    .bb-feedback-button--hidden {
+      display: none !important;
+    }
+    
+    .bb-feedback-button-text {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
+      position: relative;
+      z-index: 99;
+    }
+    
+    .bb-feedback-button-text:before {
+      content: "";
+      position: absolute;
+      box-shadow: rgba(0, 0, 0, 0.04) 6px 6px 5px;
+      transform: rotate(315deg);
+      bottom: 16px;
+      right: -4px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent #fff #fff transparent;
+    }
+    
+    .bb-feedback-button--bottomleft .bb-feedback-button-text:before {
+      display: none;
+    }
+    
+    .bb-feedback-button-text:after {
+      content: "";
+      position: absolute;
+      bottom: 12px;
+      right: 0px;
+      background-color: #fff;
+      width: 5px;
+      height: 30px;
+    }
+    
+    .bb-feedback-button-text-title {
+      font-family: sans-serif;
+      font-size: 14px;
+      color: #666;
+      line-height: 18px;
+      max-width: 220px;
+    }
+    
+    .bb-feedback-button-text-title b {
+      color: #000000;
+      font-weight: 600;
+    }
+
+    .bb-notification-bubble {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 12px;
+      padding: 0px 4px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 20px;
+      background-color: red;
+      color: #fff;
+      font-size: 11px;
+      font-family: sans-serif;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    .bb-notification-bubble--hidden {
+      display: none;
+    }
+    
+    .bb-feedback-button-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 48px;
+      background-color: #485bff;
+      transition: box-shadow, transform 0.2s ease-in-out;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15), 0px 0px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    
+    .bb-feedback-button-classic {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      top: 50%;
+      right: 0px;
+      position: fixed;
+      transform: rotate(-90deg) translate(50%, -50%);
+      transform-origin: 100% 50%;
+      padding: 9px 20px;
+      text-align: center;
+      background-color: #485bff;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      font-family: sans-serif;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    [dir=rtl].bb-feedback-button .bb-feedback-button-classic {
+      top: 50%;
+      left: 0px;
+      right: auto;
+      transform: rotate(90deg) translate(-50%, -100%);
+      transform-origin: 0% 0%;
+    }
+    
+    .bb-feedback-button-classic--left {
+      top: 50%;
+      left: 0px;
+      right: auto;
+      transform: rotate(90deg) translate(-50%, -100%);
+      transform-origin: 0% 0%;
+    }
+
+    [dir=rtl].bb-feedback-button .bb-feedback-button-classic--left {
+      top: 50%;
+      right: 0px;
+      left: auto;
+      transform: rotate(-90deg) translate(50%, -50%);
+      transform-origin: 100% 50%;
+    }
+    
+    .bb-feedback-button-classic--bottom {
+      top: auto;
+      bottom: 0px;
+      transform: none;
+      right: 20px;
+      left: auto;
+    }
+    
+    [dir=rtl].bb-feedback-button .bb-feedback-button-classic--bottom {
+      top: auto;
+      bottom: 0px;
+      transform: none;
+      left: 20px;
+      right: auto;
+    }
+
+    .bb-feedback-button--classic-button-style {
+      animation-duration: 0.2s;
+      animation-fill-mode: both;
+      animation-name: bbFadeInOpacity;
+    }
+    
+    .bb-feedback-button--open.bb-feedback-button--classic-button-style {
+      animation-duration: 0.2s;
+      animation-fill-mode: both;
+      animation-name: bbFadeOutRight;
+    }
+    
+    .bb-feedback-button .bb-logo-logo {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: 9px;
+      left: 9px;
+      object-fit: contain;
+      animation-duration: 0.3s;
+      animation-fill-mode: both;
+      animation-name: bbZoomIn;
+    }
+    
+    .bb-feedback-button .bb-logo-arrowdown {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      top: 17px;
+      left: 17px;
+      object-fit: contain;
+      animation-duration: 0.3s;
+      animation-fill-mode: both;
+    }
+    
+    .bb-feedback-button .bb-logo-arrowdown {
+      animation-name: bbZoomOut;
+    }
+    
+    .bb-feedback-button--open .bb-logo-arrowdown {
+      animation-name: bbZoomIn;
+    }
+    
+    .bb-feedback-button--open .bb-logo-logo {
+      animation-name: bbZoomOut;
+    }
+    
+    .bb-feedback-button-icon:hover {
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25), 0px 0px 20px rgba(0, 0, 0, 0.2);
+      transform: scale(1.1);
+    }
+    
+    .bb-feedback-button--open .bb-feedback-button-text {
+      animation-name: bbFadeOutDown;
+    }
+    
+    .bb-feedback-button--open .bb-feedback-button-icon {
+      display: flex;
+    }
+    
+    .bb-capture-svg {
+      position: fixed;
+      z-index: 2147483614;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      width: 100%;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+      cursor: crosshair;
+    }
+
+    .bb-capture-svg--preview {
+      cursor: auto !important;
+    }
+    
+    .bb-rec-on-circle {
+      animation-name: bbRecIconFade;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+    
+    .bb-rec-on-cont {
+      animation-name: bbRecIconContFade;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+    
+    .bb-capture-editor-drag-info {
+      position: fixed;
+      top: -200px;
+      left: 0px;
+      z-index: 2147483616;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .bb-capture-editor-drag-info svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .bb-capture-editor-borderlayer {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100vw;
+      height: 100vh;
+      border: 4px solid #00879b;
+      cursor: crosshair;
+      z-index: 2147483610;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    
+    .bb-capture-editor-notrecording .bb-capture-editor-borderlayer {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .bb-capture-editor-recording .bb-capture-editor-borderlayer {
+      border: 4px solid #eb144c !important;
+    }
+    
+    .bb-capture-editor-recording .bb-capture-dismiss {
+      display: none;
+    }
+    
+    .bb-capture-editor-item-inactive {
+      opacity: 0.3;
+      cursor: not-allowed !important;
+    }
+    
+    .bb-capture-editor-notrecording .bb-capture-toolbar-drawingitem {
+      opacity: 0.3;
+      cursor: not-allowed !important;
+    }
+    
+    .bb-capture-editor-notrecording .bb-capture-editor-drag-info {
+      display: none;
+    }
+    
+    .bb-capture-editor-notrecording .bb-capture-svg {
+      pointer-events: none !important;
+    }
+    
+    .bb-capture-toolbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2147483618;
+      background-color: #fff;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15), 0px 0px 20px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .bb-capture-dismiss {
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      z-index: 2147483618;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #00879b;
+      border-bottom-left-radius: 8px;
+    }
+
+    [dir=rtl] .bb-capture-dismiss {
+      top: 0px;
+      left: 0px;
+      right: auto;
+      border-bottom-left-radius: 0px !important;
+      border-bottom-right-radius: 8px;
+    }
+    
+    .bb-capture-dismiss svg path {
+      fill: #ffffff;
+    }
+    
+    .bb-capture-dismiss svg {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+    
+    .bb-capture-button-next {
+      font-family: sans-serif;
+      box-sizing: border-box;
+      font-weight: 600;
+      text-align: center;
+      width: auto;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0px;
+      line-height: 36px;
+      padding: 0px 12px;
+      font-size: 15px;
+      margin-left: 12px;
+    }
+
+    [dir=rtl].bb-capture-editor .bb-capture-button-next {
+      margin-left: auto;
+      margin-right: 12px;
+    }
+    
+    .bb-capture-toolbar-item-spacer {
+      width: 1px;
+      height: 38px;
+      min-width: 1px;
+      margin: 0px 5px;
+    }
+    
+    .bb-capture-toolbar-item {
+      width: 42px;
+      height: 38px;
+      min-width: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      margin-right: 5px;
+    }
+
+    .drag-handle-item {
+      cursor: grab !important;
+      width: 34px;
+      min-width: 34px;
+    }
+
+    .drag-handle-item svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    
+    .bb-capture-toolbar-item svg {
+      width: 23px;
+      height: 23px;
+      object-fit: contain;
+    }
+    
+    .bb-capture-toolbar-item-selectedcolor {
+      border-radius: 100%;
+      width: 20px;
+      height: 20px;
+      background-color: #db4035;
+    }
+    
+    .bb-capture-toolbar-item[data-type="undo"] svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .bb-capture-toolbar-item[data-active="true"] {
+      position: relative;
+    }
+    
+    .bb-capture-preview {
+      display: none;
+      background-color: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      z-index: 2147483620;
+    }
+    
+    .bb-capture-preview-inner {
+      background-color: #fff;
+      padding: 0px;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15), 0px 0px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      flex-direction: column;
+      max-width: 640px;
+      width: 100%;
+      margin: 20px;
+    }
+    
+    .bb-capture-preview-inner video {
+      border-radius: 8px 8px 0px 0px;
+      display: block;
+      border: 0px;
+      outline: none;
+      width: 100%;
+      max-height: 60vh;
+    }
+    
+    .bb-capture-preview-buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+    }
+    
+    .bb-capture-preview-retrybutton {
+      font-family: sans-serif;
+      border-radius: 21px;
+      box-sizing: border-box;
+      padding: 12px 26px;
+      font-size: 16px;
+      line-height: 19px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .bb-capture-preview-sendbutton {
+      font-family: sans-serif;
+      border-radius: 21px;
+      box-sizing: border-box;
+      padding: 12px 26px;
+      font-size: 16px;
+      line-height: 19px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .bb-capture-preview-retrybutton:hover,
+    .bb-capture-preview-sendbutton:hover {
+      opacity: 0.9;
+    }
+    
+    .bb-capture-toolbar-item-recording {
+      margin-right: 0px;
+    }
+    
+    .bb-capture-toolbar-item-recording svg {
+      width: 33px;
+      height: 33px;
+    }
+    
+    .bb-capture-toolbar-item-colorpicker {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2147483618;
+      background-color: #fff;
+      display: none;
+      padding: 10px;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15), 0px 0px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    
+    .bb-capture-toolbar-item-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 100%;
+      margin-right: 12px;
+      box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .bb-capture-toolbar-item-color:hover {
+      box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+    }
+    
+    .bb-capture-toolbar-item-color:last-of-type {
+      margin-right: 0px;
+    }
+    
+    [dir=rtl].bb-capture-editor .bb-capture-toolbar-item-color {
+      margin-right: auto;
+      margin-left: 12px;
+    }
+    
+    [dir=rtl].bb-capture-editor .bb-capture-toolbar-item-color:last-of-type {
+      margin-right: auto;
+      margin-left: 0px;
+    }
+    
+    .bb-capture-toolbar-item-recording[data-active="true"] svg:first-of-type {
+      display: none;
+    }
+    
+    .bb-capture-toolbar-item-recording[data-active="true"] svg:nth-of-type(2) {
+      display: block;
+    }
+    
+    .bb-capture-toolbar-item-recording[data-active="false"] svg:first-of-type {
+      display: block;
+    }
+    
+    .bb-capture-toolbar-item-recording[data-active="false"] svg:nth-of-type(2) {
+      display: none;
+    }
+    
+    .bb-capture-toolbar-item--active {
+      background-color: #eee;
+    }
+    
+    .bb-capture-toolbar-item:hover svg {
+      opacity: 1;
+    }
+    
+    .bb-capture-toolbar-item--active {
+      background-color: #f8f8f8;
+    }
+    
+    .bb-capture-toolbar-item--active svg {
+      opacity: 1;
+    }
+    
+    .bb-capture-toolbar-item--inactivecross::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 26px;
+      margin: auto;
+      border-radius: 4px;
+      background-color: #e80000;
+      transform: rotate(45deg);
+    }
+    
+    .bb-capture-toolbar-item--inactivecross svg {
+      fill: #eee;
+    }
+    
+    .bb-capture-toolbar-item-timer {
+      text-align: left;
+      line-height: 32px;
+      font-size: 14px;
+      font-family: sans-serif;
+      margin: 5px;
+      min-width: 40px;
+      display: none;
+    }
+    
+    .bb-capture-toolbar-item .bb-tooltip {
+      background-color: #555;
+      color: #fff;
+      visibility: hidden;
+      font-size: 14px;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 5px 10px;
+      position: absolute;
+      z-index: 1;
+      top: 45px;
+      left: 0px;
+      transform: translateX(calc(-50% + 21px));
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+    
+    .bb-capture-toolbar-item .bb-tooltip::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      transform: rotate(180deg);
+      border-color: #555 transparent transparent transparent;
+    }
+    
+    .bb-capture-toolbar-item:hover .bb-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .bb-capture-options {
+      display: none;
+    }
+    
+    .bb-capture-options--active {
+      display: flex;
+    }
+
+    @keyframes bbFadeOutRight {
+      from {
+        opacity: 1;
+      }
+    
+      to {
+        opacity: 0;
+      }
+    }
+    
+    @keyframes bbFadeOutDown {
+      from {
+        opacity: 1;
+      }
+    
+      to {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+    }
+    
+    @keyframes bbFadeInOpacity {
+      from {
+        opacity: 0;
+      }
+    
+      to {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes bbZoomOut {
+      from {
+        opacity: 1;
+      }
+    
+      50% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+    
+      to {
+        opacity: 0;
+      }
+    }
+    
+    @keyframes bbZoomIn {
+      from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+    
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes bbRecIconContFade {
+      0% {
+        fill: #b10802;
+      }
+      50% {
+        fill: #ff0000;
+      }
+      100% {
+        fill: #b10802;
+      }
+    }  
+    .bb-capture-preview-retrybutton {
+      color: #000000;
+      border-radius: 32px;
+      background-color: #f3f3f3;
+    }
+    .bb-capture-preview-retrybutton:hover {
+      background-color: #e1e1e1;
+    }
+    @keyframes bb-suc-fill {
+      100% {
+        box-shadow: inset 0px 0px 0px 30px #00879b;
+      }
+    }
+    .bb-capture-toolbar-item-spacer {
+      background-color: #f3f3f3;
+    }
+    .bb-tooltip {
+      border-radius: 12px;
+    }
+    @keyframes bbRecIconFade {
+      0% {
+        fill: transparent;
+      }
+      50% {
+        fill: #e1e1e1;
+      }
+      100% {
+        fill: transparent;
+      }
+    }
+    .bb-capture-preview-sendbutton {
+      color: #ffffff;
+      background-color: #00879b;
+      border-radius: 32px;
+    }
+    .bb-capture-button-next {
+      color: #ffffff;
+      background-color: #00879b;
+      border-radius: 8px;
+    }
+    .bb-capture-preview-inner {
+      background-color: #ffffff;
+      border-radius: 12px;
+    }
+    .bb-capture-toolbar-item-timer {
+      color: #878787;
+    }
+    .bb-svg-path {
+      fill: #000000;
+    }
+    .bb-capture-toolbar-item {
+      border-radius: 12px;
+    }
+    .bb-capture-toolbar {
+      background-color: #ffffff;
+      border-radius: 12px;
+    }
+    .bb-capture-toolbar-item-colorpicker {
+      background-color: #ffffff;
+    }
+    .bb-capture-toolbar-item--active {
+      background-color: #f3f3f3;
+    }
+    .bb-feedback-button-classic {
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .bb-logo-logo--default path {
+      fill: #ffffff;
+    }
+    .bb-logo-arrowdown {
+      fill: #ffffff;
+    }
+    .bb-feedback-button-icon {
+        background-color: #00879b;
+    }
+    .bb-feedback-button-classic {
+      background-color: #00879b;
+      color: #ffffff;
+    }
+
+    @media only screen and (max-width: 450px) {
+      [dir=rtl].gleap-frame-container,
+      .gleap-frame-container {
+        left: 0px;
+        right: 0px;
+        width: 100vw;
+        max-width: 100vw;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        max-height: -webkit-fill-available;
+        top: 0px;
+        bottom: 0px;
+        border-radius: 0px;
+        animation-name: gleapFadeInUpMobile;
+      }
+
+      .gleap-frame-container-inner {
+        width: 100vw;
+        height: 100%;
+      }
+
+      .gleap-frame-container:not(.gleap-frame-container--survey):not(.gleap-frame-container--survey-full) .gleap-frame-container-inner {
+        max-height: calc(var(--glvh, 1vh) * 100) !important;
+      }
+
+      .gleap-frame-container--survey {
+        height: auto !important;
+        top: initial !important;
+        bottom: 0px !important;
+        min-height: initial !important;
+      }
+
+      .gleap-frame-container--survey .gleap-frame-container-inner {
+        height: 100vh !important;
+      }
+
+      .bb-tooltip {
+        display: none !important;
+      }
+    
+      .bb-capture-toolbar-item-colorpicker {
+        top: 75px;
+      }
+    
+      .bb-capture-button-next {
+        margin-left: auto;
+      }
+    
+      .bb-capture-dismiss {
+        display: none;
+      }
+    
+      .bb-capture-toolbar {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        width: auto;
+        transform: none;
+      }
+
+      .bb-capture-editor-drag-info {
+        display: none;
+      }
+    
+      .bb-capture-editor-borderlayer {
+        border-width: 4px;
+      }
+    }
+    
+    @media print {
+      .bb-feedback-button {
+        display: none !important;
+      }
+      
+      .gleap-frame-container {
+        display: none !important;
+      }
+    }
+
+    .gleap-tour-sender {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .gleap-tour-sender-image {
+      width: 32px;
+      height: 32px;
+      border-radius: 32px;
+      margin-right: 10px;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .gleap-tour-popover.gleap-tour-popover-post {
+      min-width: 550px;
+      max-width: 550px;
+    }
+
+    @media only screen and (max-width: 450px) {
+      .gleap-tour-popover.gleap-tour-popover-post {
+        min-width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+      }
+    }
+
+    .gleap-tour-message,
+    .gleap-tour-message p,
+    .gleap-tour-message ul {
+      color: #000000;
+    }
+
+    .gleap-tour-message h2 {
+      font-weight: 600;
+      font-size: 22px;
+    }
+
+    .gleap-tour-message h3 {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .gleap-tour-message p {
+      line-height: 1.3;
+      margin-bottom: 10px !important;
+      margin-top: 10px !important;
+    }
+
+    .gleap-tour-message ul {
+      line-height: 1.3;
+      padding-left: 20px;
+      margin-top: 10px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .gleap-tour-message {
+      max-height: calc(80vh - 100px) !important;
+      overflow-y: auto;
+      min-width: 270px;
+    }
+
+    .gleap-tour-message::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .gleap-tour-message::-webkit-scrollbar-track {
+      border-radius: 0px;
+    }
+    
+    .gleap-tour-message::-webkit-scrollbar-thumb {
+      background: #e1e1e1; 
+      border-radius: 5px;
+    }
+
+    .gleap-tour-message::-webkit-scrollbar-thumb:hover {
+      background: #878787;
+    }
+
+    @media only screen and (max-width: 450px) {
+      .gleap-tour-message {
+        min-width: auto !important;
+      }
+    }
+
+    .gleap-tour-message iframe {
+      width: 100%;
+      height: 300px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border: none;
+      outline: none;
+      display: block;
+    }
+
+    .gleap-tour-sender-name {
+      font-size: 15px;
+    }
+
+    .gleap-tour-video {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .gleap-tour-video-svg--fullscreen {
+      width: 100% !important;
+      height: 100% !important;
+      top: 0px !important;
+      left: 0px !important;
+      right: 0px !important;
+      bottom: 0px !important;
+    }
+
+    .gleap-tour-video--playing .gleap-tour-video-playpause {
+      opacity: 0;
+    }
+    
+    .gleap-tour-video--playing:hover .gleap-tour-video-playpause {
+      opacity: 1;
+    }
+
+    .gleap-tour-popover-video-pointer {
+      padding: 0px !important;
+      border-radius: 8px;
+      position: relative;
+      background-color: transparent !important;
+    }
+
+    .gleap-tour-popover-video-pointer .gleap-tour-popover-footer {
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      right: 20px;
+      opacity: 0;
+      transition: opacity 200ms ease-in-out;
+    }
+
+    .gleap-tour-popover-video-pointer .gleap-tour-popover-footer button {
+      padding: 5px 12px;
+    }
+
+    .gleap-tour-popover-video-pointer.gleap-tour-popover-can-close .gleap-tour-popover-footer {
+      right: 40px !important;
+    }
+
+    .gleap-tour-popover-video-pointer:hover .gleap-tour-popover-footer {
+      opacity: 1;
+    }
+
+    .gleap-tour-popover-pointer.gleap-tour-popover-no-sender .gleap-tour-message {
+      padding-right: 20px;
+    }
+
+    .gleap-tour-video video {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border: none;
+      outline: none;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .gleap-admin-collapse-ui {
+      z-index: 2147483635;
+      cursor: pointer;
+      position: fixed;
+      bottom: 75px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    }
+
+    .gleap-admin-collapse-ui svg {
+      width: 20px;
+      height: 14px;
+      fill: #000 !important;
+    }
+
+    .gleap-admin-collapse-ui-active {
+      bottom: 20px !important;
+    }
+
+    .gleap-admin-collapse-ui-active svg {
+      transform: rotate(180deg);
+    }
+
+    .gleap-admin-frame-container-active {
+      display: none !important;
+    }
+
+    .gleap-admin-frame-container {
+      position: fixed;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      width: 100vw;
+      z-index: 2147483640;
+    }
+
+    .gleap-admin-frame {
+      width: 100%;
+      height: 100% !important;
+      border: none;
+      outline: none;
+      display: block;
+    }
+    
+    .gleap-tour-message .linktype-link {
+      display: inline-block !important;
+      background-color: transparent !important;
+      color: #00879b !important;
+    }
+
+    .gleap-tooltip .linktype-button,
+    .gleap-tour-message .linktype-button {
+      display: inline-block !important;
+      border-radius: 5px;
+      box-sizing: border-box;
+      padding: 10px 20px !important;
+      text-decoration: none !important;
+      background-color: #00879b !important;
+      color: #ffffff !important;
+    }
+
+    .gleap-tour-message img {
+      width: 100%;
+      max-width: 100%;
+      min-height: 260px;
+      height: auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+
+    .gleap-tour-active .gleap-tour-overlay {
+      pointer-events: none;
+    }
+    
+    .gleap-tour-active * {
+      pointer-events: none;
+    }
+    
+    .gleap-tour-active .gleap-tour-active-element,
+    .gleap-tour-active .gleap-tour-active-element *,
+    .gleap-tour-popover,
+    .gleap-tour-popover * {
+      pointer-events: auto;
+    }
+    
+    @keyframes animate-fade-in {
+      0% {
+        opacity: 0;
+      }
+    
+      to {
+        opacity: 1;
+      }
+    }
+    
+    .gleap-tour-fade .gleap-tour-overlay {
+      animation: animate-fade-in 200ms ease-in-out;
+    }
+    
+    .gleap-tour-fade .gleap-tour-popover {
+      animation: animate-fade-in 200ms;
+    }
+
+    .gleap-tour-video-playpause {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      width: 32px;
+      height: 32px;
+      padding: 4px;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: opacity 200ms ease-in-out;
+    }
+
+    .gleap-tour-popover-video-pointer .gleap-tour-popover-arrow {
+      display: none !important;
+    }
+
+    .gleap-tour-video-playpause svg {
+      width: 34px;
+      height: auto;
+      fill: #fff;
+    }
+    
+    /* Popover styles */
+    .gleap-tour-popover {
+      all: unset;
+      box-sizing: border-box;
+      color: #2d2d2d;
+      margin: 0;
+      padding: 15px;
+      border-radius: 12px;
+      min-width: 250px;
+      max-width: 300px;
+      box-shadow: 0 1px 10px #0006;
+      z-index: 1000000000;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #fff;
+    }
+    
+    .gleap-tour-popover * {
+      font-family: "Helvetica Neue", Inter, ui-sans-serif, "Apple Color Emoji", Helvetica, Arial, sans-serif;
+    }
+    
+    .gleap-tour-popover-title {
+      font: 19px / normal sans-serif;
+      font-weight: 700;
+      display: block;
+      position: relative;
+      line-height: 1.5;
+      zoom: 1;
+      margin: 0;
+    }
+    
+    .gleap-tour-popover-close-btn {
+      all: unset;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 32px;
+      color: #d2d2d2;
+      z-index: 1;
+      text-align: center;
+      transition: color;
+      transition-duration: 200ms;
+    }
+    
+    .gleap-tour-popover-close-btn:hover,
+    .gleap-tour-popover-close-btn:focus {
+      color: #2d2d2d;
+    }
+    
+    .gleap-tour-popover-title[style*="block"] + .gleap-tour-popover-description {
+      margin-top: 5px;
+    }
+    
+    .gleap-tour-popover-description {
+      margin-bottom: 0;
+      font: 15px / normal sans-serif;
+      line-height: 1.5;
+      font-weight: 400;
+      zoom: 1;
+    }
+    
+    .gleap-tour-popover-footer {
+      margin-top: 15px;
+      text-align: right;
+      zoom: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .gleap-tour-popover-progress-text {
+      font-size: 13px;
+      font-weight: 400;
+      color: #727272;
+      zoom: 1;
+    }
+    
+    .gleap-tour-popover-footer button {
+      background-color: #00879b;
+      color: #ffffff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 21px;
+      border: none;
+      text-align: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    .gleap-tour-popover-prev-btn {
+      color: #000000 !important;
+      background-color: #f3f3f3 !important;
+      margin-right: 3px;
+    }
+
+    .gleap-tour-popover-prev-btn:hover {
+      background-color: #00879b22 !important;
+      color: #00879b !important;
+    }
+    
+    .gleap-tour-popover-footer .gleap-tour-popover-btn-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    
+    /* Disable the scrolling of parent element if it has an active element*/
+    :not(body):has(> .gleap-tour-active-element) {
+      overflow: hidden !important;
+    }
+    
+    .gleap-tour-no-interaction, .gleap-tour-no-interaction * {
+      pointer-events: none !important;
+    }
+    
+    .gleap-tour-popover-navigation-btns {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+    
+    .gleap-tour-popover-navigation-btns button + button {
+      margin-left: 4px;
+    }
+    
+    .gleap-tour-popover-arrow {
+      content: "";
+      position: absolute;
+      border: 5px solid #fff;
+    }
+    
+    .gleap-tour-popover-arrow-side-over {
+      display: none;
+    }
+    
+    /** Popover Arrow Sides **/
+    .gleap-tour-popover-arrow-side-left {
+      left: 100%;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-top-color: transparent;
+    }
+    
+    .gleap-tour-popover-arrow-side-right {
+      right: 100%;
+      border-left-color: transparent;
+      border-bottom-color: transparent;
+      border-top-color: transparent;
+    }
+    
+    .gleap-tour-popover-arrow-side-top {
+      top: 100%;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+    }
+    
+    .gleap-tour-popover-arrow-side-bottom {
+      bottom: 100%;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-right-color: transparent;
+    }
+    
+    .gleap-tour-popover-arrow-side-center {
+      display: none;
+    }
+    
+    /* Left/Start + Right/Start */
+    .gleap-tour-popover-arrow-side-left.gleap-tour-popover-arrow-align-start,
+    .gleap-tour-popover-arrow-side-right.gleap-tour-popover-arrow-align-start {
+      top: 15px;
+    }
+    
+    /* Top/Start + Bottom/Start */
+    .gleap-tour-popover-arrow-side-top.gleap-tour-popover-arrow-align-start,
+    .gleap-tour-popover-arrow-side-bottom.gleap-tour-popover-arrow-align-start {
+      left: 15px;
+    }
+    
+    /* End/Left + End/Right */
+    .gleap-tour-popover-arrow-align-end.gleap-tour-popover-arrow-side-left,
+    .gleap-tour-popover-arrow-align-end.gleap-tour-popover-arrow-side-right {
+      bottom: 15px;
+    }
+    
+    /* Top/End + Bottom/End */
+    .gleap-tour-popover-arrow-side-top.gleap-tour-popover-arrow-align-end,
+    .gleap-tour-popover-arrow-side-bottom.gleap-tour-popover-arrow-align-end {
+      right: 15px;
+    }
+    
+    /* Left/Center + Right/Center */
+    .gleap-tour-popover-arrow-side-left.gleap-tour-popover-arrow-align-center,
+    .gleap-tour-popover-arrow-side-right.gleap-tour-popover-arrow-align-center {
+      top: 50%;
+      margin-top: -5px;
+    }
+    
+    /* Top/Center + Bottom/Center */
+    .gleap-tour-popover-arrow-side-top.gleap-tour-popover-arrow-align-center,
+    .gleap-tour-popover-arrow-side-bottom.gleap-tour-popover-arrow-align-center {
+      left: 50%;
+      margin-left: -5px;
+    }
+    
+    /* No arrow */
+    .gleap-tour-popover-arrow-none {
+      display: none;
+    }    
+
+    /* Modal styles */
+    .gleap-modal-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2147483640;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gleap-modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2147483641;
+    }
+
+    .gleap-modal {
+      position: relative;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      z-index: 2147483700;
+      background-color: #ffffff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      animation-duration: 0.3s;
+      animation-fill-mode: both;
+      animation-name: gleapFadeInUp;
+    }
+
+    .gleap-modal-frame {
+      width: 100%;
+      border: none;
+      display: block;
+      outline: none;
+    }
+
+    body.gleap-modal-open {
+      overflow: hidden;
+    }
+
+    @keyframes gleapFadeInUp {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    </style><div class="bb-feedback-button gleap-font gl-block" dir="ltr"><div class="bb-feedback-button-icon"><svg class="bb-logo-logo bb-logo-logo--default" width="145" height="144" viewBox="0 0 145 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M38.9534 15H105.047C113.857 15 121 22.1426 121 30.9534L121 89.5238L121 96.015L121 125.541C121 128.759 117.393 130.66 114.739 128.84L90.1188 111.968H38.9534C30.1426 111.968 23 104.826 23 96.015V30.9534C23 22.1426 30.1426 15 38.9534 15Z" fill="white"></path>
+    </svg><svg class="bb-logo-arrowdown" fill="#fff" width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="m50 77.637c-1.3477 0-2.6953-0.51562-3.7266-1.543l-44.73-44.73c-2.0586-2.0586-2.0586-5.3945 0-7.4531 2.0586-2.0586 5.3945-2.0586 7.4531 0l41.004 41 41.004-41c2.0586-2.0586 5.3945-2.0586 7.4531 0 2.0586 2.0586 2.0586 5.3945 0 7.4531l-44.73 44.727c-1.0312 1.0312-2.3789 1.5469-3.7266 1.5469z"></path>
+   </svg></div><div class="bb-notification-bubble bb-notification-bubble--hidden"></div></div><div class="gleap-notification-container gleap-font" dir="ltr"></div><script src="/_next/static/chunks/1393-a30c310bcb58b2eb.js"></script><script src="/_next/static/chunks/pages/groups-508819d15fc72148.js"></script><script src="/_next/static/chunks/4250-39a353f6c27f848f.js"></script><script src="/_next/static/chunks/pages/user/sessions-b2f1f2d8611f0a5a.js"></script></body>

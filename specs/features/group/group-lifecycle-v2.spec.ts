@@ -4,6 +4,7 @@ import { SessionFlow } from '../../../lib/flows/SessionFlow';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
 import { Logger } from '../../../lib/utils/Logger';
 import { Page, BrowserContext } from '@playwright/test';
+import { applyEnterpriseContextSettings } from '../../../lib/fixtures/base.fixture';
 import path from 'path';
 
 /**
@@ -32,6 +33,11 @@ test.describe.serial('Integrated Group & Session Lifecycle', {
             storageState: path.resolve(process.cwd(), 'storage/auth/leader_functional.json'),
             baseURL: baseURL
         });
+        
+        // Critically important: apply the enterprise widget kill-switch to this manual context
+        // so Gleap and Chameleon never load and interfere with click hydration.
+        await applyEnterpriseContextSettings(sharedContext, test.info());
+        
         sharedPage = await sharedContext.newPage();
     });
 

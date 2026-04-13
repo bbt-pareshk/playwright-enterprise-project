@@ -70,6 +70,7 @@ export async function applyEnterpriseContextSettings(context: BrowserContext, te
         '[class*="gleap-"]',
         '[id^="gleap"]',
         '.bb-feedback-button',
+        '.bb-notification-bubble',
         '[class*="chameleon"]',
         '[id^="chameleon"]',
         '#chameleon-container',

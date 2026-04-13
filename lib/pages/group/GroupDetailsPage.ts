@@ -49,7 +49,22 @@ export class GroupDetailsPage extends BasePage {
 
     async clickScheduleSession() {
         Logger.step('Opening Schedule Session modal');
-        await this.click(this.scheduleSessionBtn);
+        
+        // Wait for Loading spinner to disappear to avoid click interception
+        await this.page.locator('span:has-text("Loading...")').waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {});
+
+        await this.robustClick(this.scheduleSessionBtn);
+
+        // Wait and check if ANY modal is opening. If not, try again after a short delay
+        // This solves issues where the SPA drops the first click during hydration/rendering
+        const anyModal = this.page.locator('.chakra-modal__content, [role="dialog"]').last();
+        try {
+            await anyModal.waitFor({ state: 'visible', timeout: 5000 });
+        } catch {
+            Logger.warn('No modal visible after 5s, retrying Schedule a Session click...');
+            // Force click as ultimate fallback
+            await this.scheduleSessionBtn.click({ force: true });
+        }
     }
 
     async openScheduleSessionFromChat() {

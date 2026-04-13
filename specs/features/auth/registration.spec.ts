@@ -8,6 +8,7 @@ import { URLS } from '../../../config/urls';
 import { MESSAGES } from '../../../lib/data/constants/messages';
 import { Logger } from '../../../lib/utils/Logger';
 import { OnboardingPage } from '../../../lib/pages/auth/OnboardingPage';
+import { applyEnterpriseContextSettings } from '../../../lib/fixtures/base.fixture';
 import { NavigationHelper } from '../../../lib/helpers/NavigationHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { RuntimeStore } from '../../../lib/utils/RuntimeStore';
@@ -23,6 +24,7 @@ test.describe.serial('Registration & Onboarding', { tag: ['@smoke', '@member'] }
 
     test.beforeAll(async ({ browser }) => {
         context = await browser.newContext();
+        await applyEnterpriseContextSettings(context, test.info());
         page = await context.newPage();
     });
 
@@ -253,6 +255,7 @@ test.describe.serial('Registration - Resend OTP Lifecycle', () => {
 
     test.beforeAll(async ({ browser }) => {
         context = await browser.newContext();
+        await applyEnterpriseContextSettings(context, test.info());
         page = await context.newPage();
     });
 
