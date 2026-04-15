@@ -76,7 +76,7 @@ export class HostingPlanPage extends BasePage {
     async selectFreePlan() {
         Logger.step('Selecting Free Group Plan');
         await this.freePlanButton.waitFor({ state: 'visible', timeout: 30000 });
-        
+
         // Relaxing strictness: On staging, the button may appear disabled if the user already has a plan.
         // We use force: true to bypass the disabled state during testing if needed.
         await this.freePlanButton.click({ force: true });

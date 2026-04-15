@@ -3,16 +3,20 @@ import { Page, BrowserContext } from '@playwright/test';
 import { HostingPlanPage } from '../../../lib/pages/hosting/HostingPlanPage';
 import { LeaderHelper } from '../../../lib/helpers/LeaderHelper';
 import { DataGenerator } from '../../../lib/utils/DataGenerator';
+import { applyEnterpriseContextSettings } from '../../../lib/fixtures/base.fixture';
 
 test.describe.serial('Hosting Plan Selection', { tag: ['@smoke', '@leader'] }, () => {
     let sharedPage: Page;
     let sharedContext: BrowserContext;
 
-    test.beforeAll(async ({ browser }) => {
+    test.beforeAll(async ({ browser }, testInfo) => {
         // Staging can be slow on hosting plan page
         test.setTimeout(120_000);
 
         sharedContext = await browser.newContext();
+        // Manually apply enterprise stability settings to the shared context
+        await applyEnterpriseContextSettings(sharedContext, testInfo);
+
         sharedPage = await sharedContext.newPage();
 
         // Step 1: Register a fresh leader to ensure Hosting Plan buttons are enabled

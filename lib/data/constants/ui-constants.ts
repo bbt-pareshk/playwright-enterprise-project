@@ -91,6 +91,7 @@ export const UI_CONSTANTS = {
         TABS: {
             JOINED: 'joined groups'
         },
+        EMPTY_STATE: /haven't joined any groups yet/i,
         BUTTONS: {
             PAY_AND_ACTIVATE: 'pay and activate group'
         },

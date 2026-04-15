@@ -5,6 +5,7 @@ import { PaymentHelper } from '../../../lib/helpers/PaymentHelper';
 import { AssertionHelper } from '../../../lib/helpers/AssertionHelper';
 import { APP_CONSTANTS } from '../../../lib/data/constants/app-constants';
 import { Logger } from '../../../lib/utils/Logger';
+import { applyEnterpriseContextSettings } from '../../../lib/fixtures/base.fixture';
 
 /**
  * Stripe Payment Validation - Edge Cases
@@ -30,6 +31,9 @@ test.describe.serial('Stripe Payment Validation', { tag: ['@regression', '@leade
                 ? { recordVideo: { dir: testInfo.outputPath('videos') } }
                 : {}),
         });
+
+        // Manually apply enterprise stability settings to the shared context
+        await applyEnterpriseContextSettings(context, testInfo);
         page = await context.newPage();
         email = DataGenerator.email();
 

@@ -139,7 +139,7 @@ export class OnboardingPage extends BasePage {
      */
     async completeLeaderOnboardingViaSkip() {
         Logger.step('Completing Leader onboarding via SKIP (Deep Check Flow)');
-        
+
         // 1. ENSURE STABILITY: Wait for potential background redirects to settle
         await this.page.waitForLoadState('load');
         await this.waitForLoaderToDisappear();
@@ -156,10 +156,10 @@ export class OnboardingPage extends BasePage {
         // 3. SCREEN 1: Welcome Intro (Target specifically by unique heading)
         const welcomeHeading = this.page.getByText('Welcome to MentalHappy');
         const introContinue = this.page.getByRole('button', { name: 'Continue', exact: true }).filter({ hasNotText: 'Leader' });
-        
+
         if (await welcomeHeading.isVisible()) {
             Logger.info('Screen 1 (Welcome Intro) confirmed via Heading.');
-            
+
             if (await introContinue.isDisabled()) {
                 Logger.info('Intro button disabled. Clicking Leader role button...');
                 const leaderBtn = this.page.getByRole('button', { name: 'Continue as a Group Leader' });
@@ -167,7 +167,7 @@ export class OnboardingPage extends BasePage {
                 await leaderBtn.click({ force: true });
                 await expect(introContinue).toBeEnabled({ timeout: 10000 });
             }
-            
+
             await this.robustClick(introContinue);
             await this.page.waitForTimeout(1500); // Transition wait
         }
@@ -181,7 +181,7 @@ export class OnboardingPage extends BasePage {
                 await this.page.waitForURL(u => u.pathname.includes(ROUTE_PATHS.HOSTING_PLAN), { timeout: 15000 });
             }
         }
-        
+
         Logger.success('Onboarding cleared successfully');
     }
 

@@ -119,8 +119,11 @@ export class MyGroupsPage extends BasePage {
 
     if (initial) {
       Logger.step('Waiting for My Groups page content');
-      // Wait for the tabs container instead of a card, as cards might not exist in the default tab
-      await this.page.getByRole('tablist').waitFor({
+      // Wait for either the tabs container OR the empty state message (for new users)
+      const tabs = this.page.getByRole('tablist');
+      const emptyState = this.page.getByText(UI_CONSTANTS.GROUPS.EMPTY_STATE);
+
+      await tabs.or(emptyState).waitFor({
         state: 'visible',
         timeout: 30_000,
       });
@@ -137,8 +140,13 @@ export class MyGroupsPage extends BasePage {
     const joinedGroupsTab = this.page.getByRole('tab', {
       name: new RegExp(UI_CONSTANTS.GROUPS.TABS.JOINED, 'i'),
     });
-    await this.click(joinedGroupsTab);
-    Logger.success('Joined Groups tab clicked');
+
+    if (await joinedGroupsTab.isVisible()) {
+      await this.click(joinedGroupsTab);
+      Logger.success('Joined Groups tab clicked');
+    } else {
+      Logger.info('Joined Groups tab not found (User may have no groups). Skipping tab click.');
+    }
   }
 
   /**
