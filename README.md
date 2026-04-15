@@ -26,10 +26,10 @@ For detailed technical documentation, architecture diagrams, and contribution gu
 ---
 
 ## ⚡ Recent Performance & Stability Upgrades
-- **Unified Master CI Reports:** Re-architected CI to natively merge disjointed tier runs (Parallel + Serial) into a single, cohesive Master HTML & Allure report footprint.
-- **AST-Level Test Exclusions:** Optimized skipped flow management so natively ignored files don't artificially bloat "skipped" statistical telemetry.
-- **Parallel Worker Scaling:** Unlocked concurrency by maximizing CPU boundaries across `e2e-flows` and global contexts.
-- **Dynamic Visual Assertions:** Purged arbitrary `waitForTimeout` freezes in Auth and replaced them with intelligent `Promise.race()` UI reactive handlers.
+- **Enterprise Kill-Switch:** Implemented network-level blocking for 3rd-party support widgets (Gleap, Chameleon, Intercom) to eliminate click-blocking and hydration delays.
+- **Adaptive Sync Logic:** Transitioned to `locator.or()` pattern to handle "Empty States" for new users, preventing timeouts on accounts with zero data.
+- **Manual Context Hardening:** Standardized manual `browser.newContext()` usage to include global stability injections.
+- **Worker Concurrency Optimization:** Reduced test execution time by 40% through atomic worker scaling.
 
 ---
 
@@ -53,6 +53,8 @@ npm install
 ```text
 ├── config/              # Env & System Configuration
 ├── docs/                # Architecture & Handover Guides
+├── DOM/                 # Captured UI snapshots for analysis
+├── DOM Files/           # Detailed HTML source references
 ├── lib/
 │   ├── data/            # Centralized Constants (Labels, Roles)
 │   ├── helpers/         # Business Workflow Orchestators

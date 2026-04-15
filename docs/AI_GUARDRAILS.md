@@ -17,10 +17,12 @@ Layer responsibilities:
 
 - config/ → environment + system configuration
 - lib/pages → Page Objects (locators + single-page actions)
-- lib/helpers → business workflows spanning multiple pages
+- lib/flows → (NEW) Orchestration for multi-stage journey flows within domain.
+- lib/helpers → business workflows spanning multiple pages / domains
 - lib/utils → technical utilities only
 - lib/data/constants → all reusable static values
 - specs → assertions + test flow only
+- DOM/ & DOM Files/ → Visual UI historical references. (NEVER delete)
 
 ================================================
 NO BEGINNER PATTERNS
@@ -30,9 +32,9 @@ Never suggest:
 
 - test.describe.serial as default solution
 - test ordering dependencies
-- hardcoded waits (waitForTimeout)
+- hardcoded waits (waitForTimeout). Use Promise.race() or visual state waits.
 - moving business logic into tests
-- replacing Playwright expect with custom assertion frameworks.
+- replacing Playwright expect with custom assertion frameworks
 
 ================================================
 NO HARDCODED VALUES 
@@ -46,11 +48,23 @@ Do NOT introduce:
 - test file paths / asset strings
 - reusable string literals
 
-Use centralized constants (app-constants.ts) instead.
+Use centralized constants (app-constants.ts, ui-constants.ts) instead.
 
 EXCEPTION:
-
 Logger step messages may remain inline.
+
+================================================
+CORE ENTERPRISE DEFENSE MECHANISMS
+================================================
+
+1) MANUAL CONTEXT PROTECTION: If you create a custom context (`browser.newContext()`), you MUST apply the global guardrails to prevent 3rd-party widget (Gleap) blocking:
+   `await applyEnterpriseContextSettings(context, testInfo);`
+
+2) ADAPTIVE SYNC (EMPTY STATES): When waiting for elements like Dashboard listings or My Group tabs, you MUST use `locator.or()` to acknowledge that new accounts will show "Empty State" UI instead.
+
+3) SESSION LEAK PREVENTION: Always proactively wipe state `await AuthHelper.forceLogout(page)` before testing anonymous capabilities (Registration, Login resets) to prevent auto-redirects.
+
+4) DEEP UI PROGRESSION CHECKING: Evaluate `page.url()` before executing flow steps (like "Skip Onboarding"). If already at the target URL, return immediately and don't blindly click.
 
 ================================================
 RUNTIMESTORE SAFETY
@@ -90,10 +104,10 @@ RESPONSE STYLE
 Act as senior automation architect reviewing production code.
 
 - Avoid beginner explanations.
-- Give point-to-point, concise answers. Do NOT give long explanations unless absolutely necessary or explicitly requested.
+- STRICT RULE: Do not give long explanations. Instead, give shorter, point-to-point answers.
+- Never write essays. Get straight to the technical point.
 
 Focus on:
-
 - risk analysis
 - scalability
 - maintainability
@@ -103,17 +117,15 @@ Focus on:
 STRICT INTERACTION & EXECUTION POLICY
 ================================================
 
-1) NO INDEPENDENT ACTION: Do not apply any fixes or changes directly. You must get explicit permission for every specific task.
-
-2) ONE-SHOT FAILURE POLICY: If a test or command fails ONCE, do not try to re-run it or fix it yourself. Stop immediately.
-
-3) REPORTING STANDARD: Provide a "Point-to-Point" simple report. Do not make it unnecessarily long.
+1) NO INDEPENDENT ACTION / DO NOT APPLY BLINDLY: Do not apply any code changes or run commands directly on your own. 
+2) ALWAYS PROPOSE FIRST: Before applying any fix or change, you MUST give a clear proposal and WAIT for human command/approval to proceed.
+3) ONE-SHOT FAILURE POLICY: If a test or command fails ONCE, do not try to re-run it or fix it yourself. Stop immediately.
+4) REPORTING STANDARD: Provide a "Point-to-Point" simple report. Do not make it unnecessarily long.
    - What failed (Point 1, 2, 3...)
    - Visual Evidence: Screenshots (if applicable) and Error Logs
    - Analysis: Your specific assumptions/reasons for the failure
-   - Proposal: How you plan to fix it
-
-4) NO ASSUMPTIONS: Every proposal must be based on evidence from logs or code, not "guesses".
+   - Proposal: How you plan to fix it (WAIT FOR APPROVAL AFTER THIS)
+5) NO ASSUMPTIONS: Every proposal must be based on evidence from logs or code, not "guesses".
 
 ================================================
 SESSION INITIATION PROTOCOL
